@@ -1,6 +1,6 @@
-<div class="container-fluid p-0 bg-light">
+<div class="container-fluid p-0 bg-light sticky-top">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container">
+        <div class="container d-flex flex-nowrap">
 
             <!-- Logo and Title -->
             <div class="d-flex align-items-center">
@@ -12,7 +12,7 @@
             </div>
 
             <!-- Right side links -->
-            <div class="d-flex align-items-center gap-4">
+            <div class="d-none d-md-flex align-items-center gap-4">
                 <div class="d-flex align-items-center gap-4">
                     <a class="nav-link flex-grow-1" href="#" style="white-space: nowrap;">About</a>
                     <a class="nav-link flex-grow-1" href="#" style="white-space: nowrap;">Contact</a>
@@ -23,7 +23,30 @@
                 </div>
             </div>
 
+            <!-- Right side links for smaller screens (up to lg) -->
+            <div class="d-flex d-md-none align-items-center">
 
+                <!-- Example: A toggler button for a collapsible menu -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="navbarToggleContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>            
         </div>
+        
     </nav>
+</div>
+
+<div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">Links</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <ul class="list-unstyled fw-normal pb-2 small">
+            <li><a href="/docs/5.3/getting-started/introduction/" class="offcanva-li d-inline-block rounded">Sign In</a></li>
+            <li><a href="/docs/5.3/getting-started/download/" class="offcanva-li d-inline-block rounded">Log In</a></li>
+            <li><a href="/docs/5.3/getting-started/contents/" class="offcanva-li d-inline-block rounded">About</a></li>
+            <li><a href="/docs/5.3/getting-started/browsers-devices/" class="offcanva-li d-inline-block rounded">Contact</a></li>
+        </ul>
+    </div>
 </div>
