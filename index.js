@@ -16,3 +16,7 @@ app.get("/", (req, res) => {
 app.get("/about/", (req, res) => {
     res.render("about.ejs");
 });
+
+app.get("/signup/", (req, res) => {
+    res.render("sign-up.ejs");
+});

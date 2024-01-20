@@ -1,0 +1,41 @@
+/* sign-up.css */
+
+strong {
+    color: #365486;
+    font-size: 1.2rem;
+}
+
+#left-panel {
+    border-top-left-radius: 0.5rem; 
+    border-bottom-left-radius: 0.5rem;
+}
+
+#right-panel {
+    border-top-right-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+}
+
+#full-panel {
+    border-top-left-radius: 0.5rem; 
+    border-bottom-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+}
+
+.gradient-background {
+    background: linear-gradient(300deg, #00bfff, #ffffff);
+    background-size: 180% 180%;
+    animation: gradient-animation 18s ease infinite;
+  }
+  
+@keyframes gradient-animation {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
