@@ -11,28 +11,27 @@
                 <a class="navbar-brand flex-grow-1 ms-2" style="white-space: nowrap;">PulsePost</a>
             </div>
 
-            <!-- Right side links -->
+            <!-- Right side navlinks -->
             <div class="d-none d-md-flex align-items-center gap-4">
                 <div class="d-flex align-items-center gap-4">
-                    <a class="nav-link flex-grow-1" href="#" style="white-space: nowrap;">About</a>
-                    <a class="nav-link flex-grow-1" href="#" style="white-space: nowrap;">Contact</a>
+                    <a class="nav-link flex-grow-1" href="/about/" style="white-space: nowrap;">About</a>
+                    <a class="nav-link flex-grow-1" href="/contact/" style="white-space: nowrap;">Contact</a>
                 </div>
                 <div class="d-flex align-items-center gap-3">
-                    <button type="button" class="btn btn-primary">Log In</button>
-                    <button type="button" class="btn btn-outline-primary">Sign Up</button>
+                    <a class="btn btn-outline-primary" href="/login/">Log In</a>
+                    <a class="btn btn-outline-primary" href="/signup/">Sign Up</a>
                 </div>
             </div>
 
-            <!-- Right side links for smaller screens (up to lg) -->
+            <!-- Right side collapser for offcanvas (up to md) -->
             <div class="d-flex d-md-none align-items-center">
 
-                <!-- Example: A toggler button for a collapsible menu -->
                 <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="navbarToggleContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-            </div>            
+            </div>
         </div>
-        
+
     </nav>
 </div>
 
@@ -43,10 +42,10 @@
     </div>
     <div class="offcanvas-body">
         <ul class="list-unstyled fw-normal pb-2 small">
-            <li><a href="/docs/5.3/getting-started/introduction/" class="offcanva-li d-inline-block rounded">Sign In</a></li>
-            <li><a href="/docs/5.3/getting-started/download/" class="offcanva-li d-inline-block rounded">Log In</a></li>
-            <li><a href="/docs/5.3/getting-started/contents/" class="offcanva-li d-inline-block rounded">About</a></li>
-            <li><a href="/docs/5.3/getting-started/browsers-devices/" class="offcanva-li d-inline-block rounded">Contact</a></li>
+            <li><a href="/signup/" class="offcanva-li d-inline-block rounded">Sign Up</a></li>
+            <li><a href="/login/" class="offcanva-li d-inline-block rounded">Log In</a></li>
+            <li><a href="/about/" class="offcanva-li d-inline-block rounded">About</a></li>
+            <li><a href="/contact/" class="offcanva-li d-inline-block rounded">Contact</a></li>
         </ul>
     </div>
 </div>
