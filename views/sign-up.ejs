@@ -13,21 +13,33 @@
     <div class="container-fluid h-100 d-flex align-items-center gradient-background">
         <div class="container w-50">
             <div class="row">
-                <div class="d-lg-flex d-none col-5 p-0 flex-shrink-0">
+                <div class="d-lg-flex d-none col-5 p-0">
                     <img class="img-fluid shadow" id="left-panel" src="/images/sign-up-art.png" alt="logo">
                 </div>
                 <div class="d-flex col-12 col-lg-7 bg-light p-5 shadow" id="right-panel">
-                    <form data-form-type="login">
-                        <img class="img-fluid mb-2" src="/images/logo.png" alt="logo" style="max-height: 60px;">
-                        <h2>Sign up and start posting!</h2>
+                    <form>
+                        <img class="mb-4" src="/images/logo.png" alt="logo" style="max-height: 60px;">
+                        <h3>Sign up and start posting!</h3>
+                        <div class="form-floating my-4">
+                            <input class="form-control" placeholder="Name">
+                            <label for="floatingInput">Name</label>
+                        </div>
+                        <hr>
+                        <div class="form-floating mt-4">
+                            <input class="form-control" id="floatingEmail" type="email" placeholder="Email address">
+                            <label for="floatingEmail">Email Address</label>
+                        </div>
+                        <div class="form-floating mb-4">
+                            <input class="form-control" id="floatingPassword" type="password" placeholder="Password" data-form-type="password">
+                            <label for="floatingPassword">Password</label>
+                        </div>
+                        <button class="btn btn-primary ">Sign In</button>
                     </form>
-                    
-
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="/scripts/sign-up.js" charset="utf-8"></script>
+    <script src="/js/sign-up.js" charset="utf-8"></script>
 </body>
 
