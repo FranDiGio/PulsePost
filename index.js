@@ -20,3 +20,8 @@ app.get("/about/", (req, res) => {
 app.get("/signup/", (req, res) => {
     res.render("sign-up.ejs");
 });
+
+app.get("/login/", (req, res) => {
+    res.render("log-in.ejs");
+});
+
