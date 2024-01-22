@@ -1,8 +1,15 @@
 /* sign-up.css */
 
-strong {
-    color: #365486;
-    font-size: 1.2rem;
+@media (max-width: 1199px) {
+    html {
+        font-size: 0.8rem; 
+    }
+}
+
+@media (min-width: 1200px) {
+    html {
+        font-size: 0.9rem; 
+    }
 }
 
 #left-panel {
@@ -34,13 +41,17 @@ input[type="password"] {
     border-top-right-radius: 0;
 }
 
-.sign-up .gradient-background {
+.custom-form-container {
+    max-width: 800px;
+}
+
+.gradient-background-light {
     background: linear-gradient(300deg, #00bfff, #ffffff);
     background-size: 180% 180%;
     animation: gradient-animation 18s ease infinite;
 }
 
-.log-in .gradient-background {
+.gradient-background-dark {
     background: linear-gradient(300deg ,#0A1D56, #647D87, #ffffff);
     background-size: 180% 180%;
     animation: gradient-animation 18s ease infinite;
