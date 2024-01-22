@@ -17,7 +17,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/about/", (req, res) => {
-    res.sendFile(__dirname + "/views/html/about.html");
+    res.render("ejs/about.ejs");
 });
 
 app.get("/signup/", (req, res) => {
