@@ -19,51 +19,48 @@
         </div>
         <div class="about-info w-50 h-auto position-absolute start-50 translate-middle-x p-4 z-2 rounded bg-light shadow-lg">
 
-            <h3>About Pulse-Post</h3>
-            <hr>
-            <p>
-                Pulse-Post is a dynamic blog web application designed to allow users to engage with blog 
-                content interactively. Built with Node.js, Express.js, and EJS, it serves as a platform for 
-                learning and showcasing full-stack development skills. This version focuses on core functionalities 
-                like post creation, viewing, editing, and deletion, with a keen eye on responsive and user-friendly 
-                design.
-            </p>
-            <br>
+            <div class="container my-2">
+                <div class="row">
+                    <div class="col-md-6 mx-auto">
+                        <h2 class="text-center mb-4">Contact Me</h2>
+                        <p class="text-center">Have a question or want to work together? I'm always open to discussing new projects, creative ideas, or opportunities to be part of your visions.</p>
+                        
+                        <form action="/send-message" method="POST">
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Name</label>
+                                <input type="text" class="form-control" id="name" name="name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="message" class="form-label">Message</label>
+                                <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary">Send Message</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="row mt-5 text-center d-flex justify-content-center">
 
-            <h3>My Learning Journey</h3>
-            <hr>
-            <p>
-                As an aspiring full-stack developer, creating Pulse-Post has been a significant step in my journey. 
-                I've learned about server-side programming, templating with EJS, and the importance of responsive 
-                design. Tackling challenges such as implementing CRUD operations without a database has sharpened 
-                my problem-solving skills and deepened my understanding of web application architecture.
-            </p>
-            <br>
+                    <h3 class="mb-5">Other Ways to Reach Me</h3>
+                    
+                    <p><img class="contact-icon" src="/svg/email.svg"> francodvf06@gmail.com </p>
+                    <p>
+                        <a href="https://www.linkedin.com/in/franco-forgione"><img class="contact-icon" src="/svg/linkedin.svg"></a>
+                        https://www.linkedin.com/in/franco-forgione
+                    </p>
 
-            <h3>Future Enhancements</h3>
-            <hr>
-            <p>
-                Looking ahead, I plan to expand Pulse-Post's capabilities. Planned enhancements include adding a 
-                database for data persistence, integrating user authentication for personalized experiences, and 
-                perhaps developing a RESTful API to allow for more flexible data handling.
-            </p>
-            <br>
-
-            <h3>About Me</h3>
-            <hr>
-            <p>
-                I'm Franco, a Software Engineering student. Passionate about web technologies and creating engaging 
-                digital experiences, I'm on a journey to build a career in web development. Pulse-Post is a 
-                stepping stone in this journey, showcasing my skills and dedication to learning.
-            </p>
-            <br>
-
-            <h3>Contact Me</h3>
-            <hr>
-            <p>
-                I'm always open to feedback, collaboration, or a friendly chat about technology. Feel free to 
-                reach out to me at francodvf06@gmail.com.
-            </p>
+                    <p>
+                        <a href="https://github.com/FranDiGio"><img class="contact-icon" src="/svg/github.svg"></a>
+                        https://github.com/FranDiGio
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
 
