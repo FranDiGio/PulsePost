@@ -20,6 +20,10 @@ app.get("/about/", (req, res) => {
     res.render("ejs/about.ejs");
 });
 
+app.get("/contact/", (req, res) => {
+    res.render("ejs/contact.ejs");
+});
+
 app.get("/signup/", (req, res) => {
     res.sendFile(__dirname + "/views/html/sign-up.html");
 });
