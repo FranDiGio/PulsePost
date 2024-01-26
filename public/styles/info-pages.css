@@ -1,0 +1,35 @@
+/* info-pages.css */
+
+.about-container {
+    min-height: 100%;
+}
+
+.about-wallpaper {
+    max-height: 25vh;
+}
+
+.about-info {
+    top: 20vh;
+}
+
+p {
+    text-align: justify;
+}
+
+.contact-icon {
+    width: 100%; 
+    max-width: 30px; 
+    height: auto; 
+}
+
+@media (min-width: 768px) {
+    .contact-icon {
+        max-width: 30px; 
+    }
+}
+
+@media (min-width: 992px) {
+    .contact-icon {
+        max-width: 40px; 
+    }
+}
