@@ -1,3 +1,15 @@
+.background-salmon {
+    background: #FFBFA9;
+}
+
+.background-light-blue {
+    background: #2CD3E1;
+}
+
+.background-dark-blue {
+    background: #3330E4;
+}
+
 .gradient-background-light {
     background: linear-gradient(300deg, #00bfff, #ffffff);
     background-size: 180% 180%;
