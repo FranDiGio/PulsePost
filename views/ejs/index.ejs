@@ -14,7 +14,7 @@
 <body>
     <%- include('navbar.ejs') %>
 
-    <div class="container col-xxl-8 px-4 py-5">
+    <section class="container col-xxl-8 px-4 py-5">
         <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
             <div class="col-10 col-sm-8 col-lg-6">
                 <img src="/images/landing-page-art.png" class="d-block mx-lg-auto img-fluid" alt="Home page art" width="700" height="500" loading="lazy">
@@ -27,15 +27,14 @@
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
-    <div class="container-fluid bg-light">
+    <section class="container-fluid bg-light">
         <div class="container px-4 py-5" id="custom-cards">
             <h2 class="pb-2 border-bottom">Explore Pulse-Post</h2>
         
             <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
               
-              <!-- Feature Card: Create Posts -->
               <div class="col">
                 <div class="flip-card">
                     <div class="flip-card-inner">
@@ -52,14 +51,12 @@
                 </div>
               </div>
 
-              <!-- Feature Card: Engage with Community -->
               <div class="col">
                 <div class="flip-card">
                     <div class="flip-card-inner">
                         <div class="card card-cover flip-card-front h-100 overflow-hidden rounded-4 shadow-lg" style="background-image: url('/images/card-2.png');">
                             <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
                               <h3 class="pt-3 mt-5 mb-4 display-6 lh-1 fw-bold">Connect and Engage</h3>
-                             
                             </div>
                         </div>
 
@@ -70,7 +67,6 @@
                 </div>
               </div>
         
-              <!-- Feature Card: Discover Content -->
               <div class="col">
                 <div class="flip-card">
                     <div class="flip-card-inner">
@@ -89,24 +85,26 @@
         
             </div>
         </div>
-    </div>
-    
-    <div class="container">
-        <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+    </section>
+
+    <section class="container-fluid bg-light pb-4">
+      <div class="container">
+        <footer class="d-flex flex-wrap justify-content-between align-items-center pt-2 pb-4 mt-4 border-top">
           <div class="col-md-4 d-flex align-items-center">
-            <a href="/" class="mb-3 me-2 mb-md-0 text-body-secondary text-decoration-none lh-1">
-              <svg class="bi" width="30" height="24"><use xlink:href="#bootstrap"></use></svg>
+            <a href="/" class="mb-3 me-2 mb-md-0 text-muted text-decoration-none lh-1">
+              <img class="img-fluid" src="/images/logo.png" alt="logo" width="30" height="24">
             </a>
-            <span class="mb-3 mb-md-0 text-body-secondary">© 2024 Company, Inc</span>
+            <span class="text-muted">© 2024 Franco. Pulse-Post™</span>
           </div>
       
           <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
-            <li class="ms-3"><a class="text-body-secondary" href="https://www.linkedin.com/in/franco-forgione"><img src="/svg/linkedin.svg"></a></li>
-            <li class="ms-3"><a class="text-body-secondary" href="https://github.com/FranDiGio"><img src="/svg/github.svg"></a></li>
-            <li class="ms-3"><a class="text-body-secondary" href="mailto:francodvf06@gmail.com"><img src="/svg/email.svg"></a></li>
+            <li class="ms-3"><a class="text-muted" href="https://www.linkedin.com/in/franco-forgione"><img src="/svg/linkedin.svg"></a></li>
+            <li class="ms-3"><a class="text-muted" href="https://github.com/FranDiGio"><img src="/svg/github.svg"></a></li>
+            <li class="ms-3"><a class="text-muted" href="mailto:francodvf06@gmail.com"><img src="/svg/email.svg"></a></li>
           </ul>
         </footer>
-    </div>
+      </div>
+    </section>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </body>
