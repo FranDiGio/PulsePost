@@ -1,4 +1,5 @@
 import express from "express";
+import bodyParser from "body-parser";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 
@@ -6,6 +7,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 const app = express();
 const port = 3000;
 
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
 app.listen(port, () => {
@@ -28,7 +30,14 @@ app.get("/signup/", (req, res) => {
     res.sendFile(__dirname + "/views/html/sign-up.html");
 });
 
+app.post('/api/signup', (req, res) => {
+    res.send(`Sign-up done with name: ${req.body["name"]}, email: ${req.body["email"]} and password: ${req.body["password"]}`);
+});
+
 app.get("/login/", (req, res) => {
     res.sendFile(__dirname + "/views/html/log-in.html");
 });
 
+app.post('/api/login', (req, res) => {
+    res.send(`Login attempted with email: ${req.body["email"]} and password: ${req.body["password"]}`);
+});
