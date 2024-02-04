@@ -13,46 +13,40 @@
 <body>
     <%- include('navbar.ejs') %>
 
-    <div class="about-container container-fluid px-0 m-0">
-        <div class="about-wallpaper w-100 position-relative z-1 overflow-hidden rounded">
-            <img class="img-fluid shadow w-100" src="/images/about-wallpaper.png" alt="wallpaper">
-        </div>
-        <div class="about-info w-50 h-auto position-absolute start-50 translate-middle-x p-4 z-2 rounded bg-light shadow-lg">
+    <div class="info-container container-fluid px-0 m-0">
+        <div class="about-background w-100 position-relative z-1 overflow-hidden rounded"></div>
+        <div class="info-structure w-50 h-auto position-absolute start-50 translate-middle-x p-4 z-2 rounded bg-light shadow-lg">
 
             <h3 class="border-bottom pb-3">About Pulse-Post</h3>
-            <p>
+            <p class="mb-3">
                 Pulse-Post is a dynamic blog web application designed to allow users to engage with blog 
                 content interactively. Built with Node.js, Express.js, EJS, and Bootstrap, it serves as a platform for 
                 learning and showcasing full-stack development skills. This version focuses on core functionalities 
                 like post creation, viewing, editing, and deletion, with attention to detail on responsive and user-friendly 
                 design.
             </p>
-            <br>
 
             <h3 class="border-bottom pb-3">My Learning Experience</h3>
-            <p>
+            <p class="mb-3">
                 As an aspiring full-stack developer, creating Pulse-Post has been a significant step towards this goal. 
                 I've learned about server-side programming, templating with EJS, and the importance of responsive 
                 design. Tackling challenges such as implementing CRUD operations without a database has deepened 
                 my understanding of web-dev architecture.
             </p>
-            <br>
 
             <h3 class="border-bottom pb-3">Future Enhancements</h3>
-            <p>
+            <p class="mb-3">
                 Looking ahead, I plan to expand Pulse-Post's capabilities. Planned enhancements include adding a 
                 database for data persistence, integrating user authentication for personalized experiences, and 
                 perhaps developing a RESTful API to allow for more flexible data handling. Who knows!
             </p>
-            <br>
 
             <h3 class="border-bottom pb-3">About Me</h3>
-            <p>
+            <p class="mb-3">
                 I'm Franco, a Software Engineering graduate. Passionate about web technologies and creating  
                 digital experiences, I'm on track to become a well-rounded Software Dev. Pulse-Post is a 
                 stepping stone for showcasing my skills and dedication to learning.
             </p>
-            <br>
 
         </div>
     </div>
