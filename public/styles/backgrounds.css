@@ -10,6 +10,10 @@
     background: #3330E4;
 }
 
+.background-green {
+    background: #50D890;
+}
+
 .gradient-background-light {
     background: linear-gradient(300deg, #00bfff, #ffffff);
     background-size: 180% 180%;

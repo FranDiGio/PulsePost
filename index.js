@@ -5,7 +5,6 @@ import { dirname } from "path";
 import { fileURLToPath } from "url";
 import { User } from './models/User.mjs';
 
-
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const app = express();
 const port = 3000;
@@ -19,31 +18,31 @@ app.listen(port, () => {
 });
 
 app.get("/", (req, res) => {
-    res.render("ejs/index.ejs");
+    res.render("index.ejs");
 });
 
 app.get("/about/", (req, res) => {
-    res.render("ejs/about.ejs");
+    res.render("about.ejs");
 });
 
 app.get("/contact/", (req, res) => {
-    res.render("ejs/contact.ejs");
+    res.render("contact.ejs");
 });
 
 app.get("/signup/", (req, res) => {
-    res.sendFile(__dirname + "/views/html/sign-up.html");
+    res.render("sign-up.ejs", { success: false });
 });
 
 app.get("/login/", (req, res) => {
-    res.sendFile(__dirname + "/views/html/log-in.html");
+    res.render("log-in.ejs");
 });
 
 app.post('/api/signup', (req, res) => {
     const { nickname, email, password } = req.body;
     const newUser = new User(nickname, email, password);
+    console.log("User added: " + newUser.toString());
     users.push(newUser);
-    console.log(newUser.toString());
-    res.send('<h3>Sign-up successful</h3>');
+    res.render("sign-up.ejs", { success: true });
 });
 
 app.post('/api/login', (req, res) => {
