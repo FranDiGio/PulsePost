@@ -1,6 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
-import validator from "validator";
+import { isStrongPassword } from "./services/userService.js";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import { User } from './models/User.mjs';
@@ -39,10 +39,16 @@ app.get("/login/", (req, res) => {
 
 app.post('/api/signup', (req, res) => {
     const { nickname, email, password } = req.body;
-    const newUser = new User(nickname, email, password);
-    console.log("User added: " + newUser.toString());
-    users.push(newUser);
-    res.render("sign-up.ejs", { success: true });
+    
+    if (isStrongPassword(password)){
+        const newUser = new User(nickname, email, password);
+        users.push(newUser);
+        res.render("sign-up.ejs", { success: true });
+    } 
+    else {
+        res.render("sign-up.ejs", { success: false });
+    }
+    
 });
 
 app.post('/api/login', (req, res) => {

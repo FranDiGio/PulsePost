@@ -16,6 +16,7 @@
             <div class="row custom-form-container">
 
                 <% if (success == false) { %>
+                    
                     <div class="d-lg-flex d-none col-5 p-0">
                         <img class="img-fluid shadow" id="left-panel" src="/images/sign-up-art.png" alt="art">
                     </div>
@@ -43,7 +44,9 @@
                             <button class="btn btn-primary" type="submit">Sign In</button>
                         </form>
                     </div>
+
                 <% } else { %>
+
                     <div class="d-flex col-12 p-5 h-50 shadow justify-content-center background-green" id="top-panel">
                         <p>
                             <img class="pb-5" height="150px" src="/svg/checkmark.svg">
@@ -54,6 +57,7 @@
                         <h4>Your account has been successfully created</h4>
                         <button type="button" class="btn btn-primary btn-lg mt-5 shadow">Continue</button>
                     </div>
+
                 <% } %>
             </div>
         </div>
