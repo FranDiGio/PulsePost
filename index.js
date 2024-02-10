@@ -30,7 +30,7 @@ app.get("/contact/", (req, res) => {
 });
 
 app.get("/signup/", (req, res) => {
-    res.render("sign-up.ejs", { success: false });
+    res.render("sign-up.ejs", { success: false, invalidPassword: false });
 });
 
 app.get("/login/", (req, res) => {
@@ -46,7 +46,7 @@ app.post('/api/signup', (req, res) => {
         res.render("sign-up.ejs", { success: true });
     } 
     else {
-        res.render("sign-up.ejs", { success: false });
+        res.render("sign-up.ejs", { success: false, invalidPassword: true });
     }
     
 });
