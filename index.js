@@ -40,14 +40,21 @@ app.get("/login/", (req, res) => {
 app.post('/api/signup', (req, res) => {
     const { nickname, email, password } = req.body;
     
-    if (isStrongPassword(password)){
+    if (users.some(user => user.nickname === nickname)){
+        res.render("sign-up.ejs", { success: false, invalidNickname: true });
+    } 
+    else if (users.some(user => user.email === email)){
+        res.render("sign-up.ejs", { success: false, invalidEmail: true });
+    }
+    else if (!isStrongPassword(password)){
+        res.render("sign-up.ejs", { success: false, invalidPassword: true });
+    }
+    else {
         const newUser = new User(nickname, email, password);
         users.push(newUser);
         res.render("sign-up.ejs", { success: true });
-    } 
-    else {
-        res.render("sign-up.ejs", { success: false, invalidPassword: true });
     }
+
 });
 
 app.post('/api/login', (req, res) => {
