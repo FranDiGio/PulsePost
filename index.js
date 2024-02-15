@@ -48,9 +48,15 @@ app.post('/api/signup', (req, res) => {
     else {
         res.render("sign-up.ejs", { success: false, invalidPassword: true });
     }
-    
 });
 
 app.post('/api/login', (req, res) => {
-    res.send(`Login attempted with email: ${req.body["email"]} and password: ${req.body["password"]}`);
+    const { email, password } = req.body;
+    const userExists = users.some(user => user.email === email && user.password === password);
+
+    if (userExists){
+        res.send("User found.");
+    } else {
+        res.send("User not found or incorrect password");
+    }
 });
