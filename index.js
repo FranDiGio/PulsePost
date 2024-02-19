@@ -30,7 +30,7 @@ app.get("/contact/", (req, res) => {
 });
 
 app.get("/signup/", (req, res) => {
-    res.render("sign-up.ejs", { success: false, invalidPassword: false });
+    res.render("sign-up.ejs", { success: false });
 });
 
 app.get("/login/", (req, res) => {
@@ -62,7 +62,7 @@ app.post('/api/login', (req, res) => {
     const userExists = users.some(user => user.email === email && user.password === password);
 
     if (userExists){
-        res.send("User found.");
+        res.render("feed.ejs");
     } else {
         res.send("User not found or incorrect password");
     }
