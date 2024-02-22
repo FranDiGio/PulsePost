@@ -21,6 +21,10 @@ app.get("/", (req, res) => {
     res.render("index.ejs");
 });
 
+app.get("/feed/", (req, res) => {
+    res.render("feed.ejs");
+});
+
 app.get("/about/", (req, res) => {
     res.render("about.ejs");
 });
@@ -62,8 +66,8 @@ app.post('/api/login', (req, res) => {
     const userExists = users.some(user => user.email === email && user.password === password);
 
     if (userExists){
-        res.render("feed.ejs");
+        res.redirect("/feed/");
     } else {
-        res.send("User not found or incorrect password");
+        res.render("log-in.ejs", { invalid: true })
     }
 });

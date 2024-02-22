@@ -44,5 +44,16 @@
         </div>
     </div>
 
+    <% if (locals.invalid == true) { %>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                var inputs = document.querySelectorAll('.form-control');
+                inputs.forEach(function(input) {
+                    input.classList.add('is-invalid');
+                });
+            });
+        </script>
+    <% } %>
+
     <script src="/js/panel-resize.js" charset="utf-8"></script>
 </body>
