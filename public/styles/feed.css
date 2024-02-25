@@ -1,6 +1,19 @@
-
 .contact-icon {
     width: 100%; 
     max-width: 30px; 
     height: auto; 
+}
+
+.fixed-sidebar-left {
+    position: fixed;
+    top: 78px;
+    left: 0;
+    height: 100vh;
+}
+
+.fixed-sidebar-right {
+    position: fixed;
+    top: 78px; 
+    right: 0;
+    height: 100vh;
 }
