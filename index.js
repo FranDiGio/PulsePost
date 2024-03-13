@@ -1,5 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
+import session from "express-session";
 import { isStrongPassword } from "./services/userService.js";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
@@ -12,7 +13,13 @@ let users = [];
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
-
+app.use(session({
+    secret: '9qB7n!4@F#5ZwpUJ*3Hg',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: 'auto' }
+  }));
+  
 app.listen(port, () => {
     console.log("Listening to port " + port)
 });
@@ -22,7 +29,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/feed/", (req, res) => {
-    res.render("feed.ejs");
+    res.render("feed.ejs", { nickname: req.session.nickname });
 });
 
 app.get("/about/", (req, res) => {
@@ -56,9 +63,9 @@ app.post('/api/signup', (req, res) => {
     else {
         const newUser = new User(nickname, email, password);
         users.push(newUser);
+        req.session.nickname = newUser.nickname;
         res.render("sign-up.ejs", { success: true });
     }
-
 });
 
 app.post('/api/login', (req, res) => {
