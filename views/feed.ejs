@@ -15,22 +15,22 @@
 </head>
 
 <body>
-    <%- include('navbar-feed.ejs') %>
+    <%- include('partials/navbar-feed.ejs') %>
 
     <div class="container-fluid">
-        <div class="row d-flex justify-content-center">
-            <div class="col-2 d-flex flex-column bg-light ps-4 pt-3 fixed-sidebar-left">
-                <h2 class="open-sans-title align-self-start fs-4">My Posts</h2>
+        <div class="row">
+            <div class="bg-light ps-4 pt-3 fixed-sidebar-left">
+                <h2 class="open-sans-title text-muted border-bottom border-2 fs-4 pb-2">My Posts</h2>
 
                 <ul class="list-unstyled fw-normal pb-2 small mt-3">
-                    <li><a href="/signup/" class="d-inline-block list-item rounded mb-2 fs-6">Sign Up</a></li>
-                    <li><a href="/login/" class="d-inline-block list-item rounded mb-2 fs-6">Log In</a></li>
-                    <li><a href="/about/" class="d-inline-block list-item rounded mb-2 fs-6">About</a></li>
-                    <li><a href="/contact/" class="d-inline-block list-item rounded mb-2 fs-6">Contact</a></li>
+                    <li><a href="/feed/" class="d-block list-item rounded border border-info-subtle border-2 pb-1 mb-2 fs-6">The Art of Unlearning: Embracing New Beginnings</a></li>
+                    <li><a href="/feed/" class="d-block list-item rounded border border-info-subtle border-2 pb-1 mb-2 fs-6">Echoes of Silence: When Words Fall Short</a></li>
+                    <li><a href="/feed/" class="d-block list-item rounded border border-info-subtle border-2 pb-1 mb-2 fs-6">Beyond the Horizon: Adventures in Unknown Territories</a></li>
+                    <li><a href="/feed/" class="d-block list-item rounded border border-info-subtle border-2 pb-1 mb-2 fs-6">Invisible Ties</a></li>
                 </ul>
             </div>
 
-            <div class="col-8 pt-3 px-4">
+            <div class="pt-3 px-4 feed-content">
                 <p>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Pretium quam vulputate dignissim suspendisse in est ante. Nascetur ridiculus mus mauris vitae ultricies leo integer malesuada. Maecenas ultricies mi eget mauris pharetra et. Diam quis enim lobortis scelerisque fermentum dui faucibus in ornare. Ut tortor pretium viverra suspendisse potenti nullam. Erat velit scelerisque in dictum non consectetur. Velit euismod in pellentesque massa. Enim nulla aliquet porttitor lacus luctus. At urna condimentum mattis pellentesque id nibh tortor id aliquet. Posuere morbi leo urna molestie at elementum eu facilisis.
 
@@ -49,14 +49,14 @@
                 </p>
             </div>
 
-            <div class="col-2 d-flex flex-column bg-light ps-4 pt-3 fixed-sidebar-right">
-                <h2 class="open-sans-title align-self-start fs-4">Following</h2>
+            <div class="bg-light ps-4 pt-3 fixed-sidebar-right">
+                <h2 class="open-sans-title text-muted border-bottom border-2 fs-4 pb-2">Following</h2>
 
                 <ul class="list-unstyled fw-normal pb-2 small mt-3">
-                    <li><a href="/signup/" class="d-inline-block list-item rounded mb-2 fs-6">Juggerwicho</a></li>
-                    <li><a href="/login/" class="d-inline-block list-item rounded mb-2 fs-6">MrBeast</a></li>
-                    <li><a href="/about/" class="d-inline-block list-item rounded mb-2 fs-6">howtobasic</a></li>
-                    <li><a href="/contact/" class="d-inline-block list-item rounded mb-2 fs-6">maxmoefoe</a></li>
+                    <li><a href="/signup/" class="d-block list-item rounded pb-1 mb-2 fs-6">Juggerwicho</a></li>
+                    <li><a href="/login/" class="d-block list-item rounded pb-1 mb-2 fs-6">MrBeast</a></li>
+                    <li><a href="/about/" class="d-block list-item rounded pb-1 mb-2 fs-6">howtobasic</a></li>
+                    <li><a href="/contact/" class="d-block list-item rounded pb-1 mb-2 fs-6">maxmoefoe</a></li>
                 </ul>
             </div>
         </div>

@@ -8,6 +8,7 @@
     position: fixed;
     top: 78px;
     left: 0;
+    width: 20.56%;
     height: 100vh;
     overflow-y: auto;
 }
@@ -16,6 +17,7 @@
     position: fixed;
     top: 78px; 
     right: 0;
+    width: 20.56%;
     height: 100vh;
     overflow-y: auto;
 }
@@ -24,6 +26,11 @@
     display: none;
 }
 
+.feed-content {
+    width: 58.88%;
+    margin-left: 20.56%;
+    margin-right: 20.56%;
+}
 
 .open-sans-title {
   font-family: "Open Sans", sans-serif;

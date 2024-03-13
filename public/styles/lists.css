@@ -2,7 +2,9 @@
     text-decoration: none; 
     color: black; 
     padding: 3px 7px; 
-    display: block; 
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .list-item:hover {
