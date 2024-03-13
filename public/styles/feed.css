@@ -1,4 +1,4 @@
-.contact-icon {
+.header-icon {
     width: 100%; 
     max-width: 30px; 
     height: auto; 
@@ -9,6 +9,7 @@
     top: 78px;
     left: 0;
     height: 100vh;
+    overflow-y: auto;
 }
 
 .fixed-sidebar-right {
@@ -16,4 +17,19 @@
     top: 78px; 
     right: 0;
     height: 100vh;
+    overflow-y: auto;
+}
+
+.fixed-sidebar-left::-webkit-scrollbar, .fixed-sidebar-right::-webkit-scrollbar {
+    display: none;
+}
+
+
+.open-sans-title {
+  font-family: "Open Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 100;
 }

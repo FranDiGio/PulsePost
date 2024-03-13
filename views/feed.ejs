@@ -5,7 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pulse Post</title>
     <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="/styles/lists.css" rel="stylesheet">
     <link href="/styles/feed.css" rel="stylesheet">
     <link href="/styles/backgrounds.css" rel="stylesheet">
 </head>
@@ -15,10 +19,15 @@
 
     <div class="container-fluid">
         <div class="row d-flex justify-content-center">
-            <div class="col-2 bg-light ps-4 pt-3 fixed-sidebar-left">
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna.
-                </p>
+            <div class="col-2 d-flex flex-column bg-light ps-4 pt-3 fixed-sidebar-left">
+                <h2 class="open-sans-title align-self-start fs-4">My Posts</h2>
+
+                <ul class="list-unstyled fw-normal pb-2 small mt-3">
+                    <li><a href="/signup/" class="d-inline-block list-item rounded mb-2 fs-6">Sign Up</a></li>
+                    <li><a href="/login/" class="d-inline-block list-item rounded mb-2 fs-6">Log In</a></li>
+                    <li><a href="/about/" class="d-inline-block list-item rounded mb-2 fs-6">About</a></li>
+                    <li><a href="/contact/" class="d-inline-block list-item rounded mb-2 fs-6">Contact</a></li>
+                </ul>
             </div>
 
             <div class="col-8 pt-3 px-4">
@@ -37,14 +46,18 @@
 
                     Nunc mi ipsum faucibus vitae aliquet nec. Non arcu risus quis varius quam. At quis risus sed vulputate odio ut. Praesent tristique magna sit amet purus gravida quis blandit. Ultricies lacus sed turpis tincidunt id aliquet risus feugiat. Quam nulla porttitor massa id neque. At ultrices mi tempus imperdiet nulla malesuada pellentesque. Lectus nulla at volutpat diam ut venenatis tellus. Tortor pretium viverra suspendisse potenti. Nisl tincidunt eget nullam non nisi est sit.
 
-                    Ac feugiat sed lectus vestibulum. Tortor aliquam nulla facilisi cras fermentum. Pharetra et ultrices neque ornare aenean euismod elementum. Integer enim neque volutpat ac tincidunt. Interdum velit laoreet id donec ultrices tincidunt arcu. Scelerisque in dictum non consectetur a erat. Ipsum consequat nisl vel pretium lectus quam id leo. Sapien nec sagittis aliquam malesuada bibendum. Rhoncus aenean vel elit scelerisque mauris pellentesque. Augue interdum velit euismod in. Id aliquet lectus proin nibh nisl condimentum. Non sodales neque sodales ut etiam sit amet nisl. Consectetur adipiscing elit pellentesque habitant morbi tristique senectus. Etiam dignissim diam quis enim lobortis scelerisque fermentum.
                 </p>
             </div>
 
-            <div class="col-2 bg-light pe-4 pt-3 fixed-sidebar-right">
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna.
-                </p>
+            <div class="col-2 d-flex flex-column bg-light ps-4 pt-3 fixed-sidebar-right">
+                <h2 class="open-sans-title align-self-start fs-4">Following</h2>
+
+                <ul class="list-unstyled fw-normal pb-2 small mt-3">
+                    <li><a href="/signup/" class="d-inline-block list-item rounded mb-2 fs-6">Juggerwicho</a></li>
+                    <li><a href="/login/" class="d-inline-block list-item rounded mb-2 fs-6">MrBeast</a></li>
+                    <li><a href="/about/" class="d-inline-block list-item rounded mb-2 fs-6">howtobasic</a></li>
+                    <li><a href="/contact/" class="d-inline-block list-item rounded mb-2 fs-6">maxmoefoe</a></li>
+                </ul>
             </div>
         </div>
     </div>

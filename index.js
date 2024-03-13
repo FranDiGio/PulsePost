@@ -13,6 +13,7 @@ let users = [];
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
+
 app.use(session({
     secret: '9qB7n!4@F#5ZwpUJ*3Hg',
     resave: false,
