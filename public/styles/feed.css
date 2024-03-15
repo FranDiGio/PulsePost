@@ -40,3 +40,7 @@
   font-variation-settings:
     "wdth" 100;
 }
+
+.button-cursor {
+    cursor: pointer;
+}
