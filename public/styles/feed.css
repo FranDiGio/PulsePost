@@ -8,7 +8,7 @@
     position: fixed;
     top: 78px;
     left: 0;
-    width: 20.56%;
+    width: 19%;
     height: 100vh;
     overflow-y: auto;
 }
@@ -27,9 +27,9 @@
 }
 
 .feed-content {
-    width: 58.88%;
-    margin-left: 20.56%;
-    margin-right: 20.56%;
+    width: 57%;
+    margin-left: 21%;
+    margin-right: 22%;
 }
 
 .open-sans-title {
