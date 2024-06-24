@@ -1,6 +1,7 @@
 # Ignore ANY file in personal folder
 personal/
 .vscode/
+node_modules/
 
 # Logs
 logs
