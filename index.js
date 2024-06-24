@@ -5,6 +5,8 @@ import { isStrongPassword } from "./services/userService.js";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import { User } from './models/User.mjs';
+import database from "config/database";
+import { ref, set } from firebase/database;
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const app = express();
