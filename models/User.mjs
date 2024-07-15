@@ -1,6 +1,6 @@
 export class User {
-    constructor (nickname, email, password){
-        this.nickname = nickname;
+    constructor (username, email, password){
+        this.username = username;
         this.email = email;
         this.password = password;
         this.posts = []
@@ -15,6 +15,6 @@ export class User {
     }
 
     toString() {
-        return `Nickname: ${this.nickname},\nEmail: ${this.email},\nPassword: ${this.password}`;
+        return `Username: ${this.username},\nEmail: ${this.email},\nPassword: ${this.password}`;
     }
 }

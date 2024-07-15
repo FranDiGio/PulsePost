@@ -28,12 +28,12 @@
                             <h3>Sign up and start posting!</h3>
                             
                             <div class="form-floating my-4 w-100">
-                                <% if (locals.invalidNickname) { %>
-                                    <input class="form-control w-100 is-invalid" placeholder="Nickname" name="nickname" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Nickname already exists.">
+                                <% if (locals.invalidUsername) { %>
+                                    <input class="form-control w-100 is-invalid" placeholder="Username" name="username" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Username already exists.">
                                 <% } else { %>
-                                    <input class="form-control w-100" placeholder="Nickname" name="nickname">
+                                    <input class="form-control w-100" placeholder="Username" name="username">
                                 <% } %>
-                                <label for="floatingInput">Nickname</label>
+                                <label for="floatingInput">Username</label>
                             </div>
                             <hr>
 

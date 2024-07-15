@@ -6,7 +6,8 @@ import { isStrongPassword } from "./services/userService.js";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import { User } from './models/User.mjs';
-import { getDatabase, ref, set } from "firebase/database";
+import { initializeApp } from "firebase/app";
+import { getDatabase, ref, set, push } from "firebase/database";
 
 dotenv.config();
 
@@ -27,7 +28,7 @@ const database = getDatabase(firebaseApp);
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
 const port = 3000;
-let users = [];
+let usersLocalList = [];
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
@@ -48,7 +49,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/feed/", (req, res) => {
-    res.render("feed.ejs", { nickname: req.session.nickname });
+    res.render("feed.ejs", { username: req.session.username });
 });
 
 app.get("/about/", (req, res) => {
@@ -68,34 +69,33 @@ app.get("/login/", (req, res) => {
 });
 
 app.post('/api/signup', (req, res) => {
-    const { nickname, email, password } = req.body;
+    const { username, email, password } = req.body;
 
-    if (users.some(user => user.nickname === nickname)) {
-        res.render("sign-up.ejs", { success: false, invalidNickname: true });
+    if (usersLocalList.some(user => user.username === username)) {
+        res.render("sign-up.ejs", { success: false, invalidUsername: true });
     } 
-    else if (users.some(user => user.email === email)) {
+    else if (usersLocalList.some(user => user.email === email)) {
         res.render("sign-up.ejs", { success: false, invalidEmail: true });
     } 
     else if (!isStrongPassword(password)) {
         res.render("sign-up.ejs", { success: false, invalidPassword: true });
     } 
     else {
-        const newUser = new User(nickname, email, password);
-        users.push(newUser);
-        req.session.nickname = newUser.nickname;
-        
-        set(ref(database, 'users/' + newUser.nickname), {
-            nickname: newUser.nickname,
-            email: newUser.email
-        });
-        
-        res.render("sign-up.ejs", { success: true });
+        const newUser = new User(username, email, password);
+        usersLocalList.push(newUser);
+        req.session.username = newUser.username;
+        const userID = push(ref(database, "users"));
+        set(userID, {
+            username: newUser.username,
+            email: newUser.email,
+            password: newUser.password
+        })
     }
 });
 
 app.post('/api/login', (req, res) => {
     const { email, password } = req.body;
-    const userExists = users.some(user => user.email === email && user.password === password);
+    const userExists = usersLocalList.some(user => user.email === email && user.password === password);
 
     if (userExists) {
         res.redirect("/feed/");
