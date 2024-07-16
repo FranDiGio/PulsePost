@@ -1,13 +1,13 @@
-import express from "express";
-import bodyParser from "body-parser";
-import session from "express-session";
+import express from 'express';
+import bodyParser from 'body-parser';
+import session from 'express-session';
 import dotenv from 'dotenv';
-import { isStrongPassword } from "./services/userService.js";
-import { dirname } from "path";
-import { fileURLToPath } from "url";
+import { isStrongPassword } from './services/userService.js';
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
 import { User } from './models/User.mjs';
-import { initializeApp } from "firebase/app";
-import { getDatabase, ref, set, push } from "firebase/database";
+import { initializeApp } from 'firebase/app';
+import { getDatabase, ref, set, push, query, orderByChild, get, equalTo } from 'firebase/database';
 
 dotenv.config();
 
@@ -41,50 +41,49 @@ app.use(session({
 }));
 
 app.listen(port, () => {
-    console.log("Listening to port " + port);
+    console.log('Listening to port ' + port);
 });
 
-app.get("/", (req, res) => {
-    res.render("index.ejs");
+app.get('/', (req, res) => {
+    res.render('index.ejs');
 });
 
-app.get("/feed/", (req, res) => {
-    res.render("feed.ejs", { username: req.session.username });
+app.get('/feed/', (req, res) => {
+    res.render('feed.ejs', { username: req.session.username });
 });
 
-app.get("/about/", (req, res) => {
-    res.render("about.ejs");
+app.get('/about/', (req, res) => {
+    res.render('about.ejs');
 });
 
-app.get("/contact/", (req, res) => {
-    res.render("contact.ejs");
+app.get('/contact/', (req, res) => {
+    res.render('contact.ejs');
 });
 
-app.get("/signup/", (req, res) => {
-    res.render("sign-up.ejs", { success: false });
+app.get('/signup/', (req, res) => {
+    res.render('sign-up.ejs', { success: false });
 });
 
-app.get("/login/", (req, res) => {
-    res.render("log-in.ejs");
+app.get('/login/', (req, res) => {
+    res.render('log-in.ejs');
 });
 
 app.post('/api/signup', (req, res) => {
     const { username, email, password } = req.body;
 
     if (usersLocalList.some(user => user.username === username)) {
-        res.render("sign-up.ejs", { success: false, invalidUsername: true });
+        res.render('sign-up.ejs', { success: false, invalidUsername: true });
     } 
     else if (usersLocalList.some(user => user.email === email)) {
-        res.render("sign-up.ejs", { success: false, invalidEmail: true });
+        res.render('sign-up.ejs', { success: false, invalidEmail: true });
     } 
     else if (!isStrongPassword(password)) {
-        res.render("sign-up.ejs", { success: false, invalidPassword: true });
+        res.render('sign-up.ejs', { success: false, invalidPassword: true });
     } 
     else {
         const newUser = new User(username, email, password);
-        usersLocalList.push(newUser);
         req.session.username = newUser.username;
-        const userID = push(ref(database, "users"));
+        const userID = push(ref(database, 'users'));
         set(userID, {
             username: newUser.username,
             email: newUser.email,
@@ -95,11 +94,17 @@ app.post('/api/signup', (req, res) => {
 
 app.post('/api/login', (req, res) => {
     const { email, password } = req.body;
-    const userExists = usersLocalList.some(user => user.email === email && user.password === password);
+    const userRef = ref(database, 'users');
+    const userQuery = query(userRef, orderByChild('email'), equalTo(email));
 
-    if (userExists) {
-        res.redirect("/feed/");
-    } else {
-        res.render("log-in.ejs", { invalid: true });
-    }
+    get(userQuery).then((snapshot) => {
+        if (snapshot.exists()) {
+            const user = snapshot.val();
+            console.log(user);
+            res.redirect('/feed/');
+        }
+        else {
+            res.render('log-in.ejs', { invalid: true });
+        }
+    });
 });
