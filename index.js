@@ -23,7 +23,7 @@ const firebaseConfig = {
 };
 
 const firebaseApp = initializeApp(firebaseConfig);
-const database = getDatabase(firebaseApp);
+const db = getDatabase(firebaseApp);
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -68,13 +68,27 @@ app.get('/login/', (req, res) => {
     res.render('log-in.ejs');
 });
 
-app.post('/api/signup', (req, res) => {
+app.post('/api/signup', async (req, res) => {
     const { username, email, password } = req.body;
+    const userRef = ref(db, 'users');
+    let invalidField = "none";
 
-    if (usersLocalList.some(user => user.username === username)) {
+    // Duplicate username check-up
+    const usernameSnapshot = await get(query(userRef, orderByChild('username'), equalTo(username)));
+    if (usernameSnapshot.exists()) {
+        invalidField = "username";
+    }
+
+    // Duplicate email check-up
+    const emailSnapshot = await get(query(userRef, orderByChild('email'), equalTo(email)));
+    if (emailSnapshot.exists()) {
+        invalidField = "email";
+    }
+
+    if (invalidField === "username") {
         res.render('sign-up.ejs', { success: false, invalidUsername: true });
     } 
-    else if (usersLocalList.some(user => user.email === email)) {
+    else if (invalidField === "email") {
         res.render('sign-up.ejs', { success: false, invalidEmail: true });
     } 
     else if (!isStrongPassword(password)) {
@@ -83,18 +97,25 @@ app.post('/api/signup', (req, res) => {
     else {
         const newUser = new User(username, email, password);
         req.session.username = newUser.username;
-        const userID = push(ref(database, 'users'));
+        const userID = push(ref(db, 'users'));
         set(userID, {
             username: newUser.username,
             email: newUser.email,
             password: newUser.password
         })
+        .then(() => {
+            res.render('sign-up.ejs', { success: true });
+        })
+        .catch((error) => {
+            console.log('Error on sign-up: ' + error);
+            res.render('sign-up.ejs', { success: false });
+        });
     }
 });
 
 app.post('/api/login', (req, res) => {
     const { email, password } = req.body;
-    const userRef = ref(database, 'users');
+    const userRef = ref(db, 'users');
     const userQuery = query(userRef, orderByChild('email'), equalTo(email));
 
     get(userQuery).then((snapshot) => {
