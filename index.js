@@ -120,9 +120,16 @@ app.post('/api/login', (req, res) => {
 
     get(userQuery).then((snapshot) => {
         if (snapshot.exists()) {
-            const user = snapshot.val();
-            console.log(user);
-            res.redirect('/feed/');
+            const userSnapshot = snapshot.val();
+            const userId = Object.keys(userSnapshot)[0];
+            const user = userSnapshot[userId];
+
+            if (password === user.password){
+                res.redirect('/feed/');
+            }
+            else {
+                res.render('log-in.ejs', { invalid: true });
+            }
         }
         else {
             res.render('log-in.ejs', { invalid: true });
