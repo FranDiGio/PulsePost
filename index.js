@@ -1,7 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import session from 'express-session';
-import { isStrongPassword } from './services/userService.js';
+import { validateSignUp } from './services/userService.js';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { User } from './models/User.mjs';
@@ -44,7 +44,7 @@ app.get('/contact/', (req, res) => {
 });
 
 app.get('/signup/', (req, res) => {
-    res.render('sign-up.ejs', { success: false });
+    res.render('sign-up.ejs', { success: false, invalidUsername: false, invalidEmail: false, invalidPassword: false });
 });
 
 app.get('/login/', (req, res) => {
@@ -53,32 +53,13 @@ app.get('/login/', (req, res) => {
 
 app.post('/api/signup', async (req, res) => {
     const { username, email, password } = req.body;
-    const userRef = ref(db, 'users');
-    let invalidField = [];
+    const newUser = new User(username, email, password);
+    const invalidFields = await validateSignUp(newUser);
 
-    // Duplicate username check-up
-    const usernameSnapshot = await get(query(userRef, orderByChild('username'), equalTo(username)));
-    if (usernameSnapshot.exists()) {
-        invalidField = "username";
+    if (Object.keys(invalidFields).length > 0){
+        res.render('sign-up.ejs', { success: false, ...invalidFields });
     }
-
-    // Duplicate email check-up
-    const emailSnapshot = await get(query(userRef, orderByChild('email'), equalTo(email)));
-    if (emailSnapshot.exists()) {
-        invalidField = "email";
-    }
-
-    if (invalidField === "username") {
-        res.render('sign-up.ejs', { success: false, invalidUsername: true });
-    } 
-    else if (invalidField === "email") {
-        res.render('sign-up.ejs', { success: false, invalidEmail: true });
-    } 
-    else if (!isStrongPassword(password)) {
-        res.render('sign-up.ejs', { success: false, invalidPassword: true });
-    } 
     else {
-        const newUser = new User(username, email, password);
         req.session.username = newUser.username;
         const userID = push(ref(db, 'users'));
         set(userID, {
@@ -91,9 +72,12 @@ app.post('/api/signup', async (req, res) => {
         })
         .catch((error) => {
             console.log('Error on sign-up: ' + error);
-            res.render('sign-up.ejs', { success: false });
+            alert('Error on sign-up');
+            res.redirect('/');
         });
     }
+
+    
 });
 
 app.post('/api/login', (req, res) => {
