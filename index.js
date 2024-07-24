@@ -48,7 +48,7 @@ app.get('/signup/', (req, res) => {
 });
 
 app.get('/login/', (req, res) => {
-    res.render('log-in.ejs');
+    res.render('log-in.ejs', { invalidCredentials: false });
 });
 
 app.post('/api/signup', async (req, res) => {
@@ -95,11 +95,11 @@ app.post('/api/login', (req, res) => {
                 res.redirect('/feed/');
             }
             else {
-                res.render('log-in.ejs', { invalid: true });
+                res.render('log-in.ejs', { invalidCredentials: true });
             }
         }
         else {
-            res.render('log-in.ejs', { invalid: true });
+            res.render('log-in.ejs', { invalidCredentials: true });
         }
     });
 });

@@ -26,14 +26,18 @@
                         <h2>Log In</h2>
 
                         <div class="form-floating mt-4 w-100">
-                            <input class="form-control w-100" id="floatingEmail" type="email" placeholder="Email address" name="email">
+                            <input class="form-control w-100 <%= invalidCredentials ? "is-invalid" : "" %>" id="floatingEmail" type="email" placeholder="Email address" name="email">
                             <label for="floatingEmail">Email Address</label>
                         </div>
 
-                        <div class="form-floating mb-4 w-100">
-                            <input class="form-control w-100" id="floatingPassword" type="password" placeholder="Password" name="password">
+                        <div class="form-floating mb-1 w-100">
+                            <input class="form-control w-100 <%= invalidCredentials ? "is-invalid" : "" %>" id="floatingPassword" type="password" placeholder="Password" name="password">
                             <label for="floatingPassword">Password</label>
                         </div>
+                        
+                        <% if (invalidCredentials) { %>
+                            <p class="text-danger fst-italic">Incorrect email or password</p>
+                        <% } %>
                         
                         <button class="btn btn-primary" type="submit">Log In</button>
                         
@@ -43,17 +47,6 @@
             </div>
         </div>
     </div>
-
-    <% if (locals.invalid == true) { %>
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                var inputs = document.querySelectorAll('.form-control');
-                inputs.forEach(function(input) {
-                    input.classList.add('is-invalid');
-                });
-            });
-        </script>
-    <% } %>
 
     <script src="/js/panel-resize.js" charset="utf-8"></script>
 </body>
