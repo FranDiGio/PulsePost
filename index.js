@@ -1,13 +1,15 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import session from 'express-session';
-import { ref, set, push, query, orderByChild, get, equalTo } from 'firebase/database';
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { ref, set, query, orderByChild, get, equalTo } from 'firebase/database';
+import { getFormattedDateTime } from './services/dateService.js';
 import { validateSignUp } from './services/userService.js';
 import { fileURLToPath } from 'url';
+import { db, auth } from './config/firebaseConfig.js';
 import { dirname } from 'path';
 import { User } from './models/User.mjs';
-import { db, auth } from './config/firebaseConfig.js';
+
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -56,19 +58,27 @@ app.post('/api/signup', async (req, res) => {
     const newUser = new User(username, email, password);
 
     createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            const user = userCredential.user;
-            res.render('sign-up.ejs', { success: true });
-        })
-        .catch(async (error) => {
-            const invalidFields = await validateSignUp(newUser, error.code);
-
-            if (Object.keys(invalidFields).length > 0){
-                res.render('sign-up.ejs', { success: false, ...invalidFields });
-            }
-
-            console.log(error.message);
+    .then((userCredential) => {
+        // Signed Up
+        const user = userCredential.user;
+        set(ref(db, 'users/' + user.uid), {
+            username: username,
+            bio: "I'm new here! be nice ;-;",
+            profilePicture: "N/A",
+            createdAt: getFormattedDateTime()
         });
+
+        res.render('sign-up.ejs', { success: true });
+    })
+    .catch(async (error) => {
+        // Error in details
+        const invalidFields = await validateSignUp(newUser, error.code);
+        if (Object.keys(invalidFields).length > 0){
+            res.render('sign-up.ejs', { success: false, ...invalidFields });
+        }
+
+        console.log(error.message);
+    });
 });
 
 app.post('/api/login', (req, res) => {
