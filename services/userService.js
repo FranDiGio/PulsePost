@@ -1,15 +1,13 @@
-import validator from "validator";
 import { db } from "../config/firebaseConfig.js"
 import { ref, query, orderByChild, get, equalTo } from 'firebase/database';
 
 async function checkDuplicate(field, value) {
     const userRef = ref(db, 'users');
-    const userQuery = query(userRef, orderByChild(field), equalTo(value));
-    const snapshot = await get(userQuery);
+    const snapshot = await get(query(userRef, orderByChild(field), equalTo(value)));
     return snapshot.exists();
 }
 
-export async function validateSignUp(user) {
+export async function validateSignUp(user, error) {
     let invalidFields = {
         invalidUsername: false,
         invalidEmail: false,
@@ -19,10 +17,10 @@ export async function validateSignUp(user) {
     if (await checkDuplicate('username', user.username))
         invalidFields.invalidUsername = true;
 
-    if (await checkDuplicate('email', user.email))
+    if (error === 'auth/email-already-in-use')
         invalidFields.invalidEmail = true;
 
-    if (!validator.isStrongPassword(user.password, { minLength: 8, minLowercase: 1, minUppercase: 1, minNumbers: 1, minSymbols: 1 }))
+    if (error === 'auth/weak-password')
         invalidFields.invalidPassword = true;
 
     return invalidFields;

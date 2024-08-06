@@ -1,17 +1,17 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import session from 'express-session';
-import { validateSignUp } from './services/userService.js';
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
-import { User } from './models/User.mjs';
 import { ref, set, push, query, orderByChild, get, equalTo } from 'firebase/database';
-import { db } from './config/firebaseConfig.js';
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { validateSignUp } from './services/userService.js';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import { User } from './models/User.mjs';
+import { db, auth } from './config/firebaseConfig.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
 const port = 3000;
-let usersLocalList = [];
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
@@ -54,30 +54,21 @@ app.get('/login/', (req, res) => {
 app.post('/api/signup', async (req, res) => {
     const { username, email, password } = req.body;
     const newUser = new User(username, email, password);
-    const invalidFields = await validateSignUp(newUser);
 
-    if (Object.keys(invalidFields).length > 0){
-        res.render('sign-up.ejs', { success: false, ...invalidFields });
-    }
-    else {
-        req.session.username = newUser.username;
-        const userID = push(ref(db, 'users'));
-        set(userID, {
-            username: newUser.username,
-            email: newUser.email,
-            password: newUser.password
-        })
-        .then(() => {
+    createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            const user = userCredential.user;
             res.render('sign-up.ejs', { success: true });
         })
-        .catch((error) => {
-            console.log('Error on sign-up: ' + error);
-            alert('Error on sign-up');
-            res.redirect('/');
-        });
-    }
+        .catch(async (error) => {
+            const invalidFields = await validateSignUp(newUser, error.code);
 
-    
+            if (Object.keys(invalidFields).length > 0){
+                res.render('sign-up.ejs', { success: false, ...invalidFields });
+            }
+
+            console.log(error.message);
+        });
 });
 
 app.post('/api/login', (req, res) => {
