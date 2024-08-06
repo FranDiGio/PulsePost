@@ -2,7 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import session from 'express-session';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-import { ref, set, query, orderByChild, get, equalTo } from 'firebase/database';
+import { ref, set, query, orderByChild, get, equalTo, update } from 'firebase/database';
 import { getFormattedDateTime } from './services/dateService.js';
 import { validateSignUp } from './services/userService.js';
 import { fileURLToPath } from 'url';
@@ -65,42 +65,35 @@ app.post('/api/signup', async (req, res) => {
             username: username,
             bio: "I'm new here! be nice ;-;",
             profilePicture: "N/A",
-            createdAt: getFormattedDateTime()
+            createdAt: getFormattedDateTime(),
+            lastLogged: getFormattedDateTime()
         });
 
         res.render('sign-up.ejs', { success: true });
     })
     .catch(async (error) => {
-        // Error in details
         const invalidFields = await validateSignUp(newUser, error.code);
-        if (Object.keys(invalidFields).length > 0){
+        if (Object.keys(invalidFields).length > 0) {
             res.render('sign-up.ejs', { success: false, ...invalidFields });
         }
-
         console.log(error.message);
     });
 });
 
 app.post('/api/login', (req, res) => {
     const { email, password } = req.body;
-    const userRef = ref(db, 'users');
-    const userQuery = query(userRef, orderByChild('email'), equalTo(email));
 
-    get(userQuery).then((snapshot) => {
-        if (snapshot.exists()) {
-            const userSnapshot = snapshot.val();
-            const userId = Object.keys(userSnapshot)[0];
-            const user = userSnapshot[userId];
-
-            if (password === user.password){
-                res.redirect('/feed/');
-            }
-            else {
-                res.render('log-in.ejs', { invalidCredentials: true });
-            }
-        }
-        else {
-            res.render('log-in.ejs', { invalidCredentials: true });
-        }
+    signInWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+        // Logged In
+        const user = userCredential.user;
+        update(ref(db, 'users/' + user.uid), { 
+            lastLogged: getFormattedDateTime() 
+        });
+        res.redirect('/feed/');
+    })
+    .catch((error) => {
+        res.render('log-in.ejs', { invalidCredentials: true });
+        console.log(error.message);
     });
 });
