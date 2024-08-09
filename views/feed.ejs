@@ -19,18 +19,22 @@
 
     <div class="container-fluid">
         <div class="row">
-            <div class="bg-light ps-4 pt-3 fixed-sidebar-left">
-                <h2 class="open-sans-title text-muted border-bottom border-2 fs-4 pb-2" id="posts-title">My Posts</h2>
 
-                <ul class="list-unstyled fw-normal pb-2 small mt-3">
-                    <li><a href="/feed/" class="d-block list-item rounded p-2 mb-2 fs-6">The Art of Unlearning</a></li>
-                    <li><a href="/feed/" class="d-block list-item rounded p-2 mb-2 fs-6">Echoes of Silence</a></li>
-                    <li><a href="/feed/" class="d-block list-item rounded p-2 mb-2 fs-6">Beyond the Horizon</a></li>
-                    <li><a href="/feed/" class="d-block list-item rounded p-2 mb-2 fs-6">Invisible Ties</a></li>
-                </ul>
+            <!-- Left sidebar -->
+            <div class="col-xxl-1 bg-light"></div>
+            <div class="col-3 col-xxl-2 bg-light ps-4 pt-3 fixed-sidebar-left">
+                    <h2 class="open-sans-title text-muted border-bottom border-2 fs-4 pb-2 pt-0" id="posts-title">My Posts</h2>
+
+                    <ul class="list-unstyled fw-normal pb-2 small mt-3">
+                        <li><a href="/feed/" class="d-block list-item rounded p-2 mb-2 fs-6">The Art of Unlearning</a></li>
+                        <li><a href="/feed/" class="d-block list-item rounded p-2 mb-2 fs-6">Echoes of Silence</a></li>
+                        <li><a href="/feed/" class="d-block list-item rounded p-2 mb-2 fs-6">Beyond the Horizon</a></li>
+                        <li><a href="/feed/" class="d-block list-item rounded p-2 mb-2 fs-6">Invisible Ties</a></li>
+                    </ul>
             </div>
 
-            <div class="feed-content">
+            <!-- Main content -->
+            <div class="col-6">
                 <div class="d-flex flex-nowrap pt-3">
                     <%- include('partials/user-tag.ejs') %>
                     <div class="card col-9 border-secondary">
@@ -59,7 +63,8 @@
                 </div>
             </div>
 
-            <div class="bg-light ps-4 pt-3 fixed-sidebar-right">
+            <!-- Right sidebar -->
+            <div class="col-3 col-xxl-2 bg-light ps-4 pt-3 fixed-sidebar-right">
                 <h2 class="open-sans-title text-muted border-bottom border-2 fs-4 pb-2" id="creators-title">Following</h2>
 
                 <ul class="list-unstyled fw-normal pb-2 small mt-3">
@@ -69,6 +74,7 @@
                     <li><a href="/contact/" class="d-block list-item rounded p-2 mb-2 fs-6">maxmoefoe</a></li>
                 </ul>
             </div>
+            <div class="col-xxl-1 bg-light"></div>
         </div>
     </div>
 

@@ -5,31 +5,17 @@
 }
 
 .fixed-sidebar-left {
-    position: fixed;
-    top: 78px;
-    left: 0;
-    width: 19%;
     height: 100vh;
     overflow-y: auto;
 }
 
 .fixed-sidebar-right {
-    position: fixed;
-    top: 78px; 
-    right: 0;
-    width: 20.56%;
     height: 100vh;
     overflow-y: auto;
 }
 
 .fixed-sidebar-left::-webkit-scrollbar, .fixed-sidebar-right::-webkit-scrollbar {
     display: none;
-}
-
-.feed-content {
-    width: 57%;
-    margin-left: 21%;
-    margin-right: 22%;
 }
 
 .open-sans-title {
