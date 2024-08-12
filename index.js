@@ -2,7 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import session from 'express-session';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-import { ref, set, query, orderByChild, get, equalTo, update } from 'firebase/database';
+import { ref, set, child, get, update } from 'firebase/database';
 import { getFormattedDateTime } from './services/dateService.js';
 import { validateSignUp } from './services/userService.js';
 import { fileURLToPath } from 'url';
@@ -61,6 +61,8 @@ app.post('/api/signup', async (req, res) => {
     .then((userCredential) => {
         // Signed Up
         const user = userCredential.user;
+        req.session.username = username;
+
         set(ref(db, 'users/' + user.uid), {
             username: username,
             bio: "I'm new here! be nice ;-;",
@@ -87,10 +89,21 @@ app.post('/api/login', (req, res) => {
     .then((userCredential) => {
         // Logged In
         const user = userCredential.user;
-        update(ref(db, 'users/' + user.uid), { 
+        const usersRef = ref(db, 'users/' + user.uid);
+
+        update(usersRef, { 
             lastLogged: getFormattedDateTime() 
         });
-        res.redirect('/feed/');
+
+        get(child(usersRef, `username`)).then((snapshot) => {
+            if (snapshot.exists()){
+                req.session.username = snapshot.val();
+                res.redirect('/feed/');
+            } else {
+                console.log("No data available");
+                res.redirect('/login');
+            }
+        });
     })
     .catch((error) => {
         res.render('log-in.ejs', { invalidCredentials: true });
