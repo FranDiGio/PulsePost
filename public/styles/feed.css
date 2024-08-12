@@ -1,7 +1,7 @@
 .header-icon {
-    width: 100%; 
-    max-width: 30px; 
-    height: auto; 
+    width: 100%;
+    max-width: 30px;
+    height: auto;
 }
 
 .fixed-sidebar-left {
@@ -14,17 +14,17 @@
     overflow-y: auto;
 }
 
-.fixed-sidebar-left::-webkit-scrollbar, .fixed-sidebar-right::-webkit-scrollbar {
+.fixed-sidebar-left::-webkit-scrollbar,
+.fixed-sidebar-right::-webkit-scrollbar {
     display: none;
 }
 
 .open-sans-title {
-  font-family: "Open Sans", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 500;
-  font-style: normal;
-  font-variation-settings:
-    "wdth" 100;
+    font-family: 'Open Sans', sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
+    font-variation-settings: 'wdth' 100;
 }
 
 .button-cursor {

@@ -1,7 +1,7 @@
 .list-item {
-    text-decoration: none; 
-    color: black; 
-    padding: 3px 7px; 
+    text-decoration: none;
+    color: black;
+    padding: 3px 7px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

@@ -1,12 +1,11 @@
 <header class="container-fluid p-0 bg-light sticky-top">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container d-flex flex-nowrap">
-
             <!-- Logo and Title -->
             <div class="d-flex align-items-center">
                 <a href="/">
-                    <div class="flex-shrink-0 overflow-hidden" style="max-height: 60px;">
-                        <img class="img-fluid" src="/images/logo.png" alt="logo" style="max-height: 60px;">
+                    <div class="flex-shrink-0 overflow-hidden" style="max-height: 60px">
+                        <img class="img-fluid" src="/images/logo.png" alt="logo" style="max-height: 60px" />
                     </div>
                 </a>
 
@@ -16,8 +15,8 @@
             <!-- Right side navlinks -->
             <div class="d-none d-md-flex align-items-center gap-4 fs-5">
                 <div class="d-flex align-items-center gap-4">
-                    <a class="nav-link flex-grow-1" href="/about/" style="white-space: nowrap;">About</a>
-                    <a class="nav-link flex-grow-1" href="/contact/" style="white-space: nowrap;">Contact</a>
+                    <a class="nav-link flex-grow-1" href="/about/" style="white-space: nowrap">About</a>
+                    <a class="nav-link flex-grow-1" href="/contact/" style="white-space: nowrap">Contact</a>
                 </div>
                 <div class="d-flex align-items-center gap-3">
                     <a class="btn btn-primary fs-5" href="/login/">Log In</a>
@@ -27,27 +26,47 @@
 
             <!-- Right side collapse for offcanvas (up to md) -->
             <div class="d-flex d-md-none align-items-center">
-
-                <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="navbarToggleContent" aria-expanded="false" aria-label="Toggle navigation">
+                <button
+                    class="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasWithBothOptions"
+                    aria-controls="navbarToggleContent"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation"
+                >
                     <span class="navbar-toggler-icon"></span>
                 </button>
             </div>
         </div>
-
     </nav>
 </header>
 
-<div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
+<div
+    class="offcanvas offcanvas-end"
+    data-bs-scroll="true"
+    tabindex="-1"
+    id="offcanvasWithBothOptions"
+    aria-labelledby="offcanvasWithBothOptionsLabel"
+>
     <div class="offcanvas-header bg-light">
-      <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">Links</h5>
-      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">Links</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body fs-4">
         <ul class="list-unstyled fw-normal pb-2 small">
-            <li><a href="/signup/" class="list-item d-inline-block rounded mb-1">Sign Up</a></li>
-            <li><a href="/login/" class="list-item d-inline-block rounded mb-1">Log In</a></li>
-            <li><a href="/about/" class="list-item d-inline-block rounded mb-1">About</a></li>
-            <li><a href="/contact/" class="list-item d-inline-block rounded mb-1">Contact</a></li>
+            <li>
+                <a href="/signup/" class="list-item d-inline-block rounded mb-1">Sign Up</a>
+            </li>
+            <li>
+                <a href="/login/" class="list-item d-inline-block rounded mb-1">Log In</a>
+            </li>
+            <li>
+                <a href="/about/" class="list-item d-inline-block rounded mb-1">About</a>
+            </li>
+            <li>
+                <a href="/contact/" class="list-item d-inline-block rounded mb-1">Contact</a>
+            </li>
         </ul>
     </div>
 </div>

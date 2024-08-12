@@ -1,9 +1,9 @@
-import dotenv from 'dotenv';
-import { initializeApp } from 'firebase/app';
-import { getDatabase } from 'firebase/database';
-import { getAuth } from "firebase/auth";
+import dotenv from 'dotenv'
+import { initializeApp } from 'firebase/app'
+import { getDatabase } from 'firebase/database'
+import { getAuth } from 'firebase/auth'
 
-dotenv.config();
+dotenv.config()
 
 const firebaseConfig = {
     apiKey: process.env.FIREBASE_API_KEY,
@@ -13,12 +13,11 @@ const firebaseConfig = {
     storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
     messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
     appId: process.env.FIREBASE_APP_ID,
-    measurementId: process.env.FIREBASE_MEASUREMENT_ID
-};
-  
-const firebaseApp = initializeApp(firebaseConfig);
-const auth = getAuth(firebaseApp);
-const db = getDatabase(firebaseApp);
+    measurementId: process.env.FIREBASE_MEASUREMENT_ID,
+}
 
+const firebaseApp = initializeApp(firebaseConfig)
+const auth = getAuth(firebaseApp)
+const db = getDatabase(firebaseApp)
 
-export { db, auth };
+export { db, auth }

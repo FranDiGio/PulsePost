@@ -1,18 +1,17 @@
-
 @media (max-width: 1199px) {
     html {
-        font-size: 0.8rem; 
+        font-size: 0.8rem;
     }
 }
 
 @media (min-width: 1200px) {
     html {
-        font-size: 0.9rem; 
+        font-size: 0.9rem;
     }
 }
 
 #left-panel {
-    border-top-left-radius: 0.5rem; 
+    border-top-left-radius: 0.5rem;
     border-bottom-left-radius: 0.5rem;
 }
 
@@ -22,29 +21,29 @@
 }
 
 #full-panel {
-    border-top-left-radius: 0.5rem; 
+    border-top-left-radius: 0.5rem;
     border-bottom-left-radius: 0.5rem;
     border-top-right-radius: 0.5rem;
     border-bottom-right-radius: 0.5rem;
 }
 
 #top-panel {
-    border-top-left-radius: 0.5rem; 
+    border-top-left-radius: 0.5rem;
     border-top-right-radius: 0.5rem;
 }
 
 #bottom-panel {
-    border-bottom-left-radius: 0.5rem; 
+    border-bottom-left-radius: 0.5rem;
     border-bottom-right-radius: 0.5rem;
 }
 
-input[type="email"] {
+input[type='email'] {
     margin-bottom: 0px;
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
 }
 
-input[type="password"] {
+input[type='password'] {
     margin-bottom: 1rem;
     border-top-left-radius: 0;
     border-top-right-radius: 0;

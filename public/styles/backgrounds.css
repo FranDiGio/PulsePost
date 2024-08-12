@@ -1,17 +1,17 @@
 .background-salmon {
-    background: #FFBFA9;
+    background: #ffbfa9;
 }
 
 .background-light-blue {
-    background: #2CD3E1;
+    background: #2cd3e1;
 }
 
 .background-dark-blue {
-    background: #3330E4;
+    background: #3330e4;
 }
 
 .background-green {
-    background: #50D890;
+    background: #50d890;
 }
 
 .gradient-background-light {
@@ -21,11 +21,11 @@
 }
 
 .gradient-background-dark {
-    background: linear-gradient(300deg ,#0A1D56, #647D87, #ffffff);
+    background: linear-gradient(300deg, #0a1d56, #647d87, #ffffff);
     background-size: 180% 180%;
     animation: gradient-animation 18s ease infinite;
 }
-  
+
 @keyframes gradient-animation {
     0% {
         background-position: 0% 50%;
