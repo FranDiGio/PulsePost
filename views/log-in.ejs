@@ -26,7 +26,8 @@
                         <h2>Log In</h2>
 
                         <div class="form-floating mt-4 w-100">
-                            <input class="form-control w-100 <%= invalidCredentials ? "is-invalid" : "" %>" id="floatingEmail" type="email" placeholder="Email address" name="email">
+                            <input class="form-control w-100 <%= invalidCredentials ? "is-invalid" : "" %>" id="floatingEmail" 
+                            value="<%= locals.email ? email : '' %>" type="email" placeholder="Email address" name="email">
                             <label for="floatingEmail">Email Address</label>
                         </div>
 
@@ -36,7 +37,7 @@
                         </div>
                         
                         <% if (invalidCredentials) { %>
-                            <p class="text-danger fst-italic">Incorrect email or password</p>
+                            <p class="text-danger">Incorrect email or password</p>
                         <% } %>
                         
                         <button class="btn btn-primary" type="submit">Log In</button>

@@ -28,19 +28,26 @@
                             <h3>Sign up and start posting!</h3>
                             
                             <div class="form-floating my-4 w-100">
-                                <input class="form-control w-100 <%= invalidUsername ? 'is-invalid' : '' %>" placeholder="Username" name="username" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Username already exists">
+                                <input class="form-control w-100 <%= invalidUsername ? 'is-invalid' : '' %>" 
+                                    placeholder="Username" name="username" 
+                                    value="<%= locals.username ? username : '' %>" data-bs-toggle="tooltip" 
+                                    data-bs-placement="right" data-bs-title="Username already exists">
                                 <label for="floatingInput">Username</label>
                             </div>
                             <hr>
 
                             <div class="form-floating mt-4 w-100">
-                                <input class="form-control w-100 <%= invalidEmail ? 'is-invalid' : '' %>" id="floatingEmail" type="email" placeholder="Email address" name="email" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Email is already registered with another accounts">
+                                <input class="form-control w-100 <%= invalidEmail ? 'is-invalid' : '' %>" 
+                                    id="floatingEmail" type="email" placeholder="Email address" 
+                                    value="<%= locals.email ? email : '' %>" name="email" data-bs-toggle="tooltip" 
+                                    data-bs-placement="right" data-bs-title="Email is already registered with another account">
                                 <label for="floatingEmail">Email Address</label>
                             </div>
 
                             <div class="form-floating mb-4 w-100">
-
-                                    <input class="form-control w-100 <%= invalidPassword ? 'is-invalid' : '' %>" id="floatingPassword" type="password" placeholder="Password" name="password" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Password should be at least 6 characters long">
+                                <input class="form-control w-100 <%= invalidPassword ? 'is-invalid' : '' %>" 
+                                    id="floatingPassword" type="password" placeholder="Password" name="password" 
+                                    data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Password should be at least 6 characters long">
                                 <label for="floatingPassword">Password</label>
                             </div>
                             
@@ -56,6 +63,7 @@
                             <h2 class="ms-4 text-light align-self-center">Success!</h2>
                         </p>
                     </div>
+
                     <div class="d-flex flex-column col-12 bg-light pt-4 px-5 h-50 align-items-center shadow" id="bottom-panel">
                         <h4>Your account has been successfully created</h4>
                         <a type="button" href="/feed/" class="btn btn-primary btn-lg mt-5 shadow">Continue</a>

@@ -10,7 +10,6 @@ import { db, auth } from './config/firebaseConfig.js';
 import { dirname } from 'path';
 import { User } from './models/User.mjs';
 
-
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
 const port = 3000;
@@ -76,7 +75,12 @@ app.post('/api/signup', async (req, res) => {
     .catch(async (error) => {
         const invalidFields = await validateSignUp(newUser, error.code);
         if (Object.keys(invalidFields).length > 0) {
-            res.render('sign-up.ejs', { success: false, ...invalidFields });
+            res.render('sign-up.ejs', { 
+                success: false, 
+                ...invalidFields,
+                username,
+                email
+            });
         }
         console.log(error.message);
     });
@@ -106,7 +110,10 @@ app.post('/api/login', (req, res) => {
         });
     })
     .catch((error) => {
-        res.render('log-in.ejs', { invalidCredentials: true });
+        res.render('log-in.ejs', { 
+            invalidCredentials: true,
+            email: email
+        });
         console.log(error.message);
     });
 });
