@@ -4,7 +4,7 @@ import session from 'express-session'
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
 import { ref, set, child, get, update } from 'firebase/database'
 import { getFormattedDateTime } from './services/dateService.js'
-import { validateSignUp } from './services/userService.js'
+import { validateSignUp, checkValidUsername } from './services/userService.js'
 import { fileURLToPath } from 'url'
 import { db, auth } from './config/firebaseConfig.js'
 import { dirname } from 'path'
@@ -63,34 +63,58 @@ app.post('/api/signup', async (req, res) => {
     const { username, email, password } = req.body
     const newUser = new User(username, email, password)
 
-    createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            // Signed Up
-            const user = userCredential.user
-            req.session.username = username
+    // Initialize invalidFields
+    let invalidFields = {
+        invalidUsername: false,
+        invalidEmail: false,
+        invalidPassword: false,
+    }
 
-            set(ref(db, 'users/' + user.uid), {
-                username: username,
-                bio: "I'm new here! be nice ;-;",
-                profilePicture: 'N/A',
-                createdAt: getFormattedDateTime(),
-                lastLogged: getFormattedDateTime(),
+    try {
+        // Verify username input as firebase authentication doesn't handle this field
+        let usernameError = await checkValidUsername(username)
+        if (usernameError) {
+            invalidFields.invalidUsername = true
+            res.render('sign-up.ejs', {
+                success: false,
+                ...invalidFields,
+                invalidUsernameMsg: usernameError,
+                username,
+                email,
             })
+            return
+        }
 
-            res.render('sign-up.ejs', { success: true })
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password)
+        const user = userCredential.user
+        req.session.username = username
+
+        await set(ref(db, 'users/' + user.uid), {
+            username: username,
+            bio: "I'm new here! be nice ;-;",
+            profilePicture: 'N/A',
+            createdAt: getFormattedDateTime(),
+            lastLogged: getFormattedDateTime(),
         })
-        .catch(async (error) => {
-            const invalidFields = await validateSignUp(newUser, error.code)
-            if (Object.keys(invalidFields).length > 0) {
-                res.render('sign-up.ejs', {
-                    success: false,
-                    ...invalidFields,
-                    username,
-                    email,
-                })
-            }
-            console.log(error.message)
+
+        res.render('sign-up.ejs', { success: true })
+    } catch (error) {
+        // Validate sign-up with error and pass the current invalidFields
+        const { invalidFields: updatedInvalidFields, invalidMessages } = await validateSignUp(
+            newUser,
+            error.code,
+            invalidFields
+        )
+
+        res.render('sign-up.ejs', {
+            success: false,
+            ...updatedInvalidFields,
+            ...invalidMessages,
+            username,
+            email,
         })
+        console.log(error.message)
+    }
 })
 
 app.post('/api/login', (req, res) => {

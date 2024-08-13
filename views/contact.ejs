@@ -19,7 +19,9 @@
         <%- include('partials/navbar-home.ejs') %>
 
         <div class="info-container container-fluid px-0 m-0">
-            <div class="contact-background w-100 position-relative z-1 overflow-hidden rounded"></div>
+            <div
+                class="contact-background w-100 position-relative z-1 overflow-hidden rounded"
+            ></div>
             <div
                 class="info-structure w-50 h-auto position-absolute start-50 translate-middle-x p-4 z-2 rounded bg-light shadow-lg"
             >
@@ -28,14 +30,21 @@
                         <div class="col-md-6 mx-auto">
                             <h2 class="text-center mb-4">Contact Me</h2>
                             <p class="text-center">
-                                Have a question or want to work together? I'm always open to discussing new
-                                projects, creative ideas, or opportunities to be part of your visions.
+                                Have a question or want to work together? I'm always open to
+                                discussing new projects, creative ideas, or opportunities to be part
+                                of your visions.
                             </p>
 
                             <form action="/send-message" method="POST">
                                 <div class="mb-3">
                                     <label for="name" class="form-label">Name</label>
-                                    <input type="text" class="form-control" id="name" name="name" required />
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        id="name"
+                                        name="name"
+                                        required
+                                    />
                                 </div>
                                 <div class="mb-3">
                                     <label for="email" class="form-label">Email</label>
@@ -58,7 +67,9 @@
                                     ></textarea>
                                 </div>
                                 <div class="d-grid">
-                                    <button type="submit" class="btn btn-primary">Send Message</button>
+                                    <button type="submit" class="btn btn-primary">
+                                        Send Message
+                                    </button>
                                 </div>
                             </form>
                         </div>
@@ -72,7 +83,9 @@
                                 <a href="mailto:francodvf06@gmail.com"
                                     ><img class="contact-icon me-2" src="/svg/email.svg"
                                 /></a>
-                                <span class="link-text d-none d-md-inline">francodvf06@gmail.com</span>
+                                <span class="link-text d-none d-md-inline"
+                                    >francodvf06@gmail.com</span
+                                >
                             </p>
                         </div>
                         <div class="col-4 col-md-12 d-flex d-md-block justify-content-center">
@@ -90,7 +103,9 @@
                                 <a href="https://github.com/FranDiGio"
                                     ><img class="contact-icon me-2" src="/svg/github.svg"
                                 /></a>
-                                <span class="link-text d-none d-md-inline">https://github.com/FranDiGio</span>
+                                <span class="link-text d-none d-md-inline"
+                                    >https://github.com/FranDiGio</span
+                                >
                             </p>
                         </div>
                     </div>

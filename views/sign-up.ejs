@@ -31,7 +31,7 @@
                                 <input class="form-control w-100 <%= invalidUsername ? 'is-invalid' : '' %>" 
                                     placeholder="Username" name="username" 
                                     value="<%= locals.username ? username : '' %>" data-bs-toggle="tooltip" 
-                                    data-bs-placement="right" data-bs-title="Username already exists">
+                                    data-bs-placement="right" data-bs-title="<%= locals.invalidUsernameMsg ? invalidUsernameMsg : '' %>" >
                                 <label for="floatingInput">Username</label>
                             </div>
                             <hr>
@@ -40,14 +40,15 @@
                                 <input class="form-control w-100 <%= invalidEmail ? 'is-invalid' : '' %>" 
                                     id="floatingEmail" type="email" placeholder="Email address" 
                                     value="<%= locals.email ? email : '' %>" name="email" data-bs-toggle="tooltip" 
-                                    data-bs-placement="right" data-bs-title="Email is already registered with another account">
+                                    data-bs-placement="right" data-bs-title="<%= locals.invalidEmailMsg ? invalidEmailMsg : '' %>" >
                                 <label for="floatingEmail">Email Address</label>
                             </div>
 
                             <div class="form-floating mb-4 w-100">
                                 <input class="form-control w-100 <%= invalidPassword ? 'is-invalid' : '' %>" 
                                     id="floatingPassword" type="password" placeholder="Password" name="password" 
-                                    data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Password should be at least 6 characters long" >
+                                    data-bs-toggle="tooltip" data-bs-placement="right" 
+                                    data-bs-title="<%= locals.invalidPasswordMsg ? invalidPasswordMsg : '' %>" >
                                 <label for="floatingPassword">Password</label>
                             </div>
                             
