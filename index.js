@@ -63,27 +63,9 @@ app.post('/api/signup', async (req, res) => {
     const { username, email, password } = req.body
     const newUser = new User(username, email, password)
 
-    // Initialize invalidFields
-    let invalidFields = {
-        invalidUsername: false,
-        invalidEmail: false,
-        invalidPassword: false,
-    }
-
     try {
-        // Verify username input as firebase authentication doesn't handle this field
-        let usernameError = await checkValidUsername(username)
-        if (usernameError) {
-            invalidFields.invalidUsername = true
-            res.render('sign-up.ejs', {
-                success: false,
-                ...invalidFields,
-                invalidUsernameMsg: usernameError,
-                username,
-                email,
-            })
-            return
-        }
+        const usernameError = await checkValidUsername(username)
+        if (usernameError) throw new Error(usernameError)
 
         const userCredential = await createUserWithEmailAndPassword(auth, email, password)
         const user = userCredential.user
@@ -99,17 +81,11 @@ app.post('/api/signup', async (req, res) => {
 
         res.render('sign-up.ejs', { success: true })
     } catch (error) {
-        // Validate sign-up with error and pass the current invalidFields
-        const { invalidFields: updatedInvalidFields, invalidMessages } = await validateSignUp(
-            newUser,
-            error.code,
-            invalidFields
-        )
-
+        const validationResult = await validateSignUp(newUser, error.code)
         res.render('sign-up.ejs', {
             success: false,
-            ...updatedInvalidFields,
-            ...invalidMessages,
+            ...validationResult.invalidFields,
+            ...validationResult.invalidMessages,
             username,
             email,
         })
