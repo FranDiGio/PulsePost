@@ -6,19 +6,19 @@
 
 .fixed-sidebar-left {
     position: fixed;
-    top: 78px;
+    top: 60px;
     bottom: 0;
     left: 0;
-    height: 100vh;
+    height: calc(100vh - 60px);
     overflow-y: auto;
 }
 
 .fixed-sidebar-right {
     position: fixed;
-    top: 78px;
+    top: 60px;
     bottom: 0;
     right: 0;
-    height: 100vh;
+    height: calc(100vh - 60px);
     overflow-y: auto;
 }
 
