@@ -1,7 +1,7 @@
 import express from 'express'
 import bodyParser from 'body-parser'
 import session from 'express-session'
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth'
 import { ref, set, child, get, update } from 'firebase/database'
 import { getFormattedDateTime } from './services/dateService.js'
 import { validateSignUp, checkValidUsername } from './services/userService.js'
@@ -9,6 +9,7 @@ import { fileURLToPath } from 'url'
 import { db, auth } from './config/firebaseConfig.js'
 import { dirname } from 'path'
 import { User } from './models/User.mjs'
+import { ensureAuthenticated } from './services/authService.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const app = express()
@@ -22,7 +23,10 @@ app.use(
         secret: '9qB7n!4@F#5ZwpUJ*3Hg',
         resave: false,
         saveUninitialized: true,
-        cookie: { secure: 'auto' },
+        cookie: {
+            secure: 'auto',
+            maxAge: 24 * 60 * 60 * 1000,
+        },
     })
 )
 
@@ -34,7 +38,7 @@ app.get('/', (req, res) => {
     res.render('index.ejs')
 })
 
-app.get('/feed/', (req, res) => {
+app.get('/feed/', ensureAuthenticated, (req, res) => {
     res.render('feed.ejs', { username: req.session.username })
 })
 
@@ -123,4 +127,18 @@ app.post('/api/login', (req, res) => {
             })
             console.log(error.message)
         })
+})
+
+app.post('/api/signout', (req, res) => {
+    // Express log-out
+    req.session.destroy((err) => {
+        if (err) {
+            return res.status(500).send('Unable to sign out')
+        }
+        // Firebase log-out
+        signOut(auth).then(() => {
+            console.log('Sign-out successful')
+        })
+        res.redirect('/login')
+    })
 })
