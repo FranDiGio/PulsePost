@@ -31,16 +31,15 @@
                             <h2>Log In</h2>
 
                             <div class="form-floating mt-4 w-100">
-                                <input class="form-control w-100 <%= invalidCredentials ? "is-invalid" : ""
-                                %>" id="floatingEmail" value="<%= locals.email ? email : '' %>" type="email"
+                                <input class="form-control w-100 <%= invalidCredentials ? "is-invalid" : "" %>"
+                                id="floatingEmail" value="<%= locals.email ? email : '' %>" type="email"
                                 placeholder="Email address" name="email">
                                 <label for="floatingEmail">Email Address</label>
                             </div>
 
                             <div class="form-floating mb-1 w-100">
-                                <input class="form-control w-100 <%= invalidCredentials ? "is-invalid" : ""
-                                %>" id="floatingPassword" type="password" placeholder="Password"
-                                name="password">
+                                <input class="form-control w-100 <%= invalidCredentials ? "is-invalid" : "" %>"
+                                id="floatingPassword" type="password" placeholder="Password" name="password">
                                 <label for="floatingPassword">Password</label>
                             </div>
 

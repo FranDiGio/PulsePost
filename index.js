@@ -71,10 +71,13 @@ app.post('/api/signup', async (req, res) => {
         const usernameError = await checkValidUsername(username)
         if (usernameError) throw new Error(usernameError)
 
+        // Create user in firebase auth database
         const userCredential = await createUserWithEmailAndPassword(auth, email, password)
         const user = userCredential.user
         req.session.username = username
+        req.session.userId = user.uid
 
+        // Create user in realtime database
         await set(ref(db, 'users/' + user.uid), {
             username: username,
             bio: "I'm new here! be nice ;-;",
@@ -113,6 +116,7 @@ app.post('/api/login', (req, res) => {
             get(child(usersRef, `username`)).then((snapshot) => {
                 if (snapshot.exists()) {
                     req.session.username = snapshot.val()
+                    req.session.userId = user.uid
                     res.redirect('/feed/')
                 } else {
                     console.log('No data available')
@@ -141,4 +145,17 @@ app.post('/api/signout', (req, res) => {
         })
         res.redirect('/login')
     })
+})
+
+app.post('/api/submit/post', ensureAuthenticated, async (req, res) => {
+    const { title, content } = req.body
+    const userId = req.session.userId
+
+    await set(ref(db, 'users/' + userId + '/posts/'), {
+        title: title,
+        content: content,
+        createdAt: getFormattedDateTime(),
+    })
+
+    res.redirect('/feed')
 })

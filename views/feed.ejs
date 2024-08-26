@@ -132,14 +132,20 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
-                        <form>
+                        <form action="/api/submit/post" method="POST" id="postForm">
                             <div class="mb-3">
                                 <label class="col-form-label">Title:</label>
-                                <input type="text" class="form-control" id="postTitle" />
+                                <input type="text" class="form-control" id="postTitle" name="title" />
                             </div>
                             <div class="mb-3">
                                 <label class="col-form-label">Content:</label>
-                                <textarea class="form-control" id="postContent" rows="10" maxlength="1000"></textarea>
+                                <textarea
+                                    class="form-control"
+                                    id="postContent"
+                                    rows="10"
+                                    maxlength="1000"
+                                    name="content"
+                                ></textarea>
                                 <div class="text-body-secondary fs-6">
                                     Characters remaining: <span id="charCount">1000</span>
                                 </div>
@@ -148,7 +154,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="btn btn-primary" form="postForm">Submit</button>
                     </div>
                 </div>
             </div>
