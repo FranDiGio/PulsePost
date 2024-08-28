@@ -1,10 +1,10 @@
 import { db } from '../config/firebaseConfig.js'
-import ValidationResult from '../models/ValidationResult.mjs'
 import { ref, query, orderByChild, get, equalTo } from 'firebase/database'
+import ValidationResult from '../models/ValidationResult.mjs'
 
 export async function checkValidUsername(username) {
     if (!username) return "Username field can't be empty"
-    if (username.length > 20) return 'Username is too long'
+    if (username.length > 15) return 'Username is too long'
 
     const userRef = ref(db, 'users')
     const snapshot = await get(query(userRef, orderByChild('username'), equalTo(username)))
