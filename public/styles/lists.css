@@ -1,4 +1,4 @@
-.list-item {
+.list-item, .list-add {
     text-decoration: none;
     color: black;
     padding: 3px 7px;
@@ -9,4 +9,8 @@
 
 .list-item:hover {
     background-color: rgba(123, 226, 255, 0.888);
+}
+
+.list-add:hover {
+    background-color: rgba(194, 193, 193, 0.473);
 }
