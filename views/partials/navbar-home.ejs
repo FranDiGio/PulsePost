@@ -31,9 +31,6 @@
                     type="button"
                     data-bs-toggle="offcanvas"
                     data-bs-target="#offcanvasWithBothOptions"
-                    aria-controls="navbarToggleContent"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation"
                 >
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -42,16 +39,10 @@
     </nav>
 </header>
 
-<div
-    class="offcanvas offcanvas-end"
-    data-bs-scroll="true"
-    tabindex="-1"
-    id="offcanvasWithBothOptions"
-    aria-labelledby="offcanvasWithBothOptionsLabel"
->
+<div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions">
     <div class="offcanvas-header bg-light">
         <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">Links</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
     </div>
     <div class="offcanvas-body fs-4">
         <ul class="list-unstyled fw-normal pb-2 small">
