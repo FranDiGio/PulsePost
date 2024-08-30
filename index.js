@@ -5,6 +5,7 @@ import { dirname } from 'path'
 import { fileURLToPath } from 'url'
 import authRoutes from './routes/authRoutes.js'
 import viewRoutes from './routes/viewRoutes.js'
+import postRoutes from './routes/postRoutes.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const app = express()
@@ -28,6 +29,7 @@ app.use(
 app.set('view engine', 'ejs')
 
 app.use('/api', authRoutes)
+app.use('/', postRoutes)
 app.use('/', viewRoutes)
 
 app.listen(port, () => {
