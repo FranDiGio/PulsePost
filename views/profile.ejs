@@ -26,11 +26,43 @@
         <%- include('partials/navbar-profile.ejs') %>
 
         <div class="h-100 container-fluid px-0 m-0">
-            <div class="profile-background w-100 position-relative rounded">
-                <div
-                    class="profile-circle position-absolute d-flex justify-content-center align-items-center rounded-circle bg-white"
-                >
+            <div class="profile-background w-100 position-relative rounded"></div>
+            <div class="row justify-content-center position-relative m-0">
+                <div class="col-6 position-relative profile-circle rounded-circle bg-white">
                     <div class="profile-photo rounded-circle bg-light"></div>
+                </div>
+                <div class="col-6">
+                    <div class="row profile-username w-auto ms-2 mt-2 px-2 pt-1 rounded bg-light">
+                        <h3><%= username %></h3>
+                    </div>
+                    <div class="row profile-description w-auto ms-2 mt-2 px-2 pt-1 rounded bg-light">
+                        <p>
+                            I'm Franco, a Software Engineering graduate. Passionate about web technologies and creating
+                            digital experiences, I'm on track to become a well-rounded Software Dev. Pulse-Post is a
+                            stepping stone for showcasing my skills and dedication to learning.
+                        </p>
+                    </div>
+
+                    <h2 class="ms-2 mt-5 px-2 pt-1 w-100 border-bottom">Posts</h2>
+                    <%- include('partials/sample-post.ejs') %> <%- include('partials/sample-post.ejs') %>
+
+                    <nav>
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item">
+                                <a class="page-link" href="#">
+                                    <span>&laquo;</span>
+                                </a>
+                            </li>
+                            <li class="page-item"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">
+                                    <span>&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
                 </div>
             </div>
         </div>
