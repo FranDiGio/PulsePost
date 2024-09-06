@@ -28,7 +28,9 @@
         <div class="h-100 container-fluid px-0 m-0">
             <div class="profile-background w-100 position-relative rounded"></div>
             <div class="row justify-content-center position-relative m-0">
-                <div class="col-6 position-relative profile-circle rounded-circle bg-white">
+                <div
+                    class="col-3 d-flex justify-content-center align-items-center position-relative profile-circle rounded-circle bg-white"
+                >
                     <div class="profile-photo rounded-circle bg-light"></div>
                 </div>
                 <div class="col-6">
@@ -42,9 +44,23 @@
                             stepping stone for showcasing my skills and dedication to learning.
                         </p>
                     </div>
-
-                    <h2 class="ms-2 mt-5 px-2 pt-1 w-100 border-bottom">Posts</h2>
-                    <%- include('partials/sample-post.ejs') %> <%- include('partials/sample-post.ejs') %>
+                </div>
+            </div>
+            <div class="row justify-content-center m-0 mt-3">
+                <div class="col-3 mt-1 profile-metrics">
+                    <h4>Followers</h4>
+                    <p class="lead mb-3">0</p>
+                    <h4>Following</h4>
+                    <p class="lead mb-3">0</p>
+                    <h4>Posts</h4>
+                    <p class="lead mb-3">0</p>
+                </div>
+                <div class="col-6">
+                    <h2 class="ms-2 px-2 w-100 border-bottom">Posts</h2>
+                    <div>
+                        <%- include('partials/sample-post.ejs') %> <%- include('partials/sample-post.ejs') %> <%-
+                        include('partials/sample-post.ejs') %> <%- include('partials/sample-post.ejs') %>
+                    </div>
 
                     <nav>
                         <ul class="pagination justify-content-center">
