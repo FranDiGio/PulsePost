@@ -36,7 +36,16 @@
                             New Post
                         </a>
                     </li>
-                    <li><a class="dropdown-item" href="#">Settings</a></li>
+                    <li>
+                        <a
+                            class="dropdown-item"
+                            style="cursor: pointer"
+                            data-bs-toggle="modal"
+                            data-bs-target="#settingsModal"
+                        >
+                            Settings
+                        </a>
+                    </li>
                     <li><a class="dropdown-item" href="/profile/<%= encodeURIComponent(username) %>">Profile</a></li>
                     <li><hr class="dropdown-divider" /></li>
                     <li><a class="dropdown-item" href="#" onclick="signOut()">Sign out</a></li>
