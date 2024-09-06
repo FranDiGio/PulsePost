@@ -24,8 +24,8 @@
             <div class="dropdown text-end mt-2 d-flex flex-nowrap">
                 <p class="me-3 mt-2"><%= username %></p>
                 <a
-                    href="#"
                     class="d-block link-body-emphasis text-decoration-none dropdown-toggle"
+                    style="cursor: pointer"
                     data-bs-toggle="dropdown"
                 >
                     <img src="/images/profile-female.png" alt="mdo" width="40" height="40" class="rounded-circle" />
@@ -38,11 +38,12 @@
                             style="cursor: pointer"
                             data-bs-toggle="modal"
                             data-bs-target="#postModal"
-                            >New Post</a
                         >
+                            New Post
+                        </a>
                     </li>
                     <li><a class="dropdown-item" href="#">Settings</a></li>
-                    <li><a class="dropdown-item" href="#">Profile</a></li>
+                    <li><a class="dropdown-item" href="/profile/<%= encodeURIComponent(username) %>">Profile</a></li>
                     <li><hr class="dropdown-divider" /></li>
                     <li><a class="dropdown-item" href="#" onclick="signOut()">Sign out</a></li>
                 </ul>
