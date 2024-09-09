@@ -1,6 +1,6 @@
 import { ref, child, push, update } from 'firebase/database'
 import { db } from '../config/firebaseConfig.js'
-import { getFormattedDateTime } from './dateService.js'
+import { getFormattedDateTime } from '../services/dateService.js'
 
 export async function submitPost(req, res) {
     const { title, content } = req.body

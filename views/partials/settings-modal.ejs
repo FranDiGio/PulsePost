@@ -47,7 +47,6 @@
                     <img src="/images/profile-female.png" alt="mdo" width="120" height="120" class="rounded" />
                 </div>
                 
-
                 <div class="list-group">
                     <a href="#" class="list-group-item list-group-item-action list-group-item">
                         Upload photo
@@ -57,6 +56,10 @@
                     </a>
                 </div>
 
+                <form id="profilePicForm" style="display: none;">
+                    <input type="file" id="profilePicInput" accept="image/*" />
+                    <button type="submit">Upload Profile Picture</button>
+                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#settingsModal">Back</button>

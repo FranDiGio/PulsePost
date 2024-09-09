@@ -1,8 +1,8 @@
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth'
 import { ref, set, child, get, update } from 'firebase/database'
 import { auth, db } from '../config/firebaseConfig.js'
-import { getFormattedDateTime } from './dateService.js'
-import { validateSignUp, checkValidUsername } from './userService.js'
+import { getFormattedDateTime } from '../services/dateService.js'
+import { validateSignUp, checkValidUsername } from '../services/validationService.js'
 
 export function ensureAuthenticated(req, res, next) {
     if (req.session.username) {

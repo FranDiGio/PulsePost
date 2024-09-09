@@ -6,6 +6,7 @@ import { fileURLToPath } from 'url'
 import authRoutes from './routes/authRoutes.js'
 import viewRoutes from './routes/viewRoutes.js'
 import postRoutes from './routes/postRoutes.js'
+import settingsRoutes from './routes/settingsRoutes.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const app = express()
@@ -31,6 +32,7 @@ app.set('view engine', 'ejs')
 app.use('/api', authRoutes)
 app.use('/', postRoutes)
 app.use('/', viewRoutes)
+app.use('/', settingsRoutes)
 
 app.listen(port, () => {
     console.log('Listening to port ' + port)

@@ -1,6 +1,6 @@
 import express from 'express'
-import { ensureAuthenticated } from '../services/authService.js'
-import { submitPost } from '../services/postService.js'
+import { ensureAuthenticated } from '../controllers/authController.js'
+import { submitPost } from '../controllers/postController.js'
 
 const router = express.Router()
 
