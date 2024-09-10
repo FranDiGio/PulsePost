@@ -1,5 +1,3 @@
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth'
-import { ref, set, child, get, update } from 'firebase/database'
 import { auth, db } from '../config/firebaseConfig.js'
 import { getFormattedDateTime } from '../services/dateService.js'
 import { validateSignUp, checkValidUsername } from '../services/validationService.js'
@@ -13,95 +11,82 @@ export function ensureAuthenticated(req, res, next) {
 }
 
 export async function signUp(req, res) {
-    const { username, email, password } = req.body
-    const newUser = { username, email, password }
-
+    const { username, email, password } = req.body;
+    const newUser = { username, email, password };
+  
     try {
-        const usernameError = await checkValidUsername(username)
-        if (usernameError) throw new Error(usernameError)
-
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password)
-        const user = userCredential.user
-        req.session.username = username
-        req.session.userId = user.uid
-
-        await set(ref(db, 'users/' + user.uid), {
-            username: username,
-            bio: "I'm new here! be nice ;-;",
-            profilePicture: 'N/A',
-            createdAt: getFormattedDateTime(),
-            lastLogged: getFormattedDateTime(),
-            following: [],
-            followers: [],
-        })
-
-        res.render('sign-up.ejs', { success: true })
+      const usernameError = await checkValidUsername(username);
+      if (usernameError) throw new Error(usernameError);
+  
+      const userRecord = await auth.createUser({
+        email,
+        password,
+        displayName: username,
+        disabled: false
+      });
+  
+      const user = userRecord.toJSON();
+      req.session.username = username;
+      req.session.userId = user.uid;
+  
+      await db.ref(`users/${user.uid}`).set({
+        username,
+        bio: "I'm new here! be nice ;-;",
+        profilePicture: 'N/A',
+        createdAt: getFormattedDateTime(),
+        lastLogged: getFormattedDateTime(),
+        following: [],
+        followers: []
+      });
+  
+      res.render('sign-up.ejs', { success: true });
     } catch (error) {
-        const validationResult = await validateSignUp(newUser, error.code)
-        res.render('sign-up.ejs', {
-            success: false,
-            ...validationResult.invalidFields,
-            ...validationResult.invalidMessages,
-            username,
-            email,
-        })
-        console.log(error.message)
+      const validationResult = await validateSignUp(newUser, error.code);
+      res.render('sign-up.ejs', {
+        success: false,
+        ...validationResult.invalidFields,
+        ...validationResult.invalidMessages,
+        username,
+        email
+      });
+      console.log(error.message);
+    }
+  }
+
+export async function login(req, res) {
+    const { email, password } = req.body;
+  
+    try {
+        const userRecord = await auth.getUserByEmail(email);
+
+        req.session.username = userRecord.displayName;
+        req.session.userId = userRecord.uid;
+    
+        await db.ref(`users/${userRecord.uid}`).update({
+            lastLogged: getFormattedDateTime()
+        });
+    
+        res.redirect('/feed/');
+        } catch (error) {
+        res.render('log-in.ejs', {
+            invalidCredentials: true,
+            email
+        });
+        console.log(error.message);
     }
 }
 
-export function login(req, res) {
-    const { email, password } = req.body
-
-    signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            const user = userCredential.user
-            const usersRef = ref(db, 'users/' + user.uid)
-
-            update(usersRef, {
-                lastLogged: getFormattedDateTime(),
-            })
-
-            get(child(usersRef, `username`)).then((snapshot) => {
-                if (snapshot.exists()) {
-                    req.session.username = snapshot.val()
-                    req.session.userId = user.uid
-                    res.redirect('/feed/')
-                } else {
-                    console.log('No data available')
-                    res.redirect('/login')
-                }
-            })
-        })
-        .catch((error) => {
-            res.render('log-in.ejs', {
-                invalidCredentials: true,
-                email: email,
-            })
-            console.log(error.message)
-        })
-}
-
-export function logOut(req, res) {
-    req.session.destroy((err) => {
+export async function logOut(req, res) {
+    try {
+      const userId = req.session.userId;
+      req.session.destroy((err) => {
         if (err) {
-            return res.status(500).send('Unable to sign out')
+          return res.status(500).send('Unable to sign out');
         }
-        signOut(auth).then(() => {
-            console.log('Sign-out successful')
-        })
-        res.redirect('/login')
-    })
-}
-
-export async function submitPost(req, res) {
-    const { title, content } = req.body
-    const userId = req.session.userId
-
-    await set(ref(db, 'users/' + userId + '/posts/'), {
-        title: title,
-        content: content,
-        createdAt: getFormattedDateTime(),
-    })
-
-    res.redirect('/feed')
+        res.redirect('/login');
+      });
+    } catch (error) {
+      console.error('Error during sign-out:', error);
+      res.status(500).send('Unable to sign out');
+    }
 }

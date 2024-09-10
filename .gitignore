@@ -1,5 +1,5 @@
 # Ignore ANY file in personal folder
-personal/
+config/serviceAccountKey.json
 .vscode/
 node_modules/
 
