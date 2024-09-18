@@ -6,7 +6,7 @@ export async function uploadProfilePicture(req, res) {
         return res.status(400).send('No file uploaded.')
     }
 
-    const file = bucket.file(`profile-pics/${req.file.originalname}`)
+    const file = bucket.file(`profile_pictures/${req.session.userId}/${req.file.originalname}`)
     const stream = file.createWriteStream({
         metadata: {
             contentType: req.file.mimetype,
@@ -20,6 +20,16 @@ export async function uploadProfilePicture(req, res) {
 
     stream.on('finish', async () => {
         await file.makePublic()
+
+        const downloadUrl = await file.getSignedUrl({
+            action: 'read',
+            expires: '03-09-2491',
+        })
+
+        db.ref(`users/${req.session.userId}`).update({
+            profilePicture: downloadUrl[0],
+        })
+
         res.status(200).send('File uploaded successfully')
     })
 

@@ -1,17 +1,16 @@
 const previewPicture = document.getElementById('previewPicture')
+const fileInput = document.getElementById('profilePicInput')
 const originalPictureSource = previewPicture.src
 var file = null
 
 document.getElementById('triggerFileInput').addEventListener('click', function (event) {
     event.preventDefault()
-    const fileInput = document.getElementById('profilePicInput')
     fileInput.value = null
     fileInput.click()
 })
 
 document.getElementById('profilePicForm').addEventListener('change', function (e) {
     e.preventDefault()
-    const fileInput = document.getElementById('profilePicInput')
     file = null
     file = fileInput.files[0]
 
@@ -29,29 +28,43 @@ document.getElementById('profilePicForm').addEventListener('change', function (e
 document.getElementById('submitFileInput').addEventListener('click', function (event) {
     event.preventDefault()
 
-    if (file) {
-        const formData = new FormData()
-        formData.append('profilePic', file)
+    document.querySelector('#submitFileInput > p').classList.add('d-none')
+    document.querySelector('#submitFileInput > span').classList.remove('d-none')
 
-        fetch('/upload/profile/picture', {
-            method: 'POST',
-            body: formData,
-        })
-            .then((response) => {
-                console.log('File uploaded successfully')
-                fileInput.value = null
-                window.location.reload()
-            })
-            .catch((error) => {
-                console.error('Error uploading file:', error)
-            })
+    if (file) {
+        uploadPicture()
     }
 })
 
-document.getElementById('pictureModal').addEventListener('hidden.bs.modal', function () {
-    previewPicture.src = originalPictureSource
-    file = null
-})
+function uploadPicture() {
+    const formData = new FormData()
+    formData.append('profilePic', file)
+
+    fetch('/upload/profile/picture', {
+        method: 'POST',
+        body: formData,
+    })
+        .then((response) => {
+            console.log('File uploaded successfully')
+
+            // Clear input file
+            fileInput.value = null
+            file = null
+            previewPicture.src = originalPictureSource
+
+            // Close modal
+            const pictureModal = bootstrap.Modal.getInstance(document.getElementById('pictureModal'))
+            pictureModal.hide()
+            window.location.reload()
+        })
+        .catch((error) => {
+            console.error('Error uploading file:', error)
+        })
+        .finally(() => {
+            document.querySelector('#submitFileInput > p').classList.remove('d-none')
+            document.querySelector('#submitFileInput > span').classList.add('d-none')
+        })
+}
 
 document.querySelector('.modal-footer .btn-secondary').addEventListener('click', function () {
     previewPicture.src = originalPictureSource
