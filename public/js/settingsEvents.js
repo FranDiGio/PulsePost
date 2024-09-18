@@ -66,7 +66,8 @@ function uploadPicture() {
         })
 }
 
-document.querySelector('.modal-footer .btn-secondary').addEventListener('click', function () {
-    previewPicture.src = originalPictureSource
+document.getElementById('backButton').addEventListener('click', function () {
+    fileInput.value = null
     file = null
+    previewPicture.src = originalPictureSource
 })

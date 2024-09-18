@@ -1,5 +1,4 @@
 import { db, bucket } from '../config/firebaseConfig.js'
-import { getFormattedDateTime } from '../services/dateService.js'
 
 export async function uploadProfilePicture(req, res) {
     if (!req.file) {
