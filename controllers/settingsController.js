@@ -1,4 +1,6 @@
-import { db, bucket } from '../config/firebaseConfig.js'
+import { bucket } from '../config/firebaseConfig.js'
+import { ref, update } from 'firebase/database'
+import { db } from '../config/firebaseConfig.js'
 
 export async function uploadProfilePicture(req, res) {
     if (!req.file) {
@@ -36,11 +38,17 @@ export async function uploadProfilePicture(req, res) {
             expires: '03-09-2491',
         })
 
-        db.ref(`users/${req.session.userId}`).update({
+        const userRef = ref(db, `users/${req.session.userId}`)
+        update(userRef, {
             profilePicture: downloadUrl[0],
         })
-
-        res.status(200).send('File uploaded successfully')
+            .then(() => {
+                res.status(200).send('File uploaded successfully')
+            })
+            .catch((error) => {
+                console.error('Error updating profile picture:', error)
+                res.status(500).send('Error updating profile picture')
+            })
     })
 
     stream.end(req.file.buffer)
