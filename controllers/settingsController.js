@@ -5,7 +5,18 @@ export async function uploadProfilePicture(req, res) {
         return res.status(400).send('No file uploaded.')
     }
 
-    const file = bucket.file(`profile_pictures/${req.session.userId}/${req.file.originalname}`)
+    let fileExtension = ''
+    if (req.file.mimetype === 'image/jpeg') {
+        fileExtension = 'jpg'
+    } else if (req.file.mimetype === 'image/png') {
+        fileExtension = 'png'
+    } else {
+        return res.status(400).send('Unsupported file format.')
+    }
+
+    const uniqueFilename = `${req.session.username}-picture-${Date.now()}.${fileExtension}`
+
+    const file = bucket.file(`profile_pictures/${req.session.userId}/${uniqueFilename}`)
     const stream = file.createWriteStream({
         metadata: {
             contentType: req.file.mimetype,

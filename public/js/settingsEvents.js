@@ -32,39 +32,35 @@ document.getElementById('submitFileInput').addEventListener('click', function (e
     document.querySelector('#submitFileInput > span').classList.remove('d-none')
 
     if (file) {
-        uploadPicture()
+        const formData = new FormData()
+        formData.append('profilePic', file)
+
+        fetch('/upload/profile/picture', {
+            method: 'POST',
+            body: formData,
+        })
+            .then((response) => {
+                console.log('File uploaded successfully')
+
+                // Clear input file
+                fileInput.value = null
+                file = null
+                previewPicture.src = originalPictureSource
+
+                // Close modal
+                const pictureModal = bootstrap.Modal.getInstance(document.getElementById('pictureModal'))
+                pictureModal.hide()
+                window.location.reload()
+            })
+            .catch((error) => {
+                console.error('Error uploading file:', error)
+            })
+            .finally(() => {
+                document.querySelector('#submitFileInput > p').classList.remove('d-none')
+                document.querySelector('#submitFileInput > span').classList.add('d-none')
+            })
     }
 })
-
-function uploadPicture() {
-    const formData = new FormData()
-    formData.append('profilePic', file)
-
-    fetch('/upload/profile/picture', {
-        method: 'POST',
-        body: formData,
-    })
-        .then((response) => {
-            console.log('File uploaded successfully')
-
-            // Clear input file
-            fileInput.value = null
-            file = null
-            previewPicture.src = originalPictureSource
-
-            // Close modal
-            const pictureModal = bootstrap.Modal.getInstance(document.getElementById('pictureModal'))
-            pictureModal.hide()
-            window.location.reload()
-        })
-        .catch((error) => {
-            console.error('Error uploading file:', error)
-        })
-        .finally(() => {
-            document.querySelector('#submitFileInput > p').classList.remove('d-none')
-            document.querySelector('#submitFileInput > span').classList.add('d-none')
-        })
-}
 
 document.getElementById('backButton').addEventListener('click', function () {
     fileInput.value = null
