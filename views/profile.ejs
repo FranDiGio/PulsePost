@@ -31,7 +31,7 @@
                 <div
                     class="col-3 d-flex justify-content-center align-items-center position-relative profile-circle rounded-circle bg-white"
                 >
-                    <div class="profile-photo rounded-circle bg-light"></div>
+                <img src="<%= profilePictureUrl %>" class="profile-photo rounded-circle" />
                 </div>
                 <div class="col-6">
                     <div class="row profile-username w-auto ms-2 mt-2 px-2 pt-1 rounded bg-light">
@@ -87,6 +87,7 @@
 
         <%- include('partials/post-modal.ejs') %> <%- include('partials/settings-modal.ejs') %>
 
+        <script src="/js/settingsEvents.js" charset="utf-8"></script>
         <script src="/js/postCreationEvents.js" charset="utf-8"></script>
         <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
         <script
