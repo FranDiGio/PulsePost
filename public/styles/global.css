@@ -1,0 +1,5 @@
+/* Global styles in PulsePost */
+
+.page-link, .dropdown-item, .nav-link, .list-group-item {
+    cursor: pointer;
+}
