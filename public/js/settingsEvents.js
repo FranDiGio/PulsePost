@@ -62,6 +62,28 @@ document.getElementById('submitFileInput').addEventListener('click', function (e
     }
 })
 
+document.getElementById('deletePictureButton').addEventListener('click', function (event) {
+    event.preventDefault()
+
+    fetch('/delete/profile/picture', {
+        method: 'POST',
+    })
+        .then((response) => {
+            console.log('Picture deleted successfully')
+
+            fileInput.value = null
+            previewPicture.src = null
+
+            // Close modal
+            const pictureModal = bootstrap.Modal.getInstance(document.getElementById('pictureModal'))
+            pictureModal.hide()
+            window.location.reload()
+        })
+        .catch((error) => {
+            console.error('Error deleting profile picture:', error)
+        })
+})
+
 document.getElementById('backButton').addEventListener('click', function () {
     fileInput.value = null
     file = null

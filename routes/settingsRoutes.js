@@ -7,6 +7,6 @@ const router = express.Router()
 const upload = multer()
 
 router.post('/upload/profile/picture', upload.single('profilePic'), uploadProfilePicture)
-router.get('/delete/profile/picture', deleteProfilePicture)
+router.post('/delete/profile/picture', deleteProfilePicture)
 
 export default router

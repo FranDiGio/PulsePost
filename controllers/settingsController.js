@@ -1,7 +1,7 @@
 import { db, bucket } from '../config/firebaseConfig.js'
 import { ref, get, update } from 'firebase/database'
 
-function getFilename (mimetype, contentType, username) {
+function getFilename(mimetype, contentType, username) {
     let fileExtension = null
 
     if (mimetype === 'image/jpeg') {
@@ -12,7 +12,7 @@ function getFilename (mimetype, contentType, username) {
         return res.status(400).send('Unsupported file format.')
     }
 
-    return `${username}-${contentType}.${fileExtension}`
+    return `${username}-${contentType}-${Date.now()}.${fileExtension}`
 }
 
 export async function uploadProfilePicture(req, res) {
@@ -20,7 +20,7 @@ export async function uploadProfilePicture(req, res) {
         return res.status(400).send('No file uploaded.')
     }
 
-    const filename = getFilename(req.file.mimetype, "picture", req.session.user)
+    const filename = getFilename(req.file.mimetype, 'picture', req.session.username)
 
     const file = bucket.file(`profile_pictures/${req.session.userId}/${filename}`)
     const stream = file.createWriteStream({
@@ -59,35 +59,28 @@ export async function uploadProfilePicture(req, res) {
 }
 
 export async function deleteProfilePicture(req, res) {
-    const userId = req.session.userId;
+    const userId = req.session.userId
 
     if (!userId) {
-        return res.status(400).send('User ID not found in session.');
+        return res.status(400).send('User ID not found in session.')
     }
 
     try {
-        const userRef = ref(db, `users/${userId}`);
-        const userSnapshot = await get(userRef);
-        const userData = userSnapshot.val();
+        const userRef = ref(db, `users/${userId}`)
+        const userSnapshot = await get(userRef)
+        const userData = userSnapshot.val()
 
         if (!userData || !userData.profilePicture) {
-            return res.status(404).send('No profile picture found for this user.');
+            return res.status(404).send('No profile picture found for this user.')
         }
 
-        const url = new URL(userData.profilePicture);
-        const pathParts = url.pathname.split('/');
-        const filePath = pathParts.slice(pathParts.indexOf('profile_pictures')).join('/');
-
-        const file = bucket.file(filePath);
-        await file.delete();
-
         await update(userRef, {
-            profilePicture: null
-        });
+            profilePicture: null,
+        })
 
-        res.status(200).send('Profile picture deleted successfully');
+        res.status(200).send('Profile picture deleted successfully')
     } catch (error) {
-        console.error('Error deleting profile picture:', error);
-        res.status(500).send('Error deleting profile picture');
+        console.error('Error deleting profile picture:', error)
+        res.status(500).send('Error deleting profile picture')
     }
 }
