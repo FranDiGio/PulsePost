@@ -1,12 +1,12 @@
 .profile-background {
-    min-height: 190px; 
+    min-height: 250px; 
     overflow-y: hidden;
-    height: 210px;
+    height: 250px;
 }
 
 .profile-circle, .profile-metrics {
-    width: 18vw;
-    height: 18vw; 
+    width: 17vw;
+    height: 17vw; 
     min-width: 180px;
     min-height: 180px;
     max-width: 300px;
@@ -15,8 +15,8 @@
 }
 
 .profile-photo {
-    width: 16vw; 
-    height: 16vw; 
+    width: 15vw; 
+    height: 15vw; 
     min-width: 160px;
     min-height: 160px;
     max-width: 270px;
