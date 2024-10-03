@@ -9,6 +9,12 @@
                     </div>
                 </a>
 
+                <a class="col-2 me-1" id="trending-btn" style="cursor: pointer">
+                    <div class="flex-shrink-0 overflow-hidden my-3" style="max-height: 60px">
+                        <img class="header-icon" alt="fire icon" src="/svg/fire.svg" style="max-height: 60px" />
+                    </div>
+                </a>
+
                 <form class="col-10 col-lg-auto mb-0 me-lg-3" role="search">
                     <input type="search" class="form-control open-sans-title" placeholder="Search..." />
                 </form>
@@ -22,7 +28,7 @@
                     style="cursor: pointer"
                     data-bs-toggle="dropdown"
                 >
-                    <img src="<%= profilePictureUrl %>" alt="mdo" width="40" height="40" class="rounded-circle" />
+                    <img src="<%= profilePictureUrl %>" width="40" height="40" class="rounded-circle" />
                 </a>
 
                 <ul class="dropdown-menu text-small">
@@ -32,7 +38,7 @@
                     <li>
                         <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#settingsModal"> Settings </a>
                     </li>
-                    <li><a class="dropdown-item" href="/profile/<%= encodeURIComponent(username) %>"> Profile </a></li>
+                    <li><a class="dropdown-item" href="/profile/<%= encodeURIComponent(username) %>">Profile</a></li>
                     <li><hr class="dropdown-divider" /></li>
                     <li><a class="dropdown-item" onclick="signOut()">Sign out</a></li>
                 </ul>
@@ -40,5 +46,3 @@
         </div>
     </nav>
 </header>
-
-<script src="/js/auth.js" charset="utf-8"></script>

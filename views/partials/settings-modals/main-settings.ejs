@@ -1,0 +1,55 @@
+<!-- Settings Modal -->
+<div
+	class="modal"
+	id="settingsModal"
+	tabindex="-1"
+>
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5">Settings</h1>
+				<button
+					type="button"
+					class="btn-close"
+					data-bs-dismiss="modal"
+				></button>
+			</div>
+			<div class="modal-body">
+				<h5 class="mt-2 mb-3 ps-1">Profile</h5>
+
+				<div class="list-group">
+					<a
+						class="list-group-item list-group-item-action list-group-item-light"
+						data-bs-toggle="modal"
+						data-bs-target="#pictureModal"
+					>
+						Change profile picture
+					</a>
+					<a
+						class="list-group-item list-group-item-action list-group-item-light"
+						data-bs-toggle="modal"
+						data-bs-target="#backgroundModal"
+					>
+						Change profile background
+					</a>
+					<a class="list-group-item list-group-item-action list-group-item-light"> Update biography </a>
+				</div>
+
+				<h5 class="mt-4 mb-3 ps-1">Account</h5>
+				<div class="list-group">
+					<a class="list-group-item list-group-item-action list-group-item-light">Change password</a>
+					<a class="list-group-item list-group-item-action list-group-item-danger">Delete Account</a>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button
+					type="button"
+					class="btn btn-primary"
+					data-bs-dismiss="modal"
+				>
+					Done
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
