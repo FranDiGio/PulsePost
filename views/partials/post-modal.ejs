@@ -1,36 +1,65 @@
 <!-- Post Creation Modal -->
-<div class="modal" id="postModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5">New Post</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form action="/submit/post" method="POST" id="postForm">
-                    <div class="mb-3">
-                        <label class="col-form-label">Title:</label>
-                        <input type="text" class="form-control" id="postTitle" name="title" />
-                    </div>
-                    <div class="mb-3">
-                        <label class="col-form-label">Content:</label>
-                        <textarea
-                            class="form-control"
-                            id="postContent"
-                            rows="10"
-                            maxlength="1000"
-                            name="content"
-                        ></textarea>
-                        <div class="text-body-secondary fs-6">
-                            Characters remaining: <span id="charCount">1000</span>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary" form="postForm">Submit</button>
-            </div>
-        </div>
-    </div>
+<div
+	class="modal"
+	id="postModal"
+	tabindex="-1"
+>
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5">New Post</h1>
+				<button
+					type="button"
+					class="btn-close"
+					data-bs-dismiss="modal"
+				></button>
+			</div>
+			<div class="modal-body">
+				<form
+					action="/submit/post"
+					method="POST"
+					id="postForm"
+				>
+					<div class="mb-3">
+						<label class="col-form-label">Title:</label>
+						<input
+							type="text"
+							class="form-control"
+							id="postTitle"
+							name="title"
+						/>
+					</div>
+					<div class="mb-3">
+						<label class="col-form-label">Content:</label>
+						<textarea
+							class="form-control"
+							id="postContent"
+							rows="10"
+							maxlength="1000"
+							name="content"
+						></textarea>
+						<div class="text-body-secondary fs-6">
+							Characters remaining: <span id="postCharCount">1000</span>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button
+					type="button"
+					class="btn btn-secondary"
+					data-bs-dismiss="modal"
+				>
+					Close
+				</button>
+				<button
+					type="submit"
+					class="btn btn-primary"
+					form="postForm"
+				>
+					Submit
+				</button>
+			</div>
+		</div>
+	</div>
 </div>
