@@ -1,15 +1,20 @@
 <div class="col-3 d-inline-flex justify-content-end align-items-start me-4">
-    <div class="d-flex flex-nowrap dropdown-center border border-2 border-info-subtle rounded-5 px-2 py-1">
-        <p class="d-xl-block d-none mx-2 my-2" id="username-tag"><%= username %></p>
-        <a class="d-block link-body-emphasis text-decoration-none" role="button" data-bs-toggle="dropdown">
-            <img src="<%= profilePictureUrl %>" width="40" height="40" class="rounded-circle" />
-        </a>
+	<div class="d-flex flex-nowrap dropdown-center border border-2 border-info-subtle rounded-5 px-2 py-1">
+		<p class="d-xl-block d-none mx-2 my-2" id="username-tag"><%= username %></p>
+		<a class="d-block link-body-emphasis text-decoration-none" role="button" data-bs-toggle="dropdown">
+			<img src="<%= profilePictureUrl %>" width="40" height="40" class="rounded-circle" />
+		</a>
 
-        <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="/profile/<%= encodeURIComponent(username) %>">View Profile</a></li>
-            <li>
-                <a class="dropdown-item"><span class="text-primary">+</span> Follow</a>
-            </li>
-        </ul>
-    </div>
+		<ul class="dropdown-menu">
+			<li>
+				<a class="dropdown-item" href="/profile/<%= encodeURIComponent(username) %>">View Profile</a>
+			</li>
+			<li>
+				<a class="dropdown-item">
+					<span class="text-primary">+</span>
+					Follow
+				</a>
+			</li>
+		</ul>
+	</div>
 </div>

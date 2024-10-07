@@ -157,8 +157,6 @@ export async function updateBiography(req, res) {
 			return res.status(404).send('No data found for this user.');
 		}
 
-		console.log(req.body);
-
 		await update(userRef, {
 			bio: req.body.bioContent,
 		});

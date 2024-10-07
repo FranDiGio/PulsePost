@@ -1,18 +1,10 @@
 <!-- Profile Background Modal -->
-<div
-	class="modal"
-	id="backgroundModal"
-	tabindex="-1"
->
+<div class="modal" id="backgroundModal" tabindex="-1">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h1 class="modal-title fs-5">Change profile background</h1>
-				<button
-					type="button"
-					class="btn-close"
-					data-bs-dismiss="modal"
-				></button>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 			</div>
 			<div class="modal-body">
 				<div class="w-100 my-3 d-flex justify-content-center">
@@ -29,29 +21,16 @@
 				<h5 class="mb-3 text-center text-body-tertiary fs-6">Preview</h5>
 
 				<div class="list-group">
-					<a
-						id="triggerBgFileInput"
-						class="list-group-item list-group-item-action list-group-item"
-					>
+					<a id="triggerBgFileInput" class="list-group-item list-group-item-action list-group-item">
 						Upload background
 					</a>
-					<a
-						id="deleteBgButton"
-						class="list-group-item list-group-item-action list-group-item-danger"
-					>
+					<a id="deleteBgButton" class="list-group-item list-group-item-action list-group-item-danger">
 						Delete background
 					</a>
 				</div>
 
-				<form
-					id="bgPicForm"
-					style="display: none"
-				>
-					<input
-						type="file"
-						id="bgPicInput"
-						accept="image/*"
-					/>
+				<form id="bgPicForm" style="display: none">
+					<input type="file" id="bgPicInput" accept="image/*" />
 					<button type="submit">Upload Background</button>
 				</form>
 			</div>
@@ -66,11 +45,7 @@
 					Back
 				</button>
 
-				<button
-					id="submitBgInput"
-					type="button"
-					class="btn btn-primary"
-				>
+				<button id="submitBgInput" type="button" class="btn btn-primary">
 					<p class="m-0 p-0">Save</p>
 					<span class="spinner-border spinner-border-sm d-none"></span>
 				</button>

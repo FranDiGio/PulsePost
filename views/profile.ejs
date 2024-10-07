@@ -1,26 +1,12 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
-		<meta
-			name="viewport"
-			content="width=device-width, initial-scale=1.0"
-		/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title><%= username %>'s Profile</title>
-		<link
-			rel="icon"
-			type="image/x-icon"
-			href="/images/favicon.ico"
-		/>
-		<link
-			rel="preconnect"
-			href="https://fonts.googleapis.com"
-		/>
-		<link
-			rel="preconnect"
-			href="https://fonts.gstatic.com"
-			crossorigin
-		/>
+		<link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link
 			href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
 			rel="stylesheet"
@@ -31,22 +17,10 @@
 			integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
 			crossorigin="anonymous"
 		/>
-		<link
-			href="/styles/global.css"
-			rel="stylesheet"
-		/>
-		<link
-			href="/styles/feed.css"
-			rel="stylesheet"
-		/>
-		<link
-			href="/styles/profile.css"
-			rel="stylesheet"
-		/>
-		<link
-			href="/styles/backgrounds.css"
-			rel="stylesheet"
-		/>
+		<link href="/styles/global.css" rel="stylesheet" />
+		<link href="/styles/feed.css" rel="stylesheet" />
+		<link href="/styles/profile.css" rel="stylesheet" />
+		<link href="/styles/backgrounds.css" rel="stylesheet" />
 	</head>
 
 	<body class="row d-flex justify-content-center m-0">
@@ -54,21 +28,14 @@
 
 		<div class="h-100 col-12 col-xxl-8 px-0 m-0">
 			<div class="w-100 profile-background position-relative rounded-bottom">
-				<img
-					src="<%= profileBackgroundUrl %>"
-					class="w-100 h-100"
-					style="object-fit: cover"
-				/>
+				<img src="<%= profileBackgroundUrl %>" class="w-100 h-100" style="object-fit: cover" />
 			</div>
 
 			<div class="row justify-content-center position-relative m-0">
 				<div
 					class="col-3 d-flex justify-content-center align-items-center position-relative profile-circle rounded-circle bg-white"
 				>
-					<img
-						src="<%= profilePictureUrl %>"
-						class="profile-photo rounded-circle"
-					/>
+					<img src="<%= profilePictureUrl %>" class="profile-photo rounded-circle" />
 				</div>
 				<div class="col-6">
 					<div class="row profile-username w-auto ms-2 mt-2 px-2 pt-1 rounded bg-light">
@@ -141,26 +108,11 @@
 		<!-- Account Settings Modal -->
 		<%- include('partials/settings-modals/account-settings.ejs') %>
 
-		<script
-			src="/js/auth.js"
-			charset="utf-8"
-		></script>
-		<script
-			src="/js/settings/profilePictureEvents.js"
-			charset="utf-8"
-		></script>
-		<script
-			src="/js/settings/profileBackgroundEvents.js"
-			charset="utf-8"
-		></script>
-		<script
-			src="/js/settings/profileBioEvents.js"
-			charset="utf-8"
-		></script>
-		<script
-			src="/js/postCreationEvents.js"
-			charset="utf-8"
-		></script>
+		<script src="/js/auth.js" charset="utf-8"></script>
+		<script src="/js/settings/profilePictureEvents.js" charset="utf-8"></script>
+		<script src="/js/settings/profileBackgroundEvents.js" charset="utf-8"></script>
+		<script src="/js/settings/profileBioEvents.js" charset="utf-8"></script>
+		<script src="/js/postCreationEvents.js" charset="utf-8"></script>
 		<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 		<script
 			src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"

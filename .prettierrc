@@ -6,7 +6,14 @@
 	"semi": true,
 	"printWidth": 120,
 	"endOfLine": "auto",
-	"singleAttributePerLine": true,
 	"bracketSpacing": true,
-	"htmlWhitespaceSensitivity": "ignore"
+	"htmlWhitespaceSensitivity": "ignore",
+	"overrides": [
+		{
+			"files": "*.ejs",
+			"options": {
+				"parser": "html"
+			}
+		}
+	]
 }
