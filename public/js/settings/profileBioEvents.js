@@ -1,17 +1,27 @@
+document.addEventListener('DOMContentLoaded', function () {
+	const bioContent = document.getElementById('bioContent');
+	if (bioContent) {
+		bioContent.value = bioContent.value.trim();
+	}
+});
+
 document.getElementById('bioForm').addEventListener('submit', async function (event) {
 	event.preventDefault();
 
 	const form = event.target;
-	const bioContent = document.getElementById('bioContent').value.trim();
+	const bioContent = document.getElementById('bioContent');
 
-	if (!bioContent) {
+	if (!bioContent || !bioContent.value.trim()) {
 		alert('Bio content cannot be empty.');
 		return;
 	}
 
+	// Trim the bio content
+	const trimmedBioContent = bioContent.value.trim();
+
 	// Manually construct URL-encoded form data
 	const formData = new URLSearchParams();
-	formData.append('bioContent', bioContent);
+	formData.append('bioContent', trimmedBioContent);
 
 	const response = await fetch(form.action, {
 		method: form.method,

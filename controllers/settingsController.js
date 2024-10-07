@@ -60,8 +60,15 @@ export async function deleteProfilePicture(req, res) {
 			return res.status(404).send('No profile picture found for this user.');
 		}
 
+		// Delete the profile picture URL in Realtime Database
 		await update(userRef, {
 			profilePicture: null,
+		});
+
+		// Delete the directory in Firebase Storage
+		const directoryPath = `profile_pictures/${userId}`;
+		await bucket.deleteFiles({
+			prefix: directoryPath,
 		});
 
 		res.status(200).send('Profile picture deleted successfully');
@@ -130,8 +137,15 @@ export async function deleteProfileBackground(req, res) {
 			return res.status(404).send('No profile background found for this user.');
 		}
 
+		// Delete the profile background URL in Realtime Database
 		await update(userRef, {
 			profileBackground: null,
+		});
+
+		// Delete the directory in Firebase Storage
+		const directoryPath = `profile_backgrounds/${userId}`;
+		await bucket.deleteFiles({
+			prefix: directoryPath,
 		});
 
 		res.status(200).send('Profile background deleted successfully');
