@@ -37,11 +37,11 @@ export async function signUp(req, res) {
 
 		res.render('sign-up.ejs', { success: true });
 	} catch (error) {
-		const validationResult = await validateSignUp(newUser, error.code);
+		const userValidationResult = await validateSignUp(newUser, error.code);
 		res.render('sign-up.ejs', {
 			success: false,
-			...validationResult.invalidFields,
-			...validationResult.invalidMessages,
+			...userValidationResult.invalidFields,
+			...userValidationResult.invalidMessages,
 			username,
 			email,
 		});

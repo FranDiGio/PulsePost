@@ -1,5 +1,6 @@
 import { db, bucket } from '../config/firebaseConfig.js';
 import { ref, get, update } from 'firebase/database';
+import { getUserData } from '../services/userService.js';
 
 export async function uploadProfilePicture(req, res) {
 	if (!req.file) {
@@ -52,9 +53,7 @@ export async function deleteProfilePicture(req, res) {
 	}
 
 	try {
-		const userRef = ref(db, `users/${userId}`);
-		const userSnapshot = await get(userRef);
-		const userData = userSnapshot.val();
+		const userData = getUserData(userId);
 
 		if (!userData || !userData.profilePicture) {
 			return res.status(404).send('No profile picture found for this user.');
@@ -129,9 +128,7 @@ export async function deleteProfileBackground(req, res) {
 	}
 
 	try {
-		const userRef = ref(db, `users/${userId}`);
-		const userSnapshot = await get(userRef);
-		const userData = userSnapshot.val();
+		const userData = getUserData(userId);
 
 		if (!userData || !userData.profileBackground) {
 			return res.status(404).send('No profile background found for this user.');
@@ -163,9 +160,7 @@ export async function updateBiography(req, res) {
 	}
 
 	try {
-		const userRef = ref(db, `users/${userId}`);
-		const userSnapshot = await get(userRef);
-		const userData = userSnapshot.val();
+		const userData = getUserData(userId);
 
 		if (!userData) {
 			return res.status(404).send('No data found for this user.');

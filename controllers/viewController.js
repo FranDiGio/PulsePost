@@ -1,5 +1,4 @@
-import { ref, get } from 'firebase/database';
-import { db } from '../config/firebaseConfig.js';
+import { getUserData } from '../services/userService.js';
 
 export async function loadFeed(req, res) {
 	try {
@@ -39,9 +38,7 @@ export async function loadProfile(req, res) {
 
 async function getProfilePictureUrl(userId) {
 	try {
-		const userRef = ref(db, `users/${userId}`);
-		const userSnapshot = await get(userRef);
-		const userData = userSnapshot.val();
+		const userData = getUserData(userId);
 
 		if (userData && userData.profilePicture && userData.profilePicture !== 'N/A') {
 			return userData.profilePicture;
@@ -56,9 +53,7 @@ async function getProfilePictureUrl(userId) {
 
 async function getProfileBackgroundUrl(userId) {
 	try {
-		const userRef = ref(db, `users/${userId}`);
-		const userSnapshot = await get(userRef);
-		const userData = userSnapshot.val();
+		const userData = getUserData(userId);
 
 		if (userData && userData.profileBackground && userData.profileBackground !== 'N/A') {
 			return userData.profileBackground;
@@ -73,9 +68,7 @@ async function getProfileBackgroundUrl(userId) {
 
 async function getBiography(userId) {
 	try {
-		const userRef = ref(db, `users/${userId}`);
-		const userSnapshot = await get(userRef);
-		const userData = userSnapshot.val();
+		const userData = getUserData(userId);
 
 		if (userData && userData.bio) {
 			return userData.bio;

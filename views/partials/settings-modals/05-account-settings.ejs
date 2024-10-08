@@ -1,0 +1,67 @@
+<!-- Change Password Modal -->
+<div class="modal" id="changePasswordModal" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5">Change Password</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-body">
+				<form class="w-100" action="/update/password" method="POST" id="changePasswordForm">
+					<div class="form-floating mb-2 w-100">
+						<input
+							class="form-control <%= locals.invalidCurrentPassword ? 'is-invalid' : '' %>"
+							id="floatingCurrentPassword"
+							type="password"
+							placeholder="Current Password"
+							name="currentPassword"
+							data-bs-toggle="tooltip"
+							data-bs-placement="right"
+							data-bs-title="<%= locals.invalidCurrentPasswordMsg ? invalidCurrentPasswordMsg : '' %>"
+						/>
+						<label class="text-secondary" for="floatingCurrentPassword">Current Password</label>
+					</div>
+
+					<hr />
+
+					<div class="form-floating mb-2 w-100">
+						<input
+							class="form-control w-100 <%= locals.invalidNewPassword ? 'is-invalid' : '' %>"
+							id="floatingNewPassword"
+							type="password"
+							placeholder="New Password"
+							name="newPassword"
+							data-bs-toggle="tooltip"
+							data-bs-placement="right"
+							data-bs-title="<%= locals.invalidNewPasswordMsg ? invalidNewPasswordMsg : '' %>"
+						/>
+						<label class="text-secondary" for="floatingNewPassword">New Password</label>
+					</div>
+
+					<div class="form-floating mb-2 w-100">
+						<input
+							class="form-control w-100 <%= locals.invalidNewPasswordMsg ? 'is-invalid' : '' %>"
+							id="floatingConfirmPassword"
+							type="password"
+							placeholder="Confirm Password"
+							name="confirmPassword"
+						/>
+						<label class="text-secondary" for="floatingConfirmPassword">Confirm Password</label>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button
+					type="button"
+					id="backPicButton"
+					class="btn btn-secondary"
+					data-bs-toggle="modal"
+					data-bs-target="#settingsModal"
+				>
+					Back
+				</button>
+				<button type="submit" class="btn btn-primary" form="changePasswordForm">Save</button>
+			</div>
+		</div>
+	</div>
+</div>

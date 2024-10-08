@@ -1,6 +1,7 @@
 import { ref, query, orderByChild, equalTo, get } from 'firebase/database';
 import { db } from '../config/firebaseConfig.js';
-import ValidationResult from '../models/ValidationResult.mjs';
+import UserValidationResult from '../models/UserValidationResult.mjs';
+import PasswordValidationResult from '../models/PasswordValidationResult.mjs';
 
 export async function checkValidUsername(username) {
 	if (!username) return "Username field can't be empty";
@@ -19,30 +20,30 @@ export async function checkValidUsername(username) {
 }
 
 export async function validateSignUp(user, error) {
-	const validationResult = new ValidationResult();
+	const userValidationResult = new UserValidationResult();
 	const usernameError = await checkValidUsername(user.username);
 
 	if (usernameError) {
-		validationResult.setInvalid('Username', usernameError);
+		userValidationResult.setInvalid('Username', usernameError);
 	} else {
 		switch (error) {
 			case 'auth/email-already-in-use':
 				break;
 			case 'auth/invalid-email':
-				validationResult.setInvalid('Email', 'Invalid email format');
+				userValidationResult.setInvalid('Email', 'Invalid email format');
 				break;
 			case 'auth/missing-email':
 				break;
 			case 'auth/weak-password':
-				validationResult.setInvalid('Password', 'Password should be at least 6 characters long');
+				userValidationResult.setInvalid('Password', 'Password should be at least 6 characters long');
 				break;
 			case 'auth/missing-password':
-				validationResult.setInvalid('Password', 'Password is required');
+				userValidationResult.setInvalid('Password', 'Password is required');
 				break;
 			default:
 				break;
 		}
 	}
 
-	return validationResult;
+	return userValidationResult;
 }
