@@ -98,13 +98,15 @@
 		<!-- Create Post Modal -->
 		<%- include('partials/post-modal.ejs') %>
 		<!-- Main Settings Modal -->
-		<%- include('partials/settings-modals/01-main-settings.ejs') %>
+		<%- include('partials/settings-modals/00-main-settings.ejs') %>
 		<!-- Profile Picture Settings Modal -->
-		<%- include('partials/settings-modals/02-picture-settings.ejs') %>
+		<%- include('partials/settings-modals/01-picture-settings.ejs') %>
 		<!-- Profile Background Settings Modal -->
-		<%- include('partials/settings-modals/03-background-settings.ejs') %>
+		<%- include('partials/settings-modals/02-background-settings.ejs') %>
 		<!-- Biography Settings Modal -->
-		<%- include('partials/settings-modals/04-biography-settings.ejs') %>
+		<%- include('partials/settings-modals/03-biography-settings.ejs') %>
+		<!-- Password Settings Modal -->
+		<%- include('partials/settings-modals/04-password-settings.ejs') %>
 		<!-- Account Settings Modal -->
 		<%- include('partials/settings-modals/05-account-settings.ejs') %>
 
@@ -115,10 +117,10 @@
 			crossorigin="anonymous"
 		></script>
 		<script src="/js/auth.js" charset="utf-8"></script>
-		<script src="/js/settings/02-picture-setting-handler.js" charset="utf-8"></script>
-		<script src="/js/settings/03-background-setting-handler.js" charset="utf-8"></script>
-		<script src="/js/settings/04-bio-setting-handler.js" charset="utf-8"></script>
-		<script src="/js/settings/05-password-setting-handler.js" charset="utf-8"></script>
-		<script src="/js/postCreationEvents.js" charset="utf-8"></script>
+		<script src="/js/create-post-handler.js" charset="utf-8"></script>
+		<script src="/js/settings/01-picture-setting-handler.js" charset="utf-8"></script>
+		<script src="/js/settings/02-background-setting-handler.js" charset="utf-8"></script>
+		<script src="/js/settings/03-bio-setting-handler.js" charset="utf-8"></script>
+		<script src="/js/settings/04-password-setting-handler.js" charset="utf-8"></script>
 	</body>
 </html>
