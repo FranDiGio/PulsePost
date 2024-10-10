@@ -28,9 +28,6 @@ document.getElementById('bgPicForm').addEventListener('change', function (e) {
 document.getElementById('submitBgInput').addEventListener('click', function (event) {
 	event.preventDefault();
 
-	document.querySelector('#submitBgInput > p').classList.add('d-none');
-	document.querySelector('#submitBgInput > span').classList.remove('d-none');
-
 	if (bgFile) {
 		const formData = new FormData();
 		formData.append('background', bgFile);
@@ -54,10 +51,6 @@ document.getElementById('submitBgInput').addEventListener('click', function (eve
 			})
 			.catch((error) => {
 				console.error('Error uploading background:', error);
-			})
-			.finally(() => {
-				document.querySelector('#submitBgInput > p').classList.remove('d-none');
-				document.querySelector('#submitBgInput > span').classList.add('d-none');
 			});
 	}
 });

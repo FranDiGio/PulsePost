@@ -28,9 +28,6 @@ document.getElementById('picForm').addEventListener('change', function (e) {
 document.getElementById('submitPicInput').addEventListener('click', function (event) {
 	event.preventDefault();
 
-	document.querySelector('#submitPicInput > p').classList.add('d-none');
-	document.querySelector('#submitPicInput > span').classList.remove('d-none');
-
 	if (picFile) {
 		const formData = new FormData();
 		formData.append('profilePic', picFile);
@@ -54,10 +51,6 @@ document.getElementById('submitPicInput').addEventListener('click', function (ev
 			})
 			.catch((error) => {
 				console.error('Error uploading file:', error);
-			})
-			.finally(() => {
-				document.querySelector('#submitPicInput > p').classList.remove('d-none');
-				document.querySelector('#submitPicInput > span').classList.add('d-none');
 			});
 	}
 });
