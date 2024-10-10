@@ -194,7 +194,6 @@ export async function resetPassword(req, res) {
 
 		// Validate new password
 		const error = validateNewPassword(req.body.newPassword, req.body.confirmNewPassword);
-		console.log(error);
 
 		if (error) {
 			return res.status(400).json({ newPassword: `${error}` });

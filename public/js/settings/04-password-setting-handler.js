@@ -19,7 +19,7 @@ document.getElementById('changePasswordForm').addEventListener('submit', async f
 		clearValidationErrors();
 
 		if (response.ok) {
-			alert('Password updated successfully');
+			showSuccessMessage();
 			form.reset();
 		} else {
 			handleValidationErrors(result);
@@ -71,4 +71,13 @@ function handleValidationErrors(errors) {
 	tooltipTriggerList.forEach(function (tooltipTriggerEl) {
 		new bootstrap.Tooltip(tooltipTriggerEl);
 	});
+}
+
+function showSuccessMessage() {
+	const changePasswordModalElement = document.getElementById('changePasswordModal');
+	const changePasswordModal = bootstrap.Modal.getInstance(changePasswordModalElement);
+	changePasswordModal.hide();
+
+	const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+	successModal.show();
 }
