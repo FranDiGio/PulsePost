@@ -10,14 +10,13 @@
 				<form class="w-100" action="/update/password" method="POST" id="changePasswordForm">
 					<div class="form-floating mb-2 w-100">
 						<input
-							class="form-control <%= locals.invalidCurrentPassword ? 'is-invalid' : '' %>"
+							class="form-control"
 							id="floatingCurrentPassword"
 							type="password"
 							placeholder="Current Password"
 							name="currentPassword"
 							data-bs-toggle="tooltip"
 							data-bs-placement="right"
-							data-bs-title="<%= locals.invalidCurrentPasswordMsg ? invalidCurrentPasswordMsg : '' %>"
 						/>
 						<label class="text-secondary" for="floatingCurrentPassword">Current Password</label>
 					</div>
@@ -26,25 +25,24 @@
 
 					<div class="form-floating mb-2 w-100">
 						<input
-							class="form-control w-100 <%= locals.invalidNewPassword ? 'is-invalid' : '' %>"
+							class="form-control w-100"
 							id="floatingNewPassword"
 							type="password"
 							placeholder="New Password"
 							name="newPassword"
 							data-bs-toggle="tooltip"
 							data-bs-placement="right"
-							data-bs-title="<%= locals.invalidNewPasswordMsg ? invalidNewPasswordMsg : '' %>"
 						/>
 						<label class="text-secondary" for="floatingNewPassword">New Password</label>
 					</div>
 
 					<div class="form-floating mb-2 w-100">
 						<input
-							class="form-control w-100 <%= locals.invalidNewPasswordMsg ? 'is-invalid' : '' %>"
+							class="form-control w-100"
 							id="floatingConfirmPassword"
 							type="password"
 							placeholder="Confirm Password"
-							name="confirmPassword"
+							name="confirmNewPassword"
 						/>
 						<label class="text-secondary" for="floatingConfirmPassword">Confirm Password</label>
 					</div>
@@ -53,7 +51,7 @@
 			<div class="modal-footer">
 				<button
 					type="button"
-					id="backPicButton"
+					id="backPasswordModalButton"
 					class="btn btn-secondary"
 					data-bs-toggle="modal"
 					data-bs-target="#settingsModal"

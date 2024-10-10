@@ -1,7 +1,6 @@
 import { ref, query, orderByChild, equalTo, get } from 'firebase/database';
 import { db } from '../config/firebaseConfig.js';
 import UserValidationResult from '../models/UserValidationResult.mjs';
-import PasswordValidationResult from '../models/PasswordValidationResult.mjs';
 
 export async function checkValidUsername(username) {
 	if (!username) return "Username field can't be empty";
@@ -28,11 +27,13 @@ export async function validateSignUp(user, error) {
 	} else {
 		switch (error) {
 			case 'auth/email-already-in-use':
+				userValidationResult.setInvalid('Email', 'Email already in use');
 				break;
 			case 'auth/invalid-email':
 				userValidationResult.setInvalid('Email', 'Invalid email format');
 				break;
 			case 'auth/missing-email':
+				userValidationResult.setInvalid('Email', 'Missing email');
 				break;
 			case 'auth/weak-password':
 				userValidationResult.setInvalid('Password', 'Password should be at least 6 characters long');
@@ -46,4 +47,18 @@ export async function validateSignUp(user, error) {
 	}
 
 	return userValidationResult;
+}
+
+export function validateNewPassword(newPassword, confirmPassword) {
+	let passwordError;
+
+	if (newPassword.length < 6) {
+		passwordError = 'Password should be at least 6 characters long';
+	} else if (newPassword !== confirmPassword) {
+		passwordError = 'Passwords do not match';
+	} else {
+		passwordError = null;
+	}
+
+	return passwordError;
 }

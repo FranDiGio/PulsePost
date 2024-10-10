@@ -27,12 +27,11 @@ export async function signUp(req, res) {
 
 		await set(ref(db, 'users/' + user.uid), {
 			username: username,
+			email: email,
 			bio: "I'm new here! be nice ;-;",
 			profilePicture: 'N/A',
 			createdAt: getFormattedDateTime(),
 			lastLogged: getFormattedDateTime(),
-			following: [],
-			followers: [],
 		});
 
 		res.render('sign-up.ejs', { success: true });
@@ -76,7 +75,7 @@ export async function login(req, res) {
 				invalidCredentials: true,
 				email: email,
 			});
-			console.log(error.message);
+			console.error(error.message);
 		});
 }
 

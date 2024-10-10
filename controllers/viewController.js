@@ -38,7 +38,7 @@ export async function loadProfile(req, res) {
 
 async function getProfilePictureUrl(userId) {
 	try {
-		const userData = getUserData(userId);
+		const userData = await getUserData(userId);
 
 		if (userData && userData.profilePicture && userData.profilePicture !== 'N/A') {
 			return userData.profilePicture;
@@ -53,7 +53,7 @@ async function getProfilePictureUrl(userId) {
 
 async function getProfileBackgroundUrl(userId) {
 	try {
-		const userData = getUserData(userId);
+		const userData = await getUserData(userId);
 
 		if (userData && userData.profileBackground && userData.profileBackground !== 'N/A') {
 			return userData.profileBackground;
@@ -68,7 +68,7 @@ async function getProfileBackgroundUrl(userId) {
 
 async function getBiography(userId) {
 	try {
-		const userData = getUserData(userId);
+		const userData = await getUserData(userId);
 
 		if (userData && userData.bio) {
 			return userData.bio;
