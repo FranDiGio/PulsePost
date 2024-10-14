@@ -2,9 +2,11 @@ import { getUserData } from '../services/userService.js';
 
 export async function loadFeed(req, res) {
 	try {
-		const profilePictureUrl = await getProfilePictureUrl(req.session.userId);
-		const profileBackgroundUrl = await getProfileBackgroundUrl(req.session.userId);
-		const bio = await getBiography(req.session.userId);
+		const userId = req.session.userId;
+
+		const profilePictureUrl = await getProfilePictureUrl(userId);
+		const profileBackgroundUrl = await getProfileBackgroundUrl(userId);
+		const bio = await getBiography(userId);
 
 		res.render('feed.ejs', {
 			username: req.session.username,
@@ -20,9 +22,9 @@ export async function loadFeed(req, res) {
 
 export async function loadProfile(req, res) {
 	try {
-		const profilePictureUrl = await getProfilePictureUrl(req.session.userId);
-		const profileBackgroundUrl = await getProfileBackgroundUrl(req.session.userId);
-		const bio = await getBiography(req.session.userId);
+		const profilePictureUrl = await getProfilePictureUrl(userId);
+		const profileBackgroundUrl = await getProfileBackgroundUrl(userId);
+		const bio = await getBiography(userId);
 
 		res.render('profile.ejs', {
 			username: req.session.username,
@@ -38,7 +40,7 @@ export async function loadProfile(req, res) {
 
 async function getProfilePictureUrl(userId) {
 	try {
-		const userData = await getUserData(userId);
+		const { userData } = await getUserData(userId);
 
 		if (userData && userData.profilePicture && userData.profilePicture !== 'N/A') {
 			return userData.profilePicture;
@@ -53,7 +55,7 @@ async function getProfilePictureUrl(userId) {
 
 async function getProfileBackgroundUrl(userId) {
 	try {
-		const userData = await getUserData(userId);
+		const { userData } = await getUserData(userId);
 
 		if (userData && userData.profileBackground && userData.profileBackground !== 'N/A') {
 			return userData.profileBackground;
@@ -68,12 +70,12 @@ async function getProfileBackgroundUrl(userId) {
 
 async function getBiography(userId) {
 	try {
-		const userData = await getUserData(userId);
+		const { userData } = await getUserData(userId);
 
 		if (userData && userData.bio) {
 			return userData.bio;
 		} else {
-			throw new Error('User biography not found');
+			return '';
 		}
 	} catch (error) {
 		console.error('Error fetching user data:', error);

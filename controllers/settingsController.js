@@ -1,16 +1,17 @@
-import { db, auth, bucket } from '../config/firebaseConfig.js';
-import { ref, update } from 'firebase/database';
+import { auth, bucket } from '../config/firebaseConfig.js';
 import { updatePassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { update } from 'firebase/database';
 import { getUserData } from '../services/userService.js';
+import { getFilename } from '../services/fileService.js';
 import { validateNewPassword } from '../services/validationService.js';
 
 export async function uploadProfilePicture(req, res) {
 	if (!req.file) {
 		return res.status(400).send('No file uploaded.');
 	}
+	const userId = req.session.userId;
 
 	const filename = getFilename(req.file.mimetype, 'picture', req.session.username);
-
 	const file = bucket.file(`profile_pictures/${req.session.userId}/${filename}`);
 	const stream = file.createWriteStream({
 		metadata: {
@@ -31,7 +32,7 @@ export async function uploadProfilePicture(req, res) {
 			expires: '03-09-2491',
 		});
 
-		const userRef = ref(db, `users/${req.session.userId}`);
+		const { userRef } = await getUserData(userId);
 		update(userRef, {
 			profilePicture: downloadUrl[0],
 		})
@@ -55,7 +56,7 @@ export async function deleteProfilePicture(req, res) {
 	}
 
 	try {
-		const userData = await getUserData(userId);
+		const { userData, userRef } = await getUserData(userId);
 
 		if (!userData || !userData.profilePicture) {
 			return res.status(404).send('No profile picture found for this user.');
@@ -84,8 +85,8 @@ export async function uploadProfileBackground(req, res) {
 		return res.status(400).send('No file uploaded.');
 	}
 
+	const { userRef } = await getUserData(userId);
 	const filename = getFilename(req.file.mimetype, 'background', req.session.username);
-
 	const file = bucket.file(`profile_backgrounds/${req.session.userId}/${filename}`);
 	const stream = file.createWriteStream({
 		metadata: {
@@ -106,7 +107,6 @@ export async function uploadProfileBackground(req, res) {
 			expires: '03-09-2491',
 		});
 
-		const userRef = ref(db, `users/${req.session.userId}`);
 		update(userRef, {
 			profileBackground: downloadUrl[0],
 		})
@@ -130,7 +130,7 @@ export async function deleteProfileBackground(req, res) {
 	}
 
 	try {
-		const userData = await getUserData(userId);
+		const { userData, userRef } = await getUserData(userId);
 
 		if (!userData || !userData.profileBackground) {
 			return res.status(404).send('No profile background found for this user.');
@@ -162,7 +162,7 @@ export async function updateBiography(req, res) {
 	}
 
 	try {
-		const userData = await getUserData(userId);
+		const { userData, userRef } = await getUserData(userId);
 
 		if (!userData) {
 			return res.status(404).send('No data found for this user.');
@@ -192,7 +192,7 @@ export async function resetPassword(req, res) {
 		// Authenticate user with current password
 		await signInWithEmailAndPassword(auth, userData.email, req.body.currentPassword);
 
-		// Validate new password
+		// Validate new password format
 		const error = validateNewPassword(req.body.newPassword, req.body.confirmNewPassword);
 
 		if (error) {
@@ -211,19 +211,4 @@ export async function resetPassword(req, res) {
 
 		return res.status(500).json({ error: 'Error updating password' });
 	}
-}
-
-// Helper functions
-function getFilename(mimetype, contentType, username) {
-	let fileExtension = null;
-
-	if (mimetype === 'image/jpeg') {
-		fileExtension = 'jpg';
-	} else if (mimetype === 'image/png') {
-		fileExtension = 'png';
-	} else {
-		return res.status(400).send('Unsupported file format.');
-	}
-
-	return `${username}-${contentType}-${Date.now()}.${fileExtension}`;
 }
