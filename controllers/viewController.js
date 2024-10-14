@@ -22,6 +22,8 @@ export async function loadFeed(req, res) {
 
 export async function loadProfile(req, res) {
 	try {
+		const userId = req.session.userId;
+
 		const profilePictureUrl = await getProfilePictureUrl(userId);
 		const profileBackgroundUrl = await getProfileBackgroundUrl(userId);
 		const bio = await getBiography(userId);

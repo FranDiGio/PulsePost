@@ -1,48 +1,82 @@
-const previewBackground = document.getElementById('previewBackground');
-const bgInput = document.getElementById('bgPicInput');
-const originalBackgroundSource = previewBackground.src;
-let bgFile = null;
+document.addEventListener('DOMContentLoaded', function () {
+	const previewBackground = document.getElementById('previewBackground');
+	const bgInput = document.getElementById('bgPicInput');
+	const saveButton = document.getElementById('submitBgInput');
+	const confirmDeleteBgButton = document.getElementById('confirmDeleteBgButton');
+	const originalBackgroundSource = previewBackground.src;
+	let bgFile = null;
 
-document.getElementById('triggerBgFileInput').addEventListener('click', function (event) {
-	event.preventDefault();
-	bgInput.value = null;
-	bgInput.click();
-});
+	document.getElementById('triggerBgFileInput').addEventListener('click', function (event) {
+		event.preventDefault();
+		bgInput.value = null;
+		bgInput.click();
+	});
 
-document.getElementById('bgPicForm').addEventListener('change', function (e) {
-	e.preventDefault();
-	bgFile = null;
-	bgFile = bgInput.files[0];
+	document.getElementById('bgPicForm').addEventListener('change', function (e) {
+		e.preventDefault();
+		bgFile = null;
+		bgFile = bgInput.files[0];
 
-	if (bgFile) {
-		const reader = new FileReader();
-		reader.onload = function () {
-			previewBackground.src = reader.result;
-		};
-		reader.readAsDataURL(bgFile);
-	} else {
-		previewBackground.src = originalBackgroundSource;
-	}
-});
+		if (bgFile) {
+			const reader = new FileReader();
+			reader.onload = function () {
+				previewBackground.src = reader.result;
+			};
+			reader.readAsDataURL(bgFile);
+			saveButton.disabled = false;
+		} else {
+			previewBackground.src = originalBackgroundSource;
+			saveButton.disabled = true;
+		}
+	});
 
-document.getElementById('submitBgInput').addEventListener('click', function (event) {
-	event.preventDefault();
+	saveButton.addEventListener('click', function (event) {
+		event.preventDefault();
 
-	if (bgFile) {
-		const formData = new FormData();
-		formData.append('background', bgFile);
+		if (bgFile) {
+			const formData = new FormData();
+			formData.append('background', bgFile);
 
-		fetch('/upload/background', {
+			saveButton.disabled = true;
+			saveButton.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
+
+			fetch('/upload/background', {
+				method: 'POST',
+				body: formData,
+			})
+				.then((response) => {
+					console.log('Background uploaded successfully');
+
+					// Clear input file
+					bgInput.value = null;
+					bgFile = null;
+					previewBackground.src = originalBackgroundSource;
+
+					// Close modal
+					const backgroundModal = bootstrap.Modal.getInstance(document.getElementById('backgroundModal'));
+					backgroundModal.hide();
+					window.location.reload();
+				})
+				.catch((error) => {
+					console.error('Error uploading background:', error);
+					saveButton.innerHTML = 'Save';
+					saveButton.disabled = false;
+				});
+		}
+	});
+
+	confirmDeleteBgButton.addEventListener('click', function (event) {
+		event.preventDefault();
+
+		confirmDeleteBgButton.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
+		confirmDeleteBgButton.disabled = true;
+
+		fetch('/delete/background', {
 			method: 'POST',
-			body: formData,
 		})
 			.then((response) => {
-				console.log('Background uploaded successfully');
-
-				// Clear input file
 				bgInput.value = null;
-				bgFile = null;
-				previewBackground.src = originalBackgroundSource;
+				previewBackground.src = null;
 
 				// Close modal
 				const backgroundModal = bootstrap.Modal.getInstance(document.getElementById('backgroundModal'));
@@ -50,35 +84,23 @@ document.getElementById('submitBgInput').addEventListener('click', function (eve
 				window.location.reload();
 			})
 			.catch((error) => {
-				console.error('Error uploading background:', error);
+				console.error('Error deleting background:', error);
 			});
-	}
-});
+	});
 
-document.getElementById('deleteBgButton').addEventListener('click', function (event) {
-	event.preventDefault();
+	document.getElementById('backgroundModal').addEventListener('hidden.bs.modal', function () {
+		bgInput.value = null;
+		bgFile = null;
+		previewBackground.src = originalBackgroundSource;
 
-	fetch('/delete/background', {
-		method: 'POST',
-	})
-		.then((response) => {
-			console.log('Background deleted successfully');
+		// Disable "Save" for next time the modal is opened
+		saveButton.innerHTML = 'Save';
+		saveButton.disabled = true;
 
-			bgInput.value = null;
-			previewBackground.src = null;
+		// Enable "Confirm" button and override the spinner
+		confirmDeleteBgButton.innerHTML = 'Confirm';
+		confirmDeleteBgButton.disabled = false;
+	});
 
-			// Close modal
-			const backgroundModal = bootstrap.Modal.getInstance(document.getElementById('backgroundModal'));
-			backgroundModal.hide();
-			window.location.reload();
-		})
-		.catch((error) => {
-			console.error('Error deleting background:', error);
-		});
-});
-
-document.getElementById('backBgButton').addEventListener('click', function () {
-	bgInput.value = null;
-	bgFile = null;
-	previewBackground.src = originalBackgroundSource;
+	saveButton.disabled = true;
 });

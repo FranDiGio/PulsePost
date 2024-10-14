@@ -1,48 +1,84 @@
-const previewPic = document.getElementById('previewPic');
-const picInput = document.getElementById('picFileInput');
-const originalPicSource = previewPic.src;
-let picFile = null;
+document.addEventListener('DOMContentLoaded', function () {
+	const previewPic = document.getElementById('previewPic');
+	const picInput = document.getElementById('picFileInput');
+	const saveButton = document.getElementById('submitPicInput');
+	const confirmDeletePicButton = document.getElementById('confirmDeletePicButton');
+	const originalPicSource = previewPic.src;
+	let picFile = null;
 
-document.getElementById('triggerPicFileInput').addEventListener('click', function (event) {
-	event.preventDefault();
-	picInput.value = null;
-	picInput.click();
-});
+	document.getElementById('triggerPicFileInput').addEventListener('click', function (event) {
+		event.preventDefault();
+		picInput.value = null;
+		picInput.click();
+	});
 
-document.getElementById('picForm').addEventListener('change', function (e) {
-	e.preventDefault();
-	picFile = null;
-	picFile = picInput.files[0];
+	document.getElementById('picForm').addEventListener('change', function (e) {
+		e.preventDefault();
+		picFile = null;
+		picFile = picInput.files[0];
 
-	if (picFile) {
-		const reader = new FileReader();
-		reader.onload = function () {
-			previewPic.src = reader.result;
-		};
-		reader.readAsDataURL(picFile);
-	} else {
-		previewPic.src = originalPicSource;
-	}
-});
+		if (picFile) {
+			const reader = new FileReader();
+			reader.onload = function () {
+				previewPic.src = reader.result;
+			};
+			reader.readAsDataURL(picFile);
+			saveButton.disabled = false;
+		} else {
+			previewPic.src = originalPicSource;
+			saveButton.disabled = true;
+		}
+	});
 
-document.getElementById('submitPicInput').addEventListener('click', function (event) {
-	event.preventDefault();
+	saveButton.addEventListener('click', function (event) {
+		event.preventDefault();
 
-	if (picFile) {
-		const formData = new FormData();
-		formData.append('profilePic', picFile);
+		if (picFile) {
+			const formData = new FormData();
+			formData.append('profilePic', picFile);
 
-		fetch('/upload/picture', {
+			saveButton.disabled = true;
+			saveButton.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
+
+			fetch('/upload/picture', {
+				method: 'POST',
+				body: formData,
+			})
+				.then((response) => {
+					console.log('File uploaded successfully');
+
+					// Clear input file
+					picInput.value = null;
+					picFile = null;
+					previewPic.src = originalPicSource;
+
+					// Close modal
+					const picModal = bootstrap.Modal.getInstance(document.getElementById('pictureModal'));
+					picModal.hide();
+					window.location.reload();
+				})
+				.catch((error) => {
+					console.error('Error uploading file:', error);
+					saveButton.innerHTML = 'Save';
+					saveButton.disabled = false;
+				});
+		}
+	});
+
+	confirmDeletePicButton.addEventListener('click', function (event) {
+		event.preventDefault();
+
+		confirmDeletePicButton.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
+		confirmDeletePicButton.disabled = true;
+
+		fetch('/delete/picture', {
 			method: 'POST',
-			body: formData,
 		})
 			.then((response) => {
-				console.log('File uploaded successfully');
+				console.log('Picture deleted successfully');
 
-				// Clear input file
 				picInput.value = null;
-				picFile = null;
-				previewPic.src = originalPicSource;
+				previewPic.src = null;
 
 				// Close modal
 				const picModal = bootstrap.Modal.getInstance(document.getElementById('pictureModal'));
@@ -50,35 +86,23 @@ document.getElementById('submitPicInput').addEventListener('click', function (ev
 				window.location.reload();
 			})
 			.catch((error) => {
-				console.error('Error uploading file:', error);
+				console.error('Error deleting profile picture:', error);
 			});
-	}
-});
+	});
 
-document.getElementById('deletePicButton').addEventListener('click', function (event) {
-	event.preventDefault();
+	document.getElementById('pictureModal').addEventListener('hidden.bs.modal', function () {
+		picInput.value = null;
+		picFile = null;
+		previewPic.src = originalPicSource;
 
-	fetch('/delete/picture', {
-		method: 'POST',
-	})
-		.then((response) => {
-			console.log('Picture deleted successfully');
+		// Disable "Save" for next time the modal is opened
+		saveButton.innerHTML = 'Save';
+		saveButton.disabled = true;
 
-			picInput.value = null;
-			previewPic.src = null;
+		// Enable "Confirm" button and override the spinner
+		confirmDeletePicButton.innerHTML = 'Confirm';
+		confirmDeletePicButton.disabled = false;
+	});
 
-			// Close modal
-			const picModal = bootstrap.Modal.getInstance(document.getElementById('pictureModal'));
-			picModal.hide();
-			window.location.reload();
-		})
-		.catch((error) => {
-			console.error('Error deleting profile picture:', error);
-		});
-});
-
-document.getElementById('backPicButton').addEventListener('click', function () {
-	picInput.value = null;
-	picFile = null;
-	previewPic.src = originalPicSource;
+	saveButton.disabled = true;
 });

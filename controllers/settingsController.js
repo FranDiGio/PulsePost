@@ -188,7 +188,7 @@ export async function resetPassword(req, res) {
 	}
 
 	try {
-		const userData = await getUserData(userId);
+		const { userData } = await getUserData(userId);
 
 		// Authenticate user with current password
 		await signInWithEmailAndPassword(auth, userData.email, req.body.currentPassword);
