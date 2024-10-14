@@ -24,7 +24,11 @@
 					<a id="triggerBgFileInput" class="list-group-item list-group-item-action list-group-item">
 						Upload background
 					</a>
-					<a id="deleteBgButton" class="list-group-item list-group-item-action list-group-item-danger">
+					<a
+						class="list-group-item list-group-item-action list-group-item-danger"
+						data-bs-toggle="modal"
+						data-bs-target="#confirmDeleteBgModal"
+					>
 						Delete background
 					</a>
 				</div>
@@ -47,6 +51,39 @@
 
 				<button id="submitBgInput" type="button" class="btn btn-primary action-button">
 					<p class="m-0 p-0">Save</p>
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Confirm Delete Modal -->
+<div class="modal" id="confirmDeleteBgModal" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5">Delete profile background</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-body">
+				<div class="d-flex col-12 p-5 h-50 align-items-center" id="top-panel">
+					<div class="d-flex align-items-center flex-column text-center">
+						<h5>Are you sure you want to delete your profile background?</h5>
+						<p>(This action can't be undone)</p>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button
+					type="button"
+					class="btn btn-secondary shadow"
+					data-bs-toggle="modal"
+					data-bs-target="#backgroundModal"
+				>
+					Back
+				</button>
+				<button id="deleteBgButton" type="button" class="btn btn-primary action-button">
+					<p class="m-0 p-0">Confirm</p>
 				</button>
 			</div>
 		</div>

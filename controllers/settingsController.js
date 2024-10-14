@@ -84,8 +84,8 @@ export async function uploadProfileBackground(req, res) {
 	if (!req.file) {
 		return res.status(400).send('No file uploaded.');
 	}
+	const userId = req.session.userId;
 
-	const { userRef } = await getUserData(userId);
 	const filename = getFilename(req.file.mimetype, 'background', req.session.username);
 	const file = bucket.file(`profile_backgrounds/${req.session.userId}/${filename}`);
 	const stream = file.createWriteStream({
@@ -107,6 +107,7 @@ export async function uploadProfileBackground(req, res) {
 			expires: '03-09-2491',
 		});
 
+		const { userRef } = await getUserData(userId);
 		update(userRef, {
 			profileBackground: downloadUrl[0],
 		})
