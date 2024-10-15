@@ -52,6 +52,27 @@
     background: #909090; /* Lighter color of the scrollbar thumb on hover */
 }
 
+.like-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    outline: none;
+}
+
+.heart-icon {
+    width: 18px;
+    height: 18px;
+    display: inline-block;
+    background: url('/svg/heart.svg') no-repeat center center;
+    background-size: contain;
+    transition: background 0.3s;
+}
+
+.heart-icon.filled {
+    background: url('/svg/heart-fill.svg') no-repeat center center;
+    background-size: contain;
+}
+
 .open-sans-title {
     font-family: 'Open Sans', sans-serif;
     font-optical-sizing: auto;
