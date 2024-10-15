@@ -39,17 +39,14 @@
 						</h2>
 
 						<ul class="list-unstyled fw-normal pb-2 small mt-3">
-							<li>
-								<a href="/feed/" class="d-block list-item rounded p-2 mb-2 fs-6">
-									The Art of Unlearning
-								</a>
-							</li>
+							<% for (let i = 0; i < 10; i++) { %>
 							<li>
 								<a href="/feed/" class="d-block list-item rounded p-2 mb-2 fs-6">Echoes of Silence</a>
 							</li>
 							<li>
 								<a href="/feed/" class="d-block list-item rounded p-2 mb-2 fs-6">Beyond the Horizon</a>
 							</li>
+							<% } %>
 							<li>
 								<a
 									style="cursor: pointer"
@@ -65,7 +62,7 @@
 				</div>
 
 				<!-- Main content -->
-				<div class="col-8 col-xxl-6">
+				<div class="col-8 col-xxl-6 bg-light">
 					<div class="d-flex flex-nowrap pt-3">
 						<%- include('partials/user-tag.ejs') %>
 						<div class="col-8"><%- include('partials/sample-post.ejs') %></div>
@@ -136,7 +133,6 @@
 		></script>
 		<script src="/js/auth.js" charset="utf-8"></script>
 		<script src="/js/create-post-handler.js" charset="utf-8"></script>
-		<script src="/js/animations.js" charset="utf-8"></script>
 		<script src="/js/trending-mode-handler.js" charset="utf-8"></script>
 		<script src="/js/settings/01-picture-settings-handler.js" charset="utf-8"></script>
 		<script src="/js/settings/02-background-settings-handler.js" charset="utf-8"></script>

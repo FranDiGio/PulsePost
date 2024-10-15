@@ -22,9 +22,34 @@
     overflow-y: auto;
 }
 
+.fixed-sidebar-left,
+.fixed-sidebar-right {
+    overflow: hidden; /* Hide the scrollbar by default */
+}
+
+.fixed-sidebar-left:hover,
+.fixed-sidebar-right:hover {
+    overflow: auto; /* Show the scrollbar on hover */
+}
+
 .fixed-sidebar-left::-webkit-scrollbar,
 .fixed-sidebar-right::-webkit-scrollbar {
-    display: none;
+    width: 6px; /* Width of the scrollbar */
+}
+
+.fixed-sidebar-left::-webkit-scrollbar-track,
+.fixed-sidebar-right::-webkit-scrollbar-track {
+    background: #e0e0e0; /* Lighter background color of the scrollbar track */
+}
+
+.fixed-sidebar-left::-webkit-scrollbar-thumb,
+.fixed-sidebar-right::-webkit-scrollbar-thumb {
+    background: #b0b0b0; /* Lighter color of the scrollbar thumb */
+}
+
+.fixed-sidebar-left::-webkit-scrollbar-thumb:hover,
+.fixed-sidebar-right::-webkit-scrollbar-thumb:hover {
+    background: #909090; /* Lighter color of the scrollbar thumb on hover */
 }
 
 .open-sans-title {
