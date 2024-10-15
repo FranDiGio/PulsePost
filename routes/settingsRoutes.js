@@ -1,6 +1,5 @@
 import express from 'express';
 import multer from 'multer';
-import { ensureAuthenticated } from '../controllers/authController.js';
 import {
 	uploadProfilePicture,
 	deleteProfilePicture,
@@ -8,6 +7,7 @@ import {
 	deleteProfileBackground,
 	updateBiography,
 	resetPassword,
+	deleteAccount,
 } from '../controllers/settingsController.js';
 
 const router = express.Router();
@@ -19,5 +19,6 @@ router.post('/upload/background', upload.single('background'), uploadProfileBack
 router.post('/delete/background', deleteProfileBackground);
 router.post('/update/bio', updateBiography);
 router.post('/update/password', resetPassword);
+router.post('/delete/account', deleteAccount);
 
 export default router;

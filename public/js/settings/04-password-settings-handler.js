@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		const changePasswordModal = bootstrap.Modal.getInstance(changePasswordModalElement);
 		changePasswordModal.hide();
 
-		const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+		const successModal = new bootstrap.Modal(document.getElementById('passwordChangeSuccessModal'));
 		successModal.show();
 	}
 

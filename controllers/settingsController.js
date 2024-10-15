@@ -1,6 +1,6 @@
 import { auth, bucket } from '../config/firebaseConfig.js';
-import { updatePassword, signInWithEmailAndPassword } from 'firebase/auth';
-import { update } from 'firebase/database';
+import { updatePassword, signInWithEmailAndPassword, deleteUser } from 'firebase/auth';
+import { update, remove } from 'firebase/database';
 import { getUserData } from '../services/userService.js';
 import { getFilename } from '../services/fileService.js';
 import { validateNewPassword } from '../services/validationService.js';
@@ -211,5 +211,38 @@ export async function resetPassword(req, res) {
 		}
 
 		return res.status(500).json({ error: 'Error updating password' });
+	}
+}
+
+export async function deleteAccount(req, res) {
+	const userId = req.session.userId;
+
+	if (!userId) {
+		return res.status(400).send('User ID not found in session.');
+	}
+
+	try {
+		const { userRef } = await getUserData(userId);
+		const user = auth.currentUser;
+
+		if (!user) {
+			return res.status(401).send('User not authenticated.');
+		}
+
+		await remove(userRef);
+		await deleteUser(user);
+
+		await bucket.deleteFiles({
+			prefix: `profile_backgrounds/${userId}`,
+		});
+
+		await bucket.deleteFiles({
+			prefix: `profile_pictures/${userId}`,
+		});
+
+		return res.status(200).json({ message: 'Account deleted successfully' });
+	} catch (error) {
+		console.error('Error deleting account:', error.message || error);
+		return res.status(500).json({ error: 'Error deleting account' });
 	}
 }

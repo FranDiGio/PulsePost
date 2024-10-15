@@ -1,0 +1,52 @@
+<!-- Delete Account Modal -->
+<div class="modal" id="deleteAccountModal" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5">Delete account</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-body">
+				<div class="d-flex col-12 p-5 h-50 align-items-center" id="top-panel">
+					<div class="d-flex align-items-center flex-column text-center">
+						<h5>Are you sure you want to delete your PulsePost account?</h5>
+						<p>(This action can't be undone)</p>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button
+					type="button"
+					class="btn btn-secondary shadow"
+					data-bs-toggle="modal"
+					data-bs-target="#settingsModal"
+				>
+					Back
+				</button>
+				<button id="confirmDeleteAccButton" type="button" class="btn btn-danger shadow">
+					<p class="m-0 p-0">Confirm</p>
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Success Modal -->
+<div class="modal" id="accountDeleteSuccessModal" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5">Success</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-body">
+				<div class="d-flex col-12 p-5 h-50 align-items-center" id="top-panel">
+					<div class="d-flex justify-content-evenly align-items-center">
+						<img class="p-3" height="120px" alt="checkmark icon" src="/svg/check2-circle.svg" />
+						<h4 class="ms-2">Account deleted succesfully!</h4>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
