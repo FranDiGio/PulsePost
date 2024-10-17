@@ -1,4 +1,6 @@
 import { getUserData } from '../services/userService.js';
+import { db } from '../config/firebaseConfig.js';
+import { ref, get } from 'firebase/database';
 
 export async function loadFeed(req, res) {
 	try {
@@ -7,12 +9,14 @@ export async function loadFeed(req, res) {
 		const profilePictureUrl = await getProfilePictureUrl(userId);
 		const profileBackgroundUrl = await getProfileBackgroundUrl(userId);
 		const bio = await getBiography(userId);
+		const posts = await getLatestPosts();
 
-		res.render('feed.ejs', {
+		await res.render('feed.ejs', {
 			username: req.session.username,
 			profilePictureUrl: profilePictureUrl,
 			profileBackgroundUrl: profileBackgroundUrl,
 			bio: bio,
+			posts: posts,
 		});
 	} catch (error) {
 		console.error('Error fetching user data:', error);
@@ -40,6 +44,27 @@ export async function loadProfile(req, res) {
 	}
 }
 
+async function getLatestPosts() {
+	try {
+		const postsRef = ref(db, `posts`);
+		const postsSnapshot = await get(postsRef);
+		const postsData = postsSnapshot.val();
+
+		// Fetch profile picture for each post's author
+		for (const key in postsData) {
+			if (postsData.hasOwnProperty(key)) {
+				const post = postsData[key];
+				const profilePictureUrl = await getProfilePictureUrl(post.uid);
+				post.profilePictureUrl = profilePictureUrl;
+			}
+		}
+
+		return postsData;
+	} catch (error) {
+		console.error('Error fetching posts:', error);
+		return '';
+	}
+}
 async function getProfilePictureUrl(userId) {
 	try {
 		const { userData } = await getUserData(userId);
