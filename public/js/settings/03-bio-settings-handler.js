@@ -22,8 +22,6 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 
 		const trimmedBioContent = bioContent.value.trim();
-
-		// Manually construct URL-encoded form data
 		const formData = new URLSearchParams();
 		formData.append('bioContent', trimmedBioContent);
 
