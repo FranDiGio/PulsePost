@@ -1,6 +1,6 @@
-import { auth, bucket } from '../config/firebaseConfig.js';
+import { auth, db, bucket } from '../config/firebaseConfig.js';
 import { updatePassword, signInWithEmailAndPassword, deleteUser } from 'firebase/auth';
-import { update, remove } from 'firebase/database';
+import { update, remove, ref, query, orderByChild, equalTo, get } from 'firebase/database';
 import { getUserData } from '../services/userService.js';
 import { getFilename } from '../services/fileService.js';
 import { validateNewPassword } from '../services/validationService.js';
@@ -227,6 +227,27 @@ export async function deleteAccount(req, res) {
 
 		if (!user) {
 			return res.status(401).send('User not authenticated.');
+		}
+
+		const postsRef = ref(db, 'posts');
+		const postsQuery = query(postsRef, orderByChild('uid'), equalTo(userId));
+		const snapshot = await get(postsQuery);
+
+		// Check if any posts exist for this user
+		if (snapshot.exists()) {
+			snapshot.forEach((postSnapshot) => {
+				const postKey = postSnapshot.key;
+
+				remove(ref(db, `posts/${postKey}`))
+					.then(() => {
+						console.log(`Post ${postKey} deleted successfully.`);
+					})
+					.catch((error) => {
+						console.error(`Error deleting post ${postKey}:`, error);
+					});
+			});
+		} else {
+			console.log('No posts found for this user.');
 		}
 
 		await remove(userRef);
