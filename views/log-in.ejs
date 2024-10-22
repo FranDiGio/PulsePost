@@ -54,8 +54,8 @@
 								<label for="floatingPassword">Password</label>
 							</div>
 
-							<% if (invalidCredentials) { %>
-							<p class="text-danger">Incorrect email or password</p>
+							<% if (locals.message) { %>
+							<p class="text-danger"><%= message %></p>
 							<% } %>
 
 							<button class="btn btn-primary" type="submit">Log In</button>

@@ -51,32 +51,62 @@ export async function signUp(req, res) {
 export async function login(req, res) {
 	const { email, password } = req.body;
 
-	signInWithEmailAndPassword(auth, email, password)
-		.then((userCredential) => {
-			const user = userCredential.user;
-			const usersRef = ref(db, 'users/' + user.uid);
+	// Initialize session variables if they don't exist
+	if (!req.session.failedAttempts) {
+		req.session.failedAttempts = 0;
+	}
+	if (!req.session.blockedUntil) {
+		req.session.blockedUntil = null;
+	}
 
-			update(usersRef, {
-				lastLogged: getFormattedDateTime(),
-			});
-			get(child(usersRef, `username`)).then((snapshot) => {
-				if (snapshot.exists()) {
-					req.session.username = snapshot.val();
-					req.session.userId = user.uid;
-					res.redirect('/feed/');
-				} else {
-					console.log('No data available');
-					res.redirect('/login');
-				}
-			});
-		})
-		.catch((error) => {
-			res.render('log-in.ejs', {
-				invalidCredentials: true,
-				email: email,
-			});
-			console.error(error.message);
+	const now = new Date();
+
+	// Check if the user is currently blocked
+	if (req.session.blockedUntil && now < new Date(req.session.blockedUntil)) {
+		res.render('log-in.ejs', {
+			invalidCredentials: true,
+			email: email,
+			message: 'Too many failed attempts. Try again later.',
 		});
+		return;
+	}
+
+	try {
+		const userCredential = await signInWithEmailAndPassword(auth, email, password);
+		const user = userCredential.user;
+		const usersRef = ref(db, 'users/' + user.uid);
+
+		req.session.failedAttempts = 0;
+		req.session.blockedUntil = null;
+
+		await update(usersRef, {
+			lastLogged: getFormattedDateTime(),
+		});
+
+		get(child(usersRef, `username`)).then((snapshot) => {
+			if (snapshot.exists()) {
+				req.session.username = snapshot.val();
+				req.session.userId = user.uid;
+				res.redirect('/feed/');
+			} else {
+				console.log('No data available');
+				res.redirect('/login');
+			}
+		});
+	} catch (error) {
+		req.session.failedAttempts += 1;
+
+		if (req.session.failedAttempts >= 5) {
+			req.session.blockedUntil = new Date(now.getTime() + 15 * 60 * 1000).toISOString(); // Block for 15 minutes
+		}
+
+		res.render('log-in.ejs', {
+			invalidCredentials: true,
+			email: email,
+			message: 'Invalid email or password.',
+		});
+		console.error(error.message);
+	}
 }
 
 export async function logOut(req, res) {
