@@ -64,7 +64,9 @@
 				</div>
 
 				<!-- Main content -->
-				<div class="col-8 col-xxl-6 bg-light"><%- include('partials/feed-posts.ejs') %></div>
+				<div class="col-8 col-xxl-6 bg-light">
+					<% if (locals.posts) { %><%- include('partials/feed-posts.ejs') %><% } %>
+				</div>
 
 				<!-- Right sidebar -->
 				<div

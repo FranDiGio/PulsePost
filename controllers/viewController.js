@@ -26,17 +26,20 @@ export async function loadFeed(req, res) {
 
 export async function loadProfile(req, res) {
 	try {
-		const userId = req.session.userId;
+		const idSnapshot = await get(ref(db, `usernames/` + req.params.username));
+		const userId = idSnapshot.val();
 
 		const profilePictureUrl = await getProfilePictureUrl(userId);
 		const profileBackgroundUrl = await getProfileBackgroundUrl(userId);
 		const bio = await getBiography(userId);
+		const posts = await getUserPosts(userId);
 
 		res.render('profile.ejs', {
-			username: req.session.username,
+			username: req.params.username,
 			profilePictureUrl: profilePictureUrl,
 			profileBackgroundUrl: profileBackgroundUrl,
 			bio: bio,
+			posts: posts,
 		});
 	} catch (error) {
 		console.error('Error fetching user data:', error);
@@ -65,6 +68,20 @@ async function getLatestPosts() {
 		return '';
 	}
 }
+
+async function getUserPosts(userId) {
+	try {
+		const postsRef = ref(db, `users/` + userId + '/posts');
+		const postsSnapshot = await get(postsRef);
+		const postsData = postsSnapshot.val();
+
+		return postsData;
+	} catch (error) {
+		console.error('Error fetching posts:', error);
+		return '';
+	}
+}
+
 async function getProfilePictureUrl(userId) {
 	try {
 		const { userData } = await getUserData(userId);

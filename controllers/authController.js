@@ -34,6 +34,9 @@ export async function signUp(req, res) {
 			lastLogged: getFormattedDateTime(),
 		});
 
+		// Map the username to the userId
+		await set(ref(db, 'usernames/' + username), user.uid);
+
 		res.render('sign-up.ejs', { success: true });
 	} catch (error) {
 		const userValidationResult = await validateSignUp(newUser, error.code);
@@ -51,7 +54,6 @@ export async function signUp(req, res) {
 export async function login(req, res) {
 	const { email, password } = req.body;
 
-	// Initialize session variables if they don't exist
 	if (!req.session.failedAttempts) {
 		req.session.failedAttempts = 0;
 	}
@@ -61,7 +63,6 @@ export async function login(req, res) {
 
 	const now = new Date();
 
-	// Check if the user is currently blocked
 	if (req.session.blockedUntil && now < new Date(req.session.blockedUntil)) {
 		res.render('log-in.ejs', {
 			invalidCredentials: true,

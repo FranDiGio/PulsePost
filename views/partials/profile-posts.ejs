@@ -1,37 +1,6 @@
 <% Object.keys(posts).forEach(function(key) { %>
 <div class="d-flex flex-nowrap pt-4">
-	<!-- Author Details -->
-	<div class="col-3 d-inline-flex justify-content-end align-items-start me-4">
-		<div class="d-flex flex-nowrap dropdown-center border rounded-5 bg-white px-2 py-1">
-			<p class="d-xl-block d-none mx-2 my-2"><%= posts[key].author %></p>
-			<a class="d-block link-body-emphasis text-decoration-none" role="button" data-bs-toggle="dropdown">
-				<img
-					src="<%= posts[key].profilePictureUrl %>"
-					width="40"
-					height="40"
-					alt="profile-picture"
-					class="rounded-circle"
-				/>
-			</a>
-
-			<ul class="dropdown-menu">
-				<li>
-					<a class="dropdown-item" href="/profile/<%= encodeURIComponent(posts[key].author) %>">
-						View Profile
-					</a>
-				</li>
-				<li>
-					<a class="dropdown-item">
-						<span class="text-primary">+</span>
-						Follow
-					</a>
-				</li>
-			</ul>
-		</div>
-	</div>
-
-	<!-- Post Details -->
-	<div class="col-8">
+	<div class="col-12">
 		<div class="card border-secondary">
 			<div class="card-header">
 				<ul class="nav nav-tabs card-header-tabs">
