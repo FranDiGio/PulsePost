@@ -47,7 +47,6 @@ document.addEventListener('DOMContentLoaded', function () {
 			}
 		} catch (error) {
 			console.error('Error updating password:', error);
-			alert('An error occurred while updating the password.');
 		}
 	});
 
@@ -89,11 +88,8 @@ document.addEventListener('DOMContentLoaded', function () {
 			confirmPasswordInput.classList.add('is-invalid');
 		}
 
-		// Initialize tooltips again
-		const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-		tooltipTriggerList.forEach(function (tooltipTriggerEl) {
-			new bootstrap.Tooltip(tooltipTriggerEl);
-		});
+		saveButton.disabled = false;
+		saveButton.innerHTML = 'Save';
 	}
 
 	function showSuccessMessage() {
