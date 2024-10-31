@@ -10,7 +10,16 @@
 				<form action="/submit/post" method="POST" id="postForm">
 					<div class="mb-3">
 						<label class="col-form-label">Title:</label>
-						<input type="text" class="form-control" id="postTitle" name="title" />
+						<input
+							type="text"
+							class="form-control"
+							id="postTitle"
+							name="title"
+							maxlength="100"
+							data-bs-toggle="tooltip"
+							data-bs-placement="right"
+							placeholder="Add a catchy title…"
+						/>
 					</div>
 					<div class="mb-3">
 						<label class="col-form-label">Content:</label>
@@ -18,12 +27,15 @@
 							class="form-control"
 							id="postContent"
 							rows="10"
-							maxlength="1000"
+							maxlength="1500"
 							name="content"
+							data-bs-toggle="tooltip"
+							data-bs-placement="right"
+							placeholder="What’s on your mind?"
 						></textarea>
-						<div class="text-body-secondary fs-6">
+						<div class="text-body-secondary char-counter mt-1 ms-1">
 							Characters remaining:
-							<span id="postCharCount">1000</span>
+							<span id="postCharCount">1500</span>
 						</div>
 					</div>
 				</form>

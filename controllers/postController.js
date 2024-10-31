@@ -7,6 +7,18 @@ export async function submitPost(req, res) {
 	const userId = req.session.userId;
 	const username = req.session.username;
 
+	if (!title || !content) {
+		return res.status(400).json({ errorCode: 'empty-fields', message: 'Title and content cannot be empty.' });
+	}
+	if (title.length > 100) {
+		return res.status(400).json({ errorCode: 'title-too-long', message: 'Title cannot exceed 100 characters.' });
+	}
+	if (content.length > 1500) {
+		return res
+			.status(400)
+			.json({ errorCode: 'content-too-long', message: 'Content cannot exceed 1500 characters.' });
+	}
+
 	const postData = {
 		uid: userId,
 		author: username,
