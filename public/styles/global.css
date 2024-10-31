@@ -3,3 +3,7 @@
 .page-link, .dropdown-item, .nav-link, .list-group-item {
     cursor: pointer;
 }
+
+.char-counter {
+    font-size: small;
+}
