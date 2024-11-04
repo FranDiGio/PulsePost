@@ -3,7 +3,8 @@
 }
 
 .info-structure {
-    top: 20vh;
+    margin-top: 0px;
+    opacity: 1;
 }
 
 .about-background {
@@ -29,6 +30,10 @@ p {
 @media (min-width: 768px) {
     .contact-icon {
         max-width: 30px;
+    }
+
+    .info-structure {
+        margin-top: -70px;
     }
 }
 

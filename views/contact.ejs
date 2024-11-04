@@ -12,21 +12,18 @@
 			crossorigin="anonymous"
 		/>
 		<link href="/styles/global.css" rel="stylesheet" />
-		<link href="/styles/offcanvas.css" rel="stylesheet" />
 		<link href="/styles/info-pages.css" rel="stylesheet" />
 	</head>
 
 	<body>
 		<%- include('partials/navbars/navbar-home.ejs') %>
 
-		<div class="info-container container-fluid px-0 m-0">
-			<div class="contact-background w-100 position-relative z-1 overflow-hidden rounded"></div>
-			<div
-				class="info-structure w-50 h-auto position-absolute start-50 translate-middle-x p-4 z-2 rounded bg-light shadow-lg"
-			>
+		<div class="info-container container-fluid d-flex flex-column align-items-center px-0 m-0">
+			<div class="contact-background z-0 w-100 overflow-hidden rounded"></div>
+			<div class="info-structure z-1 col-12 col-md-8 h-auto p-4 bg-white rounded">
 				<div class="container my-2">
 					<div class="row">
-						<div class="col-md-6 mx-auto">
+						<div class="col-12 col-md-8 mx-auto">
 							<h2 class="text-center mb-4">Contact Me</h2>
 							<p class="text-center">
 								Have a question or want to work together? I'm always open to discussing new projects,
@@ -91,6 +88,9 @@
 					</div>
 				</div>
 			</div>
+			<%- include('partials/footer.ejs') %>
 		</div>
+
+		<script src="/js/ui/toggle-shadow.js" charset="utf-8"></script>
 	</body>
 </html>
