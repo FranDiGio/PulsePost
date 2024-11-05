@@ -19,15 +19,17 @@ export async function submitPost(req, res) {
 			.json({ errorCode: 'content-too-long', message: 'Content cannot exceed 1500 characters.' });
 	}
 
+	// Replace multiple consecutive line breaks with a double line break
+	let sanitizedContent = content.replace(/\n{3,}/g, '\n\n').trim();
+
 	const postData = {
 		uid: userId,
 		author: username,
 		title: title,
-		content: content,
+		content: sanitizedContent,
 		createdAt: getFormattedDateTime(),
 	};
 
-	// Create a new post reference with an automatically generated key
 	const newPostRef = push(ref(db, 'posts'));
 	const newPostId = newPostRef.key;
 

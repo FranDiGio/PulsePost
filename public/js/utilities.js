@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	// Keep post content break lines
 	const postContents = document.querySelectorAll('.post-content');
 	postContents.forEach(function (postContent) {
-		const text = postContent.textContent;
+		let text = postContent.textContent.trim();
 		const formattedText = text.replace(/\n/g, '<br>');
 		postContent.innerHTML = formattedText;
 	});
