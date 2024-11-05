@@ -30,7 +30,7 @@ app.use(
 
 app.set('view engine', 'ejs');
 
-app.use('/api', authRoutes);
+app.use('/', authRoutes);
 app.use('/', settingsRoutes);
 app.use('/', postRoutes);
 app.use('/', viewRoutes);

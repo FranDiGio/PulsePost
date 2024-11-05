@@ -1,5 +1,5 @@
 function signOut() {
-	fetch('/api/signout', {
+	fetch('/signout', {
 		method: 'POST',
 	})
 		.then((response) => {

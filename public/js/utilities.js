@@ -1,8 +1,10 @@
 document.addEventListener('DOMContentLoaded', function () {
 	// Set like button animation
-	document.getElementById('like-button').addEventListener('click', function () {
-		const heartIcon = this.querySelector('.heart-icon');
-		heartIcon.classList.toggle('filled');
+	document.querySelectorAll('.like-button').forEach((button) => {
+		button.addEventListener('click', function () {
+			const heartIcon = this.querySelector('.heart-icon');
+			heartIcon.classList.toggle('filled');
+		});
 	});
 
 	// Keep post content break lines
