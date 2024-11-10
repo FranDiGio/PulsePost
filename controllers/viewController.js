@@ -6,16 +6,16 @@ export async function loadFeed(req, res) {
 	try {
 		const userId = req.session.userId;
 
-		const profilePictureUrl = await getProfilePictureUrl(userId);
-		const profileBackgroundUrl = await getProfileBackgroundUrl(userId);
-		const bio = await getBiography(userId);
+		const userPictureUrl = await getProfilePictureUrl(userId);
+		const userBackgroundUrl = await getProfileBackgroundUrl(userId);
+		const userBio = await getBiography(userId);
 		const posts = await getLatestPosts();
 
 		await res.render('feed.ejs', {
 			username: req.session.username,
-			profilePictureUrl: profilePictureUrl,
-			profileBackgroundUrl: profileBackgroundUrl,
-			bio: bio,
+			userPictureUrl: userPictureUrl,
+			userBackgroundUrl: userBackgroundUrl,
+			userBio: userBio,
 			posts: posts,
 		});
 	} catch (error) {
@@ -26,19 +26,30 @@ export async function loadFeed(req, res) {
 
 export async function loadProfile(req, res) {
 	try {
-		const idSnapshot = await get(ref(db, `usernames/` + req.params.username));
-		const userId = idSnapshot.val();
+		// Current user
+		const userId = req.session.userId;
+		const userPictureUrl = await getProfilePictureUrl(userId);
+		const userBackgroundUrl = await getProfileBackgroundUrl(userId);
+		const userBio = await getBiography(userId);
 
-		const profilePictureUrl = await getProfilePictureUrl(userId);
-		const profileBackgroundUrl = await getProfileBackgroundUrl(userId);
-		const bio = await getBiography(userId);
+		// Selected user's profile
+		const idSnapshot = await get(ref(db, `usernames/` + req.params.username));
+		const userProfileId = idSnapshot.val();
+
+		const profilePictureUrl = await getProfilePictureUrl(userProfileId);
+		const profileBackgroundUrl = await getProfileBackgroundUrl(userProfileId);
+		const profileBio = await getBiography(userProfileId);
 		const posts = await getUserPosts(userId);
 
 		res.render('profile.ejs', {
-			username: req.params.username,
+			username: req.session.username,
+			userPictureUrl: userPictureUrl,
+			userBackgroundUrl: userBackgroundUrl,
+			userBio: userBio,
+			profileUsername: req.params.username,
 			profilePictureUrl: profilePictureUrl,
 			profileBackgroundUrl: profileBackgroundUrl,
-			bio: bio,
+			profileBio: profileBio,
 			posts: posts,
 		});
 	} catch (error) {
