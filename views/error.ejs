@@ -19,78 +19,35 @@
 		/>
 		<link href="/styles/global.css" rel="stylesheet" />
 		<link href="/styles/feed.css" rel="stylesheet" />
-		<link href="/styles/profile.css" rel="stylesheet" />
 		<link href="/styles/backgrounds.css" rel="stylesheet" />
 	</head>
 
-	<body class="row d-flex justify-content-center m-0">
+	<body>
 		<%- include('partials/navbars/navbar-profile.ejs') %>
 
-		<div class="h-100 col-12 col-xxl-8 px-0 m-0">
-			<div class="w-100 profile-background position-relative rounded-bottom">
-				<img src="<%= profileBackgroundUrl %>" class="w-100 h-100" style="object-fit: cover" />
-			</div>
-
-			<div class="row justify-content-center position-relative m-0">
-				<div
-					class="col-3 d-flex justify-content-center align-items-center position-relative profile-circle rounded-circle bg-white"
-				>
-					<img src="<%= profilePictureUrl %>" class="profile-photo rounded-circle" />
-				</div>
-				<div class="col-6">
-					<div class="row w-auto ms-2 mt-2 px-2 pt-1 rounded bg-light">
-						<h3><%= profileUsername %></h3>
-					</div>
-					<div class="row w-auto ms-2 mt-2 px-2 pt-2 rounded bg-light">
-						<p class="text-break"><%= profileBio %></p>
+		<section class="container col-xxl-8 px-4">
+			<div class="row flex-lg-row align-items-center g-5 py-5">
+				<div class="col-lg-6">
+					<h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">Whoops! Something Went Wrong</h1>
+					<p class="lead">Error: <%= error %></p>
+					<div class="d-grid gap-2 d-md-flex justify-content-md-start">
+						<a class="btn btn-primary btn-lg px-4 me-md-2" href="/feed/">Go Back</a>
 					</div>
 				</div>
-			</div>
-
-			<div class="d-block d-lg-none" style="height: 20px"></div>
-
-			<div class="row justify-content-center mb-5" style="max-height: 200px">
-				<div class="col-3 profile-metrics">
-					<div class="pt-2 ps-2 mx-3">
-						<h4>Followers</h4>
-						<p class="lead mb-3">0</p>
-						<h4>Following</h4>
-						<p class="lead mb-3">0</p>
-						<h4>Posts</h4>
-						<p class="lead pb-1">0</p>
-					</div>
-				</div>
-				<div class="col-6 px-3 ms-4">
-					<div class="bg-light rounded pb-1">
-						<div class="px-3">
-							<h2 class="p-2 pt-3 w-100 border-bottom">Posts</h2>
-						</div>
-
-						<div class="px-3">
-							<% if (locals.posts) { %><%- include('partials/profile-posts.ejs') %><% } %>
-						</div>
-
-						<nav class="mt-4">
-							<ul class="pagination justify-content-center">
-								<li class="page-item">
-									<a class="page-link">
-										<span>&laquo;</span>
-									</a>
-								</li>
-								<li class="page-item"><a class="page-link">1</a></li>
-								<li class="page-item"><a class="page-link">2</a></li>
-								<li class="page-item"><a class="page-link">3</a></li>
-								<li class="page-item">
-									<a class="page-link">
-										<span>&raquo;</span>
-									</a>
-								</li>
-							</ul>
-						</nav>
-					</div>
+				<div class="col-12 col-lg-6 align-items-center justify-content-center">
+					<img
+						src="/images/error-page-art.png"
+						class="d-block mx-lg-auto img-fluid rounded-circle"
+						alt="Error page art"
+						width="600"
+						height="450"
+						loading="lazy"
+					/>
 				</div>
 			</div>
-		</div>
+		</section>
+
+		<%- include('partials/footer.ejs') %>
 
 		<!-- Create Post Modal -->
 		<%- include('partials/create-post-modal.ejs') %>

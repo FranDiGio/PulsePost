@@ -36,22 +36,32 @@ export async function loadProfile(req, res) {
 		const idSnapshot = await get(ref(db, `usernames/` + req.params.username));
 		const userProfileId = idSnapshot.val();
 
-		const profilePictureUrl = await getProfilePictureUrl(userProfileId);
-		const profileBackgroundUrl = await getProfileBackgroundUrl(userProfileId);
-		const profileBio = await getBiography(userProfileId);
-		const posts = await getUserPosts(userId);
+		if (userProfileId == null) {
+			res.render('error.ejs', {
+				username: req.session.username,
+				userPictureUrl: userPictureUrl,
+				userBackgroundUrl: userBackgroundUrl,
+				userBio: userBio,
+				error: 404,
+			});
+		} else {
+			const profilePictureUrl = await getProfilePictureUrl(userProfileId);
+			const profileBackgroundUrl = await getProfileBackgroundUrl(userProfileId);
+			const profileBio = await getBiography(userProfileId);
+			const posts = await getUserPosts(userId);
 
-		res.render('profile.ejs', {
-			username: req.session.username,
-			userPictureUrl: userPictureUrl,
-			userBackgroundUrl: userBackgroundUrl,
-			userBio: userBio,
-			profileUsername: req.params.username,
-			profilePictureUrl: profilePictureUrl,
-			profileBackgroundUrl: profileBackgroundUrl,
-			profileBio: profileBio,
-			posts: posts,
-		});
+			res.render('profile.ejs', {
+				username: req.session.username,
+				userPictureUrl: userPictureUrl,
+				userBackgroundUrl: userBackgroundUrl,
+				userBio: userBio,
+				profileUsername: req.params.username,
+				profilePictureUrl: profilePictureUrl,
+				profileBackgroundUrl: profileBackgroundUrl,
+				profileBio: profileBio,
+				posts: posts,
+			});
+		}
 	} catch (error) {
 		console.error('Error fetching user data:', error);
 		res.redirect('/login');
