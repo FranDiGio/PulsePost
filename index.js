@@ -37,7 +37,7 @@ app.use('/', viewRoutes);
 
 // Catch-all route for handling 404 errors
 app.use((req, res) => {
-	res.status(404).render('error', { error: 'Page Not Found' });
+	res.status(404).render('error', { error: '404: Page Not Found' });
 });
 
 app.listen(port, () => {

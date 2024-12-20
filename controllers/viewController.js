@@ -1,6 +1,7 @@
 import { getUserData } from '../services/userService.js';
 import { db } from '../config/firebaseConfig.js';
 import { ref, get } from 'firebase/database';
+import { error } from 'console';
 
 export async function loadFeed(req, res) {
 	try {
@@ -20,7 +21,7 @@ export async function loadFeed(req, res) {
 		});
 	} catch (error) {
 		console.error('Error fetching user data:', error);
-		res.redirect('/login');
+		res.status(500).render('error', { error: '500: Failed to load page' });
 	}
 }
 
@@ -32,22 +33,22 @@ export async function loadProfile(req, res) {
 		const userBackgroundUrl = await getProfileBackgroundUrl(userId);
 		const userBio = await getBiography(userId);
 
-		// Selected user's profile
+		// Selected profile
 		const idSnapshot = await get(ref(db, `usernames/` + req.params.username));
-		const userProfileId = idSnapshot.val();
+		const profileId = idSnapshot.val();
 
-		if (userProfileId == null) {
-			res.render('error.ejs', {
-				username: req.session.username,
-				userPictureUrl: userPictureUrl,
-				userBackgroundUrl: userBackgroundUrl,
-				userBio: userBio,
-				error: 404,
-			});
+		// Check if it is the user's profile
+		let isSelf = false;
+		if (req.session.username === req.params.username) {
+			isSelf = true;
+		}
+
+		if (profileId == null) {
+			res.status(404).render('error.ejs', { error: '404: Page Not Found' });
 		} else {
-			const profilePictureUrl = await getProfilePictureUrl(userProfileId);
-			const profileBackgroundUrl = await getProfileBackgroundUrl(userProfileId);
-			const profileBio = await getBiography(userProfileId);
+			const profilePictureUrl = await getProfilePictureUrl(profileId);
+			const profileBackgroundUrl = await getProfileBackgroundUrl(profileId);
+			const profileBio = await getBiography(profileId);
 			const posts = await getUserPosts(userId);
 
 			res.render('profile.ejs', {
@@ -59,12 +60,13 @@ export async function loadProfile(req, res) {
 				profilePictureUrl: profilePictureUrl,
 				profileBackgroundUrl: profileBackgroundUrl,
 				profileBio: profileBio,
+				isSelf: isSelf,
 				posts: posts,
 			});
 		}
 	} catch (error) {
 		console.error('Error fetching user data:', error);
-		res.redirect('/login');
+		res.status(500).render('error.ejs', { error: '500: Failed to load page' });
 	}
 }
 

@@ -10,6 +10,13 @@
 					<li class="nav-item">
 						<a class="nav-link">Comments</a>
 					</li>
+					<% if (isSelf) { %>
+					<li class="nav-item ms-auto">
+						<a class="btn flex-shrink-0 overflow-hidden pe-1 pt-0 pb-2" style="max-height: 40px">
+							<img alt="options icon" src="/svg/three-dots-vertical.svg" style="max-height: 40px" />
+						</a>
+					</li>
+					<% } %>
 				</ul>
 			</div>
 			<div class="card-body">
