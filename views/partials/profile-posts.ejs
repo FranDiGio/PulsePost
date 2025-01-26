@@ -12,9 +12,19 @@
 					</li>
 					<% if (isSelf) { %>
 					<li class="nav-item ms-auto">
-						<a class="btn flex-shrink-0 overflow-hidden pe-1 pt-0 pb-2" style="max-height: 40px">
-							<img alt="options icon" src="/svg/three-dots-vertical.svg" style="max-height: 40px" />
+						<a
+							class="flex-shrink-0 overflow-hidden pe-1 pt-0 pb-2"
+							style="max-height: 40px; cursor: pointer"
+							data-bs-toggle="dropdown"
+						>
+							<img alt="options icon" src="/svg/three-dots-vertical.svg" />
 						</a>
+
+						<ul class="dropdown-menu text-small rounded">
+							<li>
+								<a class="dropdown-item delete-post-link" data-key="<%= key %>">Delete Post</a>
+							</li>
+						</ul>
 					</li>
 					<% } %>
 				</ul>

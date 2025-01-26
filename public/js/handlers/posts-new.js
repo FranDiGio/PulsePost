@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	const titleInput = document.getElementById('postTitle');
 	const contentInput = document.getElementById('postContent');
 
+	// ===== Logic for Submitting Post =====
 	postForm.addEventListener('submit', async function (e) {
 		e.preventDefault();
 
@@ -43,6 +44,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 	});
 
+	// ===== UI Handling After Submission =====
 	postModal.addEventListener('hidden.bs.modal', function () {
 		submitBtn.innerHTML = 'Submit';
 		submitBtn.disabled = false;

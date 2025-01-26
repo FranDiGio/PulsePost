@@ -1,4 +1,4 @@
-import { ref, push, update } from 'firebase/database';
+import { ref, push, update, get, remove } from 'firebase/database';
 import { db } from '../config/firebaseConfig.js';
 import { getFormattedDateTime } from '../services/dateService.js';
 
@@ -44,5 +44,41 @@ export async function submitPost(req, res) {
 	} catch (error) {
 		console.error('Error submitting post:', error);
 		res.status(500).send('Error submitting post');
+	}
+}
+
+export async function deletePost(req, res) {
+	try {
+		const { postId } = req.body;
+		const userId = req.session.userId;
+
+		if (!userId) {
+			return res.status(401).json({ error: 'Unauthorized' });
+		}
+
+		const postRef = ref(db, `posts/${postId}`);
+		const postSnapshot = await get(postRef);
+
+		if (!postSnapshot.exists()) {
+			return res.status(404).json({ error: 'Post not found' });
+		}
+
+		const postData = postSnapshot.val();
+
+		// Check if the user owns the post
+		if (postData.uid !== userId) {
+			return res.status(403).json({ error: 'Forbidden: You do not own this post' });
+		}
+
+		const userPostRef = ref(db, `users/${userId}/posts/${postId}`);
+		await Promise.all([
+			remove(postRef), // Delete from `posts/${postId}`
+			remove(userPostRef), // Delete from `users/${userId}/posts/${postId}`
+		]);
+
+		return res.json({ message: 'Post deleted successfully' });
+	} catch (error) {
+		console.error('Error deleting post:', error);
+		return res.status(500).json({ error: 'Internal Server Error' });
 	}
 }
