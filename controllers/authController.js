@@ -106,6 +106,7 @@ export async function login(req, res) {
 			email: email,
 			message: 'Invalid email or password.',
 		});
+
 		console.error(error.message);
 	}
 }

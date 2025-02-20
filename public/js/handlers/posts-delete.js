@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 			const postId = link.dataset.key;
 
-			// Confirm deletion
 			if (confirm('Are you sure you want to delete this post?')) {
 				try {
 					const response = await fetch('/delete/post', {
