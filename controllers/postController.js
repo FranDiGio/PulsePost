@@ -1,6 +1,5 @@
 import { ref, push, update, get, remove } from 'firebase/database';
 import { db } from '../config/firebaseConfig.js';
-import { getFormattedDateTime } from '../services/dateService.js';
 
 export async function submitPost(req, res) {
 	const { title, content } = req.body;
@@ -27,7 +26,7 @@ export async function submitPost(req, res) {
 		author: username,
 		title: title,
 		content: sanitizedContent,
-		createdAt: getFormattedDateTime(),
+		createdTimestamp: new Date().toISOString(),
 	};
 
 	const newPostRef = push(ref(db, 'posts'));

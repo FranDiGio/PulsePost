@@ -1,7 +1,6 @@
 import { auth, db } from '../config/firebaseConfig.js';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { ref, set, update, get, child } from 'firebase/database';
-import { getFormattedDateTime } from '../services/dateService.js';
 import { validateSignUp, checkValidUsername } from '../services/validationService.js';
 
 export function ensureAuthenticated(req, res, next) {
@@ -30,8 +29,8 @@ export async function signUp(req, res) {
 			email: email,
 			bio: "I'm new here! be nice ;-;",
 			profilePicture: 'N/A',
-			createdAt: getFormattedDateTime(),
-			lastLogged: getFormattedDateTime(),
+			createdAt: new Date().toISOString(),
+			lastLogged: new Date().toISOString(),
 		});
 
 		// Map the username to the userId
@@ -81,7 +80,7 @@ export async function login(req, res) {
 		req.session.blockedUntil = null;
 
 		await update(usersRef, {
-			lastLogged: getFormattedDateTime(),
+			lastLogged: new Date().toISOString(),
 		});
 
 		get(child(usersRef, `username`)).then((snapshot) => {
