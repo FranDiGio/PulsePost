@@ -222,7 +222,7 @@ export async function deleteAccount(req, res) {
 	}
 
 	try {
-		const { userRef } = await getUserData(userId);
+		const { userData, userRef } = await getUserData(userId);
 		const user = auth.currentUser;
 
 		if (!user) {
@@ -250,6 +250,7 @@ export async function deleteAccount(req, res) {
 			console.log('No posts found for this user.');
 		}
 
+		await remove(ref(db, `usernames/${userData.username}`));
 		await remove(userRef);
 		await deleteUser(user);
 
