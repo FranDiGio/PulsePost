@@ -22,3 +22,13 @@
     max-width: 270px;
     max-height: 270px;
 }
+
+@media (min-width: 1400px) {
+    .profile-background {
+        border-radius: 0px 0px 15px 15px;
+        -webkit-border-radius: 0px 0px 15px 15px;
+        -moz-border-radius: 0px 0px 15px 15px;
+        -ms-border-radius: 0px 0px 15px 15px;
+        -o-border-radius: 0px 0px 15px 15px;
+}
+}
