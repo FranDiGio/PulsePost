@@ -27,8 +27,8 @@ document.addEventListener('DOMContentLoaded', function () {
 		saveButton.disabled = true;
 
 		try {
-			const response = await fetch(form.action, {
-				method: 'POST',
+			const response = await fetch('password', {
+				method: 'PUT',
 				headers: {
 					'Content-Type': 'application/json',
 				},

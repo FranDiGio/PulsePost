@@ -9,8 +9,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 			if (confirm('Are you sure you want to delete this post?')) {
 				try {
-					const response = await fetch('/delete/post', {
-						method: 'POST',
+					const response = await fetch('/post', {
+						method: 'DELETE',
 						headers: {
 							'Content-Type': 'application/json',
 						},

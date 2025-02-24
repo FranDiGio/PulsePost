@@ -14,12 +14,12 @@ import {
 const router = express.Router();
 const upload = multer();
 
-router.post('/upload/picture', ensureAuthenticated, upload.single('profilePic'), uploadProfilePicture);
-router.post('/delete/picture', ensureAuthenticated, deleteProfilePicture);
-router.post('/upload/background', ensureAuthenticated, upload.single('background'), uploadProfileBackground);
-router.post('/delete/background', ensureAuthenticated, deleteProfileBackground);
-router.post('/update/bio', ensureAuthenticated, updateBiography);
-router.post('/update/password', ensureAuthenticated, resetPassword);
-router.post('/delete/account', ensureAuthenticated, deleteAccount);
+router.post('/picture', ensureAuthenticated, upload.single('profilePic'), uploadProfilePicture);
+router.delete('/picture', ensureAuthenticated, deleteProfilePicture);
+router.post('/background', ensureAuthenticated, upload.single('background'), uploadProfileBackground);
+router.delete('/background', ensureAuthenticated, deleteProfileBackground);
+router.put('/bio', ensureAuthenticated, updateBiography);
+router.put('/password', ensureAuthenticated, resetPassword);
+router.delete('/delete/account', ensureAuthenticated, deleteAccount);
 
 export default router;

@@ -6,8 +6,8 @@ document.addEventListener('DOMContentLoaded', function () {
 			confirmButton.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
 			confirmButton.disabled = true;
 
-			const response = await fetch('/delete/account', {
-				method: 'POST',
+			const response = await fetch('/account', {
+				method: 'DELETE',
 			});
 
 			if (response.ok) {
