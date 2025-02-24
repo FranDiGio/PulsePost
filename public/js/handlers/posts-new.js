@@ -38,9 +38,6 @@ document.addEventListener('DOMContentLoaded', function () {
 			}
 		} catch (error) {
 			console.error('Error submitting post:', error);
-		} finally {
-			submitBtn.innerHTML = 'Submit';
-			submitBtn.disabled = false;
 		}
 	});
 

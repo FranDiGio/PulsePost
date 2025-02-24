@@ -22,7 +22,14 @@
 
 						<ul class="dropdown-menu text-small rounded">
 							<li>
-								<a class="dropdown-item delete-post-link" data-key="<%= key %>">Delete Post</a>
+								<a
+									class="dropdown-item delete-post-link"
+									data-key="<%= key %>"
+									data-bs-toggle="modal"
+									data-bs-target="#confirmDeletePostModal"
+								>
+									Delete post
+								</a>
 							</li>
 						</ul>
 					</li>
@@ -48,3 +55,29 @@
 	</div>
 </div>
 <% }); %>
+
+<!-- Confirm Delete Post Modal -->
+<div class="modal" id="confirmDeletePostModal" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5">Delete post</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-body">
+				<div class="d-flex col-12 p-5 h-50 align-items-center" id="top-panel">
+					<div class="d-flex align-items-center flex-column text-center">
+						<h5>Are you sure you want to delete this post?</h5>
+						<p>(This action cannot be undone)</p>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+				<button id="confirmDeletePostButton" type="button" class="btn btn-primary shadow">
+					<p class="m-0 p-0">Confirm</p>
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

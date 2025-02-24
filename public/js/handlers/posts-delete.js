@@ -1,37 +1,40 @@
 document.addEventListener('DOMContentLoaded', () => {
 	const deleteLinks = document.querySelectorAll('.delete-post-link');
+	let postIdToDelete = null;
 
 	deleteLinks.forEach((link) => {
-		link.addEventListener('click', async (event) => {
+		link.addEventListener('click', (event) => {
 			event.preventDefault();
-
-			const postId = link.dataset.key;
-
-			if (confirm('Are you sure you want to delete this post?')) {
-				try {
-					const response = await fetch('/post', {
-						method: 'DELETE',
-						headers: {
-							'Content-Type': 'application/json',
-						},
-						body: JSON.stringify({ postId }),
-					});
-
-					const result = await response.json();
-
-					if (response.ok) {
-						alert(result.message);
-						setTimeout(() => {
-							window.location.reload();
-						}, 1000);
-					} else {
-						alert(result.error);
-					}
-				} catch (error) {
-					console.error('Error deleting post:', error);
-					alert('Failed to delete the post. Please try again.');
-				}
-			}
+			postIdToDelete = link.dataset.key;
 		});
+	});
+
+	const confirmDeleteButton = document.getElementById('confirmDeletePostButton');
+	confirmDeleteButton.addEventListener('click', async () => {
+		if (postIdToDelete) {
+			try {
+				confirmDeleteButton.disabled = true;
+				confirmDeleteButton.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
+
+				const response = await fetch('/post', {
+					method: 'DELETE',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({ postId: postIdToDelete }),
+				});
+
+				const result = await response.json();
+
+				if (response.ok) {
+					window.location.reload();
+				} else {
+					alert(result.error);
+				}
+			} catch (error) {
+				console.error('Error deleting post:', error);
+				alert('Failed to delete the post. Please try again.');
+			}
+		}
 	});
 });
