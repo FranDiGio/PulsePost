@@ -20,6 +20,6 @@ router.post('/background', ensureAuthenticated, upload.single('background'), upl
 router.delete('/background', ensureAuthenticated, deleteProfileBackground);
 router.put('/bio', ensureAuthenticated, updateBiography);
 router.put('/password', ensureAuthenticated, resetPassword);
-router.delete('/delete/account', ensureAuthenticated, deleteAccount);
+router.delete('/account', ensureAuthenticated, deleteAccount);
 
 export default router;
