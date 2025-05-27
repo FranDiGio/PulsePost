@@ -65,7 +65,7 @@
 
 				<!-- Main content -->
 				<div class="col-12 col-lg-8 col-xxl-6 bg-light mb-5">
-					<% if (locals.posts) { %><%- include('partials/feed-posts.ejs') %><% } %>
+					<% if (locals.posts) { %><%- include('partials/posts/feed-posts.ejs') %><% } %>
 				</div>
 
 				<!-- Right sidebar -->
@@ -97,7 +97,7 @@
 		</div>
 
 		<!-- Create Post Modal -->
-		<%- include('partials/create-post-modal.ejs') %>
+		<%- include('partials/posts/create-post-modal.ejs') %>
 		<!-- Main Settings Modal -->
 		<%- include('partials/settings-modals/00-main-settings.ejs') %>
 		<!-- Profile Picture Settings Modal -->

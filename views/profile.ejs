@@ -67,7 +67,7 @@
 						</div>
 
 						<div class="px-3">
-							<% if (locals.posts) { %><%- include('partials/profile-posts.ejs') %><% } %>
+							<% if (locals.posts) { %><%- include('partials/posts/profile-posts.ejs') %><% } %>
 						</div>
 
 						<nav class="mt-4">
@@ -93,7 +93,7 @@
 		</div>
 
 		<!-- Create Post Modal -->
-		<%- include('partials/create-post-modal.ejs') %>
+		<%- include('partials/posts/create-post-modal.ejs') %>
 		<!-- Main Settings Modal -->
 		<%- include('partials/settings-modals/00-main-settings.ejs') %>
 		<!-- Profile Picture Settings Modal -->
