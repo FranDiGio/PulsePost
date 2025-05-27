@@ -1,5 +1,10 @@
 document.addEventListener('DOMContentLoaded', function () {
-	// Set like button animation
+	// Collapse "Following" animation in offcanvas
+	document.getElementById('followingToggle').addEventListener('click', function () {
+		document.querySelector('#followingToggle .arrow').classList.toggle('down');
+	});
+
+	// Like button animation
 	document.querySelectorAll('.like-button').forEach((button) => {
 		button.addEventListener('click', function () {
 			const heartIcon = this.querySelector('.heart-icon');
@@ -15,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		postContent.innerHTML = formattedText;
 	});
 
-	// Initialize character counter for content of post and bio
+	// Initialize character counter for new post and bio content
 	function updateCharCount(textareaId, charCountId, maxChars) {
 		const textarea = document.getElementById(textareaId);
 		const charCount = document.getElementById(charCountId);
