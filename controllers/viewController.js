@@ -37,7 +37,7 @@ export async function loadProfile(req, res) {
 		const idSnapshot = await get(ref(db, `usernames/` + req.params.username));
 		const profileId = idSnapshot.val();
 
-		// Check if it is the user's profile
+		// Check if selected profile = current user
 		let isSelf = false;
 		if (req.session.username === req.params.username) {
 			isSelf = true;
