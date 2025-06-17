@@ -4,9 +4,10 @@ import session from 'express-session';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import authRoutes from './routes/authRoutes.js';
-import viewRoutes from './routes/viewRoutes.js';
+import followRoutes from './routes/followRoutes.js';
 import postRoutes from './routes/postRoutes.js';
 import settingsRoutes from './routes/settingsRoutes.js';
+import viewRoutes from './routes/viewRoutes.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -31,8 +32,9 @@ app.use(
 app.set('view engine', 'ejs');
 
 app.use('/', authRoutes);
-app.use('/', settingsRoutes);
+app.use('/', followRoutes);
 app.use('/', postRoutes);
+app.use('/', settingsRoutes);
 app.use('/', viewRoutes);
 
 // Catch-all route for handling 404 errors
