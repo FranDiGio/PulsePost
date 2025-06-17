@@ -34,7 +34,8 @@ export async function signUp(req, res) {
 		});
 
 		// Map the username to the userId
-		await set(ref(db, 'usernames/' + username), user.uid);
+		const usernameKey = username.trim().toLowerCase();
+		await set(ref(db, 'usernames/' + usernameKey), user.uid);
 
 		res.render('sign-up.ejs', { success: true });
 	} catch (error) {
