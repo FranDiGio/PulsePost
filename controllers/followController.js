@@ -1,5 +1,5 @@
 import { db } from '../config/firebaseConfig.js';
-import { ref, get, set } from 'firebase/database';
+import { ref, get, set, remove } from 'firebase/database';
 
 export async function followUser(req, res) {
 	const { userToFollow } = req.body;
@@ -29,6 +29,33 @@ export async function followUser(req, res) {
 	} catch (error) {
 		console.error('Error following user:', error);
 		res.status(500).send('Error following user');
+	}
+}
+
+export async function unfollowUser(req, res) {
+	const { userToUnfollow } = req.body;
+	const userId = req.session.userId;
+
+	if (typeof userToUnfollow !== 'string' || !/^[a-zA-Z0-9_]{3,30}$/.test(userToUnfollow)) {
+		return res.status(400).json({ error: 'Invalid username format.' });
+	}
+
+	const sanitizedUsername = userToUnfollow.trim().toLowerCase();
+	const idSnapshot = await get(ref(db, `usernames/${sanitizedUsername}`));
+	const targetId = idSnapshot.val();
+
+	if (targetId == null) {
+		return res.status(400).json({ error: 'User not found.' });
+	}
+
+	try {
+		await remove(ref(db, `/users/${targetId}/followers/${userId}`));
+		await remove(ref(db, `/users/${userId}/following/${targetId}`));
+
+		res.status(200).send('Successful');
+	} catch (error) {
+		console.error('Error unfollowing user:', error);
+		res.status(500).send('Error unfollowing user');
 	}
 }
 
