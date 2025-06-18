@@ -43,7 +43,7 @@ export async function getFollowers(req, res) {
 			const followersSnapshot = await get(followersRef);
 			const followersData = followersSnapshot.val();
 
-			return followersData;
+			res.send(followersData);
 		}
 	} catch (error) {
 		console.error('Error fetching followers:', error);
@@ -62,7 +62,7 @@ export async function getFollowing(req, res) {
 			const followingSnapshot = await get(followingRef);
 			const followingData = followingSnapshot.val();
 
-			return followingData;
+			res.send(followingData);
 		}
 	} catch (error) {
 		console.error('Error fetching following:', error);
