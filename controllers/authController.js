@@ -110,7 +110,7 @@ export async function login(req, res) {
 	}
 }
 
-export async function logOut(req, res) {
+export async function signOut(req, res) {
 	try {
 		req.session.destroy((err) => {
 			if (err) {
