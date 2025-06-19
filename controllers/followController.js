@@ -88,3 +88,24 @@ export async function getFollowing(req, res) {
 		res.status(500).json({ error: 'Failed to fetch following.' });
 	}
 }
+
+export async function getFollowStats(req, res) {
+	try {
+		const username = req.params.username;
+		const sanitizedUsername = username.trim().toLowerCase();
+
+		const targetIdSnap = await get(ref(db, `usernames/${sanitizedUsername}`));
+		const targetId = targetIdSnap.val();
+
+		const followersSnap = await get(ref(db, `users/${targetId}/followers`));
+		const followingSnap = await get(ref(db, `users/${targetId}/following`));
+
+		const followers = followersSnap.exists() ? Object.keys(followersSnap.val()).length : 0;
+		const following = followingSnap.exists() ? Object.keys(followingSnap.val()).length : 0;
+
+		res.json({ followers, following });
+	} catch (error) {
+		console.error('Error fetching follow stats:', error);
+		res.status(500).json({ error: 'Failed to fetch follow stats.' });
+	}
+}
