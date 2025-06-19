@@ -51,10 +51,6 @@ export async function uploadProfilePicture(req, res) {
 export async function deleteProfilePicture(req, res) {
 	const userId = req.session.userId;
 
-	if (!userId) {
-		return res.status(400).send('User ID not found in session.');
-	}
-
 	try {
 		const { userData, userRef } = await getUserData(userId);
 
@@ -81,10 +77,11 @@ export async function deleteProfilePicture(req, res) {
 }
 
 export async function uploadProfileBackground(req, res) {
+	const userId = req.session.userId;
+
 	if (!req.file) {
 		return res.status(400).send('No file uploaded.');
 	}
-	const userId = req.session.userId;
 
 	const filename = getFilename(req.file.mimetype, 'background', req.session.username);
 	const file = bucket.file(`profile_backgrounds/${req.session.userId}/${filename}`);
@@ -126,10 +123,6 @@ export async function uploadProfileBackground(req, res) {
 export async function deleteProfileBackground(req, res) {
 	const userId = req.session.userId;
 
-	if (!userId) {
-		return res.status(400).send('User ID not found in session.');
-	}
-
 	try {
 		const { userData, userRef } = await getUserData(userId);
 
@@ -150,17 +143,13 @@ export async function deleteProfileBackground(req, res) {
 
 		res.status(200).send('Profile background deleted successfully');
 	} catch (error) {
-		console.error('Error deleting profile picture:', error);
+		console.error('Error deleting profile background:', error);
 		res.status(500).send('Error deleting profile background');
 	}
 }
 
 export async function updateBiography(req, res) {
 	const userId = req.session.userId;
-
-	if (!userId) {
-		return res.status(400).send('User ID not found in session.');
-	}
 
 	try {
 		const { userData, userRef } = await getUserData(userId);
@@ -175,17 +164,13 @@ export async function updateBiography(req, res) {
 
 		res.status(200).send('Bio updated succesfully');
 	} catch (error) {
-		console.error('Error updating bio:', error);
+		console.error('Error updating biography:', error);
 		res.status(500).send('Error updating biography');
 	}
 }
 
 export async function resetPassword(req, res) {
 	const userId = req.session.userId;
-
-	if (!userId) {
-		return res.status(400).send('User ID not found in session.');
-	}
 
 	try {
 		const { userData } = await getUserData(userId);
@@ -216,10 +201,6 @@ export async function resetPassword(req, res) {
 
 export async function deleteAccount(req, res) {
 	const userId = req.session.userId;
-
-	if (!userId) {
-		return res.status(400).send('User ID not found in session.');
-	}
 
 	try {
 		const { userData, userRef } = await getUserData(userId);

@@ -51,10 +51,6 @@ export async function deletePost(req, res) {
 		const { postId } = req.body;
 		const userId = req.session.userId;
 
-		if (!userId) {
-			return res.status(401).json({ error: 'Unauthorized' });
-		}
-
 		const postRef = ref(db, `posts/${postId}`);
 		const postSnapshot = await get(postRef);
 

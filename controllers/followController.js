@@ -63,15 +63,11 @@ export async function getFollowers(req, res) {
 	try {
 		const userId = req.session.userId;
 
-		if (userId == null) {
-			res.status(404).render('error.ejs', { error: '404: Page Not Found' });
-		} else {
-			const followersRef = ref(db, `users/` + userId + '/followers');
-			const followersSnapshot = await get(followersRef);
-			const followersData = followersSnapshot.val();
+		const followersRef = ref(db, `users/` + userId + '/followers');
+		const followersSnapshot = await get(followersRef);
+		const followersData = followersSnapshot.val();
 
-			res.send(followersData);
-		}
+		res.send(followersData);
 	} catch (error) {
 		console.error('Error fetching followers:', error);
 		res.status(500).json({ error: 'Failed to fetch followers.' });
@@ -82,15 +78,11 @@ export async function getFollowing(req, res) {
 	try {
 		const userId = req.session.userId;
 
-		if (userId == null) {
-			res.status(404).render('error.ejs', { error: '404: Page Not Found' });
-		} else {
-			const followingRef = ref(db, `users/` + userId + '/following');
-			const followingSnapshot = await get(followingRef);
-			const followingData = followingSnapshot.val();
+		const followingRef = ref(db, `users/` + userId + '/following');
+		const followingSnapshot = await get(followingRef);
+		const followingData = followingSnapshot.val();
 
-			res.send(followingData);
-		}
+		res.send(followingData);
 	} catch (error) {
 		console.error('Error fetching following:', error);
 		res.status(500).json({ error: 'Failed to fetch following.' });

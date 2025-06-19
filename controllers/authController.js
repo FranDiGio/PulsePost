@@ -4,7 +4,7 @@ import { ref, set, update, get, child } from 'firebase/database';
 import { validateSignUp, checkValidUsername } from '../services/validationService.js';
 
 export function ensureAuthenticated(req, res, next) {
-	if (req.session.username) {
+	if (req.session.username && req.session.userId) {
 		return next();
 	} else {
 		res.redirect('/login');
