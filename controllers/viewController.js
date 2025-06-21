@@ -1,7 +1,6 @@
 import { getUserData } from '../services/userService.js';
 import { db } from '../config/firebaseConfig.js';
 import { ref, get } from 'firebase/database';
-import { error } from 'console';
 
 export async function loadFeed(req, res) {
 	try {
@@ -34,7 +33,9 @@ export async function loadProfile(req, res) {
 		const userBio = await getBiography(userId);
 
 		// Selected profile
-		const idSnapshot = await get(ref(db, `usernames/` + req.params.username));
+		const username = req.params.username;
+		const sanitizedUsername = username.trim().toLowerCase();
+		const idSnapshot = await get(ref(db, `usernames/` + sanitizedUsername));
 		const profileId = idSnapshot.val();
 
 		// Check if selected profile = current user
