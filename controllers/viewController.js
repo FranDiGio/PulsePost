@@ -9,7 +9,7 @@ export async function loadFeed(req, res) {
 		const userPictureUrl = await getProfilePictureUrl(userId);
 		const userBackgroundUrl = await getProfileBackgroundUrl(userId);
 		const userBio = await getBiography(userId);
-		const posts = await getLatestPosts();
+		const posts = await getLatestPosts(userId);
 
 		await res.render('feed.ejs', {
 			username: req.session.username,
@@ -71,18 +71,28 @@ export async function loadProfile(req, res) {
 	}
 }
 
-async function getLatestPosts() {
+async function getLatestPosts(userId) {
 	try {
 		const postsRef = ref(db, `posts`);
 		const postsSnapshot = await get(postsRef);
 		const postsData = postsSnapshot.val();
 
-		// Fetch profile picture for each post's author
 		for (const key in postsData) {
 			if (postsData.hasOwnProperty(key)) {
 				const post = postsData[key];
+
+				// Get author's profile picture
 				const profilePictureUrl = await getProfilePictureUrl(post.uid);
 				post.profilePictureUrl = profilePictureUrl;
+
+				// Resolve author's UID from their username
+				const author = post.author.toLowerCase();
+				const authorIdSnap = await get(ref(db, `usernames/${author}`));
+				const authorId = authorIdSnap.val();
+
+				// Check if current user follows the author
+				const followSnap = await get(ref(db, `users/${authorId}/followers/${userId}`));
+				post.isFollowedByCurrentUser = followSnap.exists();
 			}
 		}
 

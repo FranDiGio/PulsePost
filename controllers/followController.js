@@ -2,15 +2,15 @@ import { db } from '../config/firebaseConfig.js';
 import { ref, get, set, remove } from 'firebase/database';
 
 export async function followUser(req, res) {
-	const { userToFollow } = req.body;
+	const { targetUser } = req.body;
 	const userId = req.session.userId;
 	const username = req.session.username;
 
-	if (typeof userToFollow !== 'string' || !/^[a-zA-Z0-9_]{3,30}$/.test(userToFollow)) {
+	if (typeof targetUser !== 'string' || !/^[a-zA-Z0-9_]{3,30}$/.test(targetUser)) {
 		return res.status(400).json({ error: 'Invalid username format.' });
 	}
 
-	const sanitizedUsername = userToFollow.trim().toLowerCase();
+	const sanitizedUsername = targetUser.trim().toLowerCase();
 	const idSnapshot = await get(ref(db, `usernames/${sanitizedUsername}`));
 	const targetId = idSnapshot.val();
 
@@ -33,14 +33,14 @@ export async function followUser(req, res) {
 }
 
 export async function unfollowUser(req, res) {
-	const { userToUnfollow } = req.body;
+	const { targetUser } = req.body;
 	const userId = req.session.userId;
 
-	if (typeof userToUnfollow !== 'string' || !/^[a-zA-Z0-9_]{3,30}$/.test(userToUnfollow)) {
+	if (typeof targetUser !== 'string' || !/^[a-zA-Z0-9_]{3,30}$/.test(targetUser)) {
 		return res.status(400).json({ error: 'Invalid username format.' });
 	}
 
-	const sanitizedUsername = userToUnfollow.trim().toLowerCase();
+	const sanitizedUsername = targetUser.trim().toLowerCase();
 	const idSnapshot = await get(ref(db, `usernames/${sanitizedUsername}`));
 	const targetId = idSnapshot.val();
 

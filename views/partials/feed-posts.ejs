@@ -21,9 +21,13 @@
 					</a>
 				</li>
 				<li>
-					<a class="dropdown-item">
-						<span class="text-primary">+</span>
-						Follow
+					<a
+						class="dropdown-item follow-btn"
+						data-username="<%= posts[key].author %>"
+						data-following="<%= posts[key].isFollowedByCurrentUser %>"
+					>
+						<span class="text-primary"><%= posts[key].isFollowedByCurrentUser ? '-' : '+' %></span>
+						<%= posts[key].isFollowedByCurrentUser ? 'Unfollow' : 'Follow' %>
 					</a>
 				</li>
 			</ul>
