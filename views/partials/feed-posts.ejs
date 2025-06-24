@@ -20,6 +20,7 @@
 						View Profile
 					</a>
 				</li>
+				<% if (posts[key].uid !== userId) { %>
 				<li>
 					<a
 						class="dropdown-item follow-btn"
@@ -30,6 +31,7 @@
 						<%= posts[key].isFollowedByCurrentUser ? 'Unfollow' : 'Follow' %>
 					</a>
 				</li>
+				<% } %>
 			</ul>
 		</div>
 	</div>

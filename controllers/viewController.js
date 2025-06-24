@@ -5,7 +5,6 @@ import { ref, get } from 'firebase/database';
 export async function loadFeed(req, res) {
 	try {
 		const userId = req.session.userId;
-
 		const userPictureUrl = await getProfilePictureUrl(userId);
 		const userBackgroundUrl = await getProfileBackgroundUrl(userId);
 		const userBio = await getBiography(userId);
@@ -13,6 +12,7 @@ export async function loadFeed(req, res) {
 
 		await res.render('feed.ejs', {
 			username: req.session.username,
+			userId: userId,
 			userPictureUrl: userPictureUrl,
 			userBackgroundUrl: userBackgroundUrl,
 			userBio: userBio,
@@ -84,6 +84,12 @@ async function getLatestPosts(userId) {
 				// Get author's profile picture
 				const profilePictureUrl = await getProfilePictureUrl(post.uid);
 				post.profilePictureUrl = profilePictureUrl;
+
+				// Skip follow check if the post belongs to the current user
+				if (post.uid === userId) {
+					post.isFollowedByCurrentUser = null;
+					continue;
+				}
 
 				// Resolve author's UID from their username
 				const author = post.author.toLowerCase();
