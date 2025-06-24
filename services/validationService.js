@@ -6,11 +6,10 @@ export async function checkValidUsername(username) {
 	if (!username) return "Username field can't be empty";
 	if (username.length > 15) return 'Username is too long';
 
-	try {
-		const usersRef = ref(db, 'users');
-		const usernameQuery = query(usersRef, orderByChild('username'), equalTo(username));
-		const snapshot = await get(usernameQuery);
+	const usernameKey = username.trim().toLowerCase();
 
+	try {
+		const snapshot = await get(ref(db, `usernames/${usernameKey}`));
 		return snapshot.exists() ? 'Username already exists' : null;
 	} catch (error) {
 		console.error('Error checking username:', error);

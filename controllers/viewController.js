@@ -1,19 +1,21 @@
+import { getFollowStatsById } from './followController.js';
 import { getUserData } from '../services/userService.js';
 import { db } from '../config/firebaseConfig.js';
 import { ref, get } from 'firebase/database';
-import { error } from 'console';
 
+// @route   GET /feed
+// @desc    Loads the main feed with current user's details and latest posts
 export async function loadFeed(req, res) {
 	try {
 		const userId = req.session.userId;
-
 		const userPictureUrl = await getProfilePictureUrl(userId);
 		const userBackgroundUrl = await getProfileBackgroundUrl(userId);
 		const userBio = await getBiography(userId);
-		const posts = await getLatestPosts();
+		const posts = await getLatestPosts(userId);
 
 		await res.render('feed.ejs', {
 			username: req.session.username,
+			userId: userId,
 			userPictureUrl: userPictureUrl,
 			userBackgroundUrl: userBackgroundUrl,
 			userBio: userBio,
@@ -25,6 +27,8 @@ export async function loadFeed(req, res) {
 	}
 }
 
+// @route   GET /profile/:username
+// @desc    Loads profile page for selected username (self or other user)
 export async function loadProfile(req, res) {
 	try {
 		// Current user
@@ -34,10 +38,12 @@ export async function loadProfile(req, res) {
 		const userBio = await getBiography(userId);
 
 		// Selected profile
-		const idSnapshot = await get(ref(db, `usernames/` + req.params.username));
+		const username = req.params.username;
+		const sanitizedUsername = username.trim().toLowerCase();
+		const idSnapshot = await get(ref(db, `usernames/` + sanitizedUsername));
 		const profileId = idSnapshot.val();
 
-		// Check if it is the user's profile
+		// Check if selected profile = current user
 		let isSelf = false;
 		if (req.session.username === req.params.username) {
 			isSelf = true;
@@ -49,7 +55,9 @@ export async function loadProfile(req, res) {
 			const profilePictureUrl = await getProfilePictureUrl(profileId);
 			const profileBackgroundUrl = await getProfileBackgroundUrl(profileId);
 			const profileBio = await getBiography(profileId);
-			const posts = await getUserPosts(userId);
+			const posts = await getUserPosts(profileId);
+			const { followersCount, followingCount } = await getFollowStatsById(profileId);
+			const profileStats = { followers: followersCount, following: followingCount };
 
 			res.render('profile.ejs', {
 				username: req.session.username,
@@ -60,6 +68,7 @@ export async function loadProfile(req, res) {
 				profilePictureUrl: profilePictureUrl,
 				profileBackgroundUrl: profileBackgroundUrl,
 				profileBio: profileBio,
+				profileStats: profileStats,
 				isSelf: isSelf,
 				posts: posts,
 			});
@@ -70,18 +79,36 @@ export async function loadProfile(req, res) {
 	}
 }
 
-async function getLatestPosts() {
+// @helper
+// @desc    Retrieves latest posts and adds follow info & author profile pics
+async function getLatestPosts(userId) {
 	try {
 		const postsRef = ref(db, `posts`);
 		const postsSnapshot = await get(postsRef);
 		const postsData = postsSnapshot.val();
 
-		// Fetch profile picture for each post's author
 		for (const key in postsData) {
 			if (postsData.hasOwnProperty(key)) {
 				const post = postsData[key];
+
+				// Get author's profile picture
 				const profilePictureUrl = await getProfilePictureUrl(post.uid);
 				post.profilePictureUrl = profilePictureUrl;
+
+				// Skip follow check if the post belongs to the current user
+				if (post.uid === userId) {
+					post.isFollowedByCurrentUser = null;
+					continue;
+				}
+
+				// Resolve author's UID from their username
+				const author = post.author.toLowerCase();
+				const authorIdSnap = await get(ref(db, `usernames/${author}`));
+				const authorId = authorIdSnap.val();
+
+				// Check if current user follows the author
+				const followSnap = await get(ref(db, `users/${authorId}/followers/${userId}`));
+				post.isFollowedByCurrentUser = followSnap.exists();
 			}
 		}
 
@@ -92,6 +119,8 @@ async function getLatestPosts() {
 	}
 }
 
+// @helper
+// @desc    Gets all posts created by the given user
 async function getUserPosts(userId) {
 	try {
 		const postsRef = ref(db, `users/` + userId + '/posts');
@@ -105,6 +134,8 @@ async function getUserPosts(userId) {
 	}
 }
 
+// @helper
+// @desc    Retrieves profile picture URL or default
 async function getProfilePictureUrl(userId) {
 	try {
 		const { userData } = await getUserData(userId);
@@ -120,6 +151,8 @@ async function getProfilePictureUrl(userId) {
 	}
 }
 
+// @helper
+// @desc    Retrieves profile background URL or default
 async function getProfileBackgroundUrl(userId) {
 	try {
 		const { userData } = await getUserData(userId);
@@ -135,6 +168,8 @@ async function getProfileBackgroundUrl(userId) {
 	}
 }
 
+// @helper
+// @desc    Retrieves biography text for a given user
 async function getBiography(userId) {
 	try {
 		const { userData } = await getUserData(userId);
