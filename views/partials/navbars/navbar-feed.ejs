@@ -2,7 +2,7 @@
 	<nav class="navbar navbar-expand-lg navbar-light bg-light">
 		<div class="container d-flex flex-nowrap">
 			<!-- Home, Trending, and Search -->
-			<div class="d-flex align-items-center">
+			<div class="d-none d-lg-flex align-items-center">
 				<a href="/feed/" class="col-2 me-1">
 					<div class="flex-shrink-0 overflow-hidden my-3" style="max-height: 60px">
 						<img class="header-icon" alt="home icon" src="/svg/house.svg" style="max-height: 60px" />
@@ -26,7 +26,19 @@
 				</form>
 			</div>
 
-			<!-- Right side navlinks -->
+			<!-- Left side collapse for offcanvas -->
+			<div class="d-flex d-lg-none align-items-center">
+				<button
+					class="navbar-toggler"
+					type="button"
+					data-bs-toggle="offcanvas"
+					data-bs-target="#offcanvas-feed"
+				>
+					<span class="navbar-toggler-icon"></span>
+				</button>
+			</div>
+
+			<!-- Right side profile links -->
 			<div class="dropdown mt-1 px-3 pt-2 d-flex flex-nowrap border border-primary bg-primary-subtle rounded-5">
 				<p class="me-2 mt-2"><%= username %></p>
 				<a
@@ -56,3 +68,40 @@
 		</div>
 	</nav>
 </header>
+
+<div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offcanvas-feed">
+	<div class="offcanvas-header bg-light">
+		<h5 class="offcanvas-title" id="offcanvas-feed-label">Navigate</h5>
+		<button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+	</div>
+	<div class="offcanvas-body fs-4">
+		<ul class="list-unstyled fw-normal pb-2 small">
+			<li>
+				<a href="/" class="list-item d-inline-block rounded mb-1">Home</a>
+			</li>
+			<li>
+				<a href="/" class="list-item d-inline-block rounded mb-1">Trending</a>
+			</li>
+			<li>
+				<a
+					href="#collapseFollowing"
+					class="list-item d-inline-block rounded mb-1"
+					data-bs-toggle="collapse"
+					role="button"
+					id="followingToggle"
+				>
+					Following
+					<img src="/svg/caret-right-fill.svg" class="arrow" width="12" height="12" />
+				</a>
+				<div class="collapse" id="collapseFollowing">
+					<ul class="list-unstyled fw-normal ms-3 pb-2 small">
+						<li><a href="/" class="list-item d-inline-block rounded mb-1">MrRoffleWaffles</a></li>
+						<li><a href="/" class="list-item d-inline-block rounded mb-1">RolfKekLmao</a></li>
+						<li><a href="/" class="list-item d-inline-block rounded mb-1">XxBongoreFanxX</a></li>
+						<li><a href="/" class="list-item d-inline-block rounded mb-1">ElRubiusOMG</a></li>
+					</ul>
+				</div>
+			</li>
+		</ul>
+	</div>
+</div>

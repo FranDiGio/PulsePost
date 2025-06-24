@@ -101,6 +101,21 @@
         transform: translateX(100%);
     }
 }
+
+.arrow {
+  display: inline-block;
+  margin-left: 5px;
+  transition: transform 0.1s ease;
+  -webkit-transition: transform 0.1s ease;
+  -moz-transition: transform 0.1s ease;
+  -ms-transition: transform 0.1s ease;
+  -o-transition: transform 0.1s ease;
+}
+
+.arrow.down {
+  transform: rotate(90deg);
+}
+
 .like-button {
     background: none;
     border: none;

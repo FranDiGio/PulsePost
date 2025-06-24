@@ -30,14 +30,14 @@
 			<div class="row d-flex justify-content-center">
 				<!-- Left sidebar -->
 				<div
-					class="col-2 col-xxl-3 bg-light ps-4 pt-3 border-end d-flex justify-content-end fixed-sidebar-left"
+					class="d-none d-lg-flex col-2 col-xxl-3 bg-light ps-4 pt-3 border-end d-flex justify-content-end fixed-sidebar-left"
 				>
 					<div class="col-12 col-xxl-7">
 						<h2
 							class="sticky-top bg-light open-sans-title text-muted border-bottom border-2 fs-4 pb-2 pt-4"
 							id="posts-title"
 						>
-							My Posts
+							Latest
 						</h2>
 
 						<ul class="list-unstyled fw-normal pb-2 small mt-3">
@@ -67,13 +67,13 @@
 				</div>
 
 				<!-- Main content -->
-				<div class="col-8 col-xxl-6 bg-light mb-5">
-					<% if (locals.posts) { %><%- include('partials/feed-posts.ejs') %><% } %>
+				<div class="col-12 col-lg-8 col-xxl-6 bg-light mb-5">
+					<% if (locals.posts) { %><%- include('partials/posts/feed-posts.ejs') %><% } %>
 				</div>
 
 				<!-- Right sidebar -->
 				<div
-					class="col-2 col-xxl-3 bg-light ps-4 pt-3 border-start d-flex justify-content-start fixed-sidebar-right"
+					class="d-none d-lg-flex col-2 col-xxl-3 bg-light ps-4 pt-3 border-start d-flex justify-content-start fixed-sidebar-right"
 				>
 					<div class="col-12 col-xxl-7">
 						<h2
@@ -100,7 +100,7 @@
 		</div>
 
 		<!-- Create Post Modal -->
-		<%- include('partials/create-post-modal.ejs') %>
+		<%- include('partials/posts/create-post-modal.ejs') %>
 		<!-- Main Settings Modal -->
 		<%- include('partials/settings-modals/00-main-settings.ejs') %>
 		<!-- Profile Picture Settings Modal -->
