@@ -1,7 +1,10 @@
+import { getFollowStatsById } from './followController.js';
 import { getUserData } from '../services/userService.js';
 import { db } from '../config/firebaseConfig.js';
 import { ref, get } from 'firebase/database';
 
+// @route   GET /feed
+// @desc    Loads the main feed with current user's details and latest posts
 export async function loadFeed(req, res) {
 	try {
 		const userId = req.session.userId;
@@ -24,6 +27,8 @@ export async function loadFeed(req, res) {
 	}
 }
 
+// @route   GET /profile/:username
+// @desc    Loads profile page for selected username (self or other user)
 export async function loadProfile(req, res) {
 	try {
 		// Current user
@@ -50,7 +55,9 @@ export async function loadProfile(req, res) {
 			const profilePictureUrl = await getProfilePictureUrl(profileId);
 			const profileBackgroundUrl = await getProfileBackgroundUrl(profileId);
 			const profileBio = await getBiography(profileId);
-			const posts = await getUserPosts(userId);
+			const posts = await getUserPosts(profileId);
+			const { followersCount, followingCount } = await getFollowStatsById(profileId);
+			const profileStats = { followers: followersCount, following: followingCount };
 
 			res.render('profile.ejs', {
 				username: req.session.username,
@@ -61,6 +68,7 @@ export async function loadProfile(req, res) {
 				profilePictureUrl: profilePictureUrl,
 				profileBackgroundUrl: profileBackgroundUrl,
 				profileBio: profileBio,
+				profileStats: profileStats,
 				isSelf: isSelf,
 				posts: posts,
 			});
@@ -71,6 +79,8 @@ export async function loadProfile(req, res) {
 	}
 }
 
+// @helper
+// @desc    Retrieves latest posts and adds follow info & author profile pics
 async function getLatestPosts(userId) {
 	try {
 		const postsRef = ref(db, `posts`);
@@ -109,6 +119,8 @@ async function getLatestPosts(userId) {
 	}
 }
 
+// @helper
+// @desc    Gets all posts created by the given user
 async function getUserPosts(userId) {
 	try {
 		const postsRef = ref(db, `users/` + userId + '/posts');
@@ -122,6 +134,8 @@ async function getUserPosts(userId) {
 	}
 }
 
+// @helper
+// @desc    Retrieves profile picture URL or default
 async function getProfilePictureUrl(userId) {
 	try {
 		const { userData } = await getUserData(userId);
@@ -137,6 +151,8 @@ async function getProfilePictureUrl(userId) {
 	}
 }
 
+// @helper
+// @desc    Retrieves profile background URL or default
 async function getProfileBackgroundUrl(userId) {
 	try {
 		const { userData } = await getUserData(userId);
@@ -152,6 +168,8 @@ async function getProfileBackgroundUrl(userId) {
 	}
 }
 
+// @helper
+// @desc    Retrieves biography text for a given user
 async function getBiography(userId) {
 	try {
 		const { userData } = await getUserData(userId);

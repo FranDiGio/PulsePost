@@ -1,6 +1,8 @@
 import { db } from '../config/firebaseConfig.js';
 import { ref, get, set, remove } from 'firebase/database';
 
+// @route   POST /follow
+// @desc    Follows the specified user
 export async function followUser(req, res) {
 	const { targetUser } = req.body;
 	const userId = req.session.userId;
@@ -32,6 +34,8 @@ export async function followUser(req, res) {
 	}
 }
 
+// @route   POST /unfollow
+// @desc    Unfollows the specified user
 export async function unfollowUser(req, res) {
 	const { targetUser } = req.body;
 	const userId = req.session.userId;
@@ -59,6 +63,8 @@ export async function unfollowUser(req, res) {
 	}
 }
 
+// @route   GET /followers
+// @desc    Returns list of followers for the current user
 export async function getFollowers(req, res) {
 	try {
 		const userId = req.session.userId;
@@ -74,6 +80,8 @@ export async function getFollowers(req, res) {
 	}
 }
 
+// @route   GET /following
+// @desc    Returns list of users the current user is following
 export async function getFollowing(req, res) {
 	try {
 		const userId = req.session.userId;
@@ -89,6 +97,8 @@ export async function getFollowing(req, res) {
 	}
 }
 
+// @route   GET /follow/stats/:username
+// @desc    Returns follower/following count for the given username
 export async function getFollowStats(req, res) {
 	try {
 		const username = req.params.username;
@@ -107,5 +117,22 @@ export async function getFollowStats(req, res) {
 	} catch (error) {
 		console.error('Error fetching follow stats:', error);
 		res.status(500).json({ error: 'Failed to fetch follow stats.' });
+	}
+}
+
+// @helper
+// @desc    Gets follower/following counts by userId (used in profile render)
+export async function getFollowStatsById(userId) {
+	try {
+		const followersSnap = await get(ref(db, `users/${userId}/followers`));
+		const followingSnap = await get(ref(db, `users/${userId}/following`));
+
+		return {
+			followersCount: followersSnap.exists() ? Object.keys(followersSnap.val()).length : 0,
+			followingCount: followingSnap.exists() ? Object.keys(followingSnap.val()).length : 0,
+		};
+	} catch (error) {
+		console.error('Error fetching follow stats:', error);
+		return { followersCount: 0, followingCount: 0 };
 	}
 }
