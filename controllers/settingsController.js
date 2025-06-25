@@ -4,6 +4,7 @@ import { update, remove, ref, query, orderByChild, equalTo, get } from 'firebase
 import { getUserData } from '../services/userService.js';
 import { getFilename } from '../services/fileService.js';
 import { validateNewPassword } from '../services/validationService.js';
+import { getFollowersList, getFollowingList } from '../services/followService.js';
 
 // @route   POST /picture
 // @desc    Uploads a new profile picture and updates the user's profile
@@ -228,7 +229,7 @@ export async function deleteAccount(req, res) {
 		const postsQuery = query(postsRef, orderByChild('uid'), equalTo(userId));
 		const snapshot = await get(postsQuery);
 
-		// Check if any posts exist for this user
+		// Remove existing posts from this user
 		if (snapshot.exists()) {
 			snapshot.forEach((postSnapshot) => {
 				const postKey = postSnapshot.key;
@@ -245,6 +246,31 @@ export async function deleteAccount(req, res) {
 			console.log('No posts found for this user.');
 		}
 
+		// Remove existing following/followers references from this user
+		const followers = await getFollowersList(userId);
+		const following = await getFollowingList(userId);
+
+		const removeFollowers = followers.map(async (uid) => {
+			const refToRemove = ref(db, `users/${uid}/following/${userId}`);
+			const snap = await get(refToRemove);
+			if (snap.exists()) {
+				await remove(refToRemove);
+				console.log(`Removed ${userId} from ${uid}'s following`);
+			}
+		});
+
+		const removeFollowing = following.map(async (uid) => {
+			const refToRemove = ref(db, `users/${uid}/followers/${userId}`);
+			const snap = await get(refToRemove);
+			if (snap.exists()) {
+				await remove(refToRemove);
+				console.log(`Removed ${userId} from ${uid}'s followers`);
+			}
+		});
+
+		await Promise.all([...removeFollowers, ...removeFollowing]);
+
+		// Remove main user data and reference
 		await remove(ref(db, `usernames/${userData.username}`));
 		await remove(userRef);
 		await deleteUser(user);
