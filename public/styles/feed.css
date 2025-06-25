@@ -144,3 +144,9 @@
     font-style: normal;
     font-variation-settings: 'wdth' 100;
 }
+
+.icon-sm {
+  height: 1em;
+  width: 1em;
+  vertical-align: middle;
+}
