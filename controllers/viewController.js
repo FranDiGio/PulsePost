@@ -1,6 +1,6 @@
-import { getLatestPosts, getUserPosts } from './postController.js';
-import { getFollowStatsById } from './followController.js';
-import { getUserData } from '../services/userService.js';
+import { getLatestPosts, getUserPosts } from '../services/postService.js';
+import { getFollowStatsById } from '../services/followService.js';
+import { getProfilePictureUrl, getProfileBackgroundUrl, getUserBiography } from '../services/userService.js';
 import { db } from '../config/firebaseConfig.js';
 import { ref, get } from 'firebase/database';
 
@@ -11,7 +11,7 @@ export async function loadFeed(req, res) {
 		const userId = req.session.userId;
 		const userPictureUrl = await getProfilePictureUrl(userId);
 		const userBackgroundUrl = await getProfileBackgroundUrl(userId);
-		const userBio = await getBiography(userId);
+		const userBio = await getUserBiography(userId);
 		const posts = await getLatestPosts(userId);
 
 		await res.render('feed.ejs', {
@@ -36,7 +36,7 @@ export async function loadProfile(req, res) {
 		const userId = req.session.userId;
 		const userPictureUrl = await getProfilePictureUrl(userId);
 		const userBackgroundUrl = await getProfileBackgroundUrl(userId);
-		const userBio = await getBiography(userId);
+		const userBio = await getUserBiography(userId);
 
 		// Selected profile
 		const username = req.params.username;
@@ -55,7 +55,7 @@ export async function loadProfile(req, res) {
 		} else {
 			const profilePictureUrl = await getProfilePictureUrl(profileId);
 			const profileBackgroundUrl = await getProfileBackgroundUrl(profileId);
-			const profileBio = await getBiography(profileId);
+			const profileBio = await getUserBiography(profileId);
 			const posts = await getUserPosts(profileId);
 			const { followersCount, followingCount } = await getFollowStatsById(profileId);
 			const profileStats = { followers: followersCount, following: followingCount };
@@ -77,56 +77,5 @@ export async function loadProfile(req, res) {
 	} catch (error) {
 		console.error('Error fetching user data:', error);
 		res.status(500).render('error.ejs', { error: '500: Failed to load page' });
-	}
-}
-
-// @helper
-// @desc    Retrieves profile picture URL or default
-async function getProfilePictureUrl(userId) {
-	try {
-		const { userData } = await getUserData(userId);
-
-		if (userData && userData.profilePicture && userData.profilePicture !== 'N/A') {
-			return userData.profilePicture;
-		} else {
-			return '/images/default-profile.png';
-		}
-	} catch (error) {
-		console.error('Error fetching user data:', error);
-		return '/images/default-profile.png';
-	}
-}
-
-// @helper
-// @desc    Retrieves profile background URL or default
-async function getProfileBackgroundUrl(userId) {
-	try {
-		const { userData } = await getUserData(userId);
-
-		if (userData && userData.profileBackground && userData.profileBackground !== 'N/A') {
-			return userData.profileBackground;
-		} else {
-			return '/images/default-background.png';
-		}
-	} catch (error) {
-		console.error('Error fetching user data:', error);
-		return '/images/default-background.png';
-	}
-}
-
-// @helper
-// @desc    Retrieves biography text for a given user
-async function getBiography(userId) {
-	try {
-		const { userData } = await getUserData(userId);
-
-		if (userData && userData.bio) {
-			return userData.bio;
-		} else {
-			return '';
-		}
-	} catch (error) {
-		console.error('Error fetching user data:', error);
-		return '';
 	}
 }
