@@ -5,6 +5,8 @@ import { getUserData } from '../services/userService.js';
 import { getFilename } from '../services/fileService.js';
 import { validateNewPassword } from '../services/validationService.js';
 
+// @route   POST /picture
+// @desc    Uploads a new profile picture and updates the user's profile
 export async function uploadProfilePicture(req, res) {
 	if (!req.file) {
 		return res.status(400).send('No file uploaded.');
@@ -48,6 +50,8 @@ export async function uploadProfilePicture(req, res) {
 	stream.end(req.file.buffer);
 }
 
+// @route   DELETE /picture
+// @desc    Deletes the user's profile picture from DB and storage
 export async function deleteProfilePicture(req, res) {
 	const userId = req.session.userId;
 
@@ -76,6 +80,8 @@ export async function deleteProfilePicture(req, res) {
 	}
 }
 
+// @route   POST /background
+// @desc    Uploads a new profile background and updates the user's profile
 export async function uploadProfileBackground(req, res) {
 	const userId = req.session.userId;
 
@@ -120,6 +126,8 @@ export async function uploadProfileBackground(req, res) {
 	stream.end(req.file.buffer);
 }
 
+// @route   DELETE /background
+// @desc    Deletes the user's profile background from DB and storage
 export async function deleteProfileBackground(req, res) {
 	const userId = req.session.userId;
 
@@ -148,6 +156,8 @@ export async function deleteProfileBackground(req, res) {
 	}
 }
 
+// @route   PUT /bio
+// @desc    Updates the user's biography
 export async function updateBiography(req, res) {
 	const userId = req.session.userId;
 
@@ -169,6 +179,8 @@ export async function updateBiography(req, res) {
 	}
 }
 
+// @route   PUT /password
+// @desc    Resets the user's password after validating current password
 export async function resetPassword(req, res) {
 	const userId = req.session.userId;
 
@@ -199,6 +211,8 @@ export async function resetPassword(req, res) {
 	}
 }
 
+// @route   DELETE /account
+// @desc    Deletes the user's account, posts, DB entries, and storage files
 export async function deleteAccount(req, res) {
 	const userId = req.session.userId;
 

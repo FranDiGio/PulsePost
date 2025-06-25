@@ -3,6 +3,8 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'fire
 import { ref, set, update, get, child } from 'firebase/database';
 import { validateSignUp, checkValidUsername } from '../services/validationService.js';
 
+// @middleware
+// @desc    Ensures user is authenticated before accessing protected routes
 export function ensureAuthenticated(req, res, next) {
 	if (req.session.username && req.session.userId) {
 		return next();
@@ -11,6 +13,8 @@ export function ensureAuthenticated(req, res, next) {
 	}
 }
 
+// @route   POST /signup
+// @desc    Creates a new user and initializes profile in database
 export async function signUp(req, res) {
 	const { username, email, password } = req.body;
 	const newUser = { username, email, password };
@@ -51,6 +55,8 @@ export async function signUp(req, res) {
 	}
 }
 
+// @route   POST /login
+// @desc    Logs in the user, updates lastLogged, and sets session
 export async function login(req, res) {
 	const { email, password } = req.body;
 
@@ -111,6 +117,8 @@ export async function login(req, res) {
 	}
 }
 
+// @route   GET /signout
+// @desc    Destroys the session and logs out the user
 export async function signOut(req, res) {
 	try {
 		req.session.destroy((err) => {
