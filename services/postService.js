@@ -54,3 +54,16 @@ export async function getUserPosts(userId) {
 		return '';
 	}
 }
+
+// @desc    Gets count of posts created by the given user
+export async function getUserPostCount(userId) {
+	try {
+		const postsRef = ref(db, `users/` + userId + '/posts');
+		const postsSnapshot = await get(postsRef);
+
+		return postsSnapshot.exists() ? Object.keys(postsSnapshot.val()).length : 0;
+	} catch (error) {
+		console.error('Error fetching posts:', error);
+		return '';
+	}
+}

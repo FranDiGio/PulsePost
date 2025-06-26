@@ -1,4 +1,4 @@
-import { getLatestPosts, getUserPosts } from '../services/postService.js';
+import { getLatestPosts, getUserPostCount, getUserPosts } from '../services/postService.js';
 import { getFollowStatsById } from '../services/followService.js';
 import { getProfilePictureUrl, getProfileBackgroundUrl, getUserBiography } from '../services/userService.js';
 import { db } from '../config/firebaseConfig.js';
@@ -58,7 +58,8 @@ export async function loadProfile(req, res) {
 			const profileBio = await getUserBiography(profileId);
 			const posts = await getUserPosts(profileId);
 			const { followersCount, followingCount } = await getFollowStatsById(profileId);
-			const profileStats = { followers: followersCount, following: followingCount };
+			const postCount = await getUserPostCount(profileId);
+			const profileStats = { followers: followersCount, following: followingCount, posts: postCount };
 
 			res.render('profile.ejs', {
 				username: req.session.username,
