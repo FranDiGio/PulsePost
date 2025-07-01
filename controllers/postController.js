@@ -1,4 +1,4 @@
-import { ref, push, update, get, remove } from 'firebase/database';
+import { ref, push, update, get, remove, set } from 'firebase/database';
 import { db } from '../config/firebaseConfig.js';
 
 // @route   POST /post
@@ -78,6 +78,40 @@ export async function deletePost(req, res) {
 		return res.json({ message: 'Post deleted successfully' });
 	} catch (error) {
 		console.error('Error deleting post:', error);
+		return res.status(500).json({ error: 'Internal Server Error' });
+	}
+}
+
+// @route   PUT /likes/:postId
+// @desc    Toggles like status for a post
+export async function toggleLike(req, res) {
+	try {
+		const { postId } = req.params;
+		const userId = req.session.userId;
+
+		const postRef = ref(db, `posts/${postId}`);
+		const postSnapshot = await get(postRef);
+
+		if (!postSnapshot.exists()) {
+			return res.status(404).json({ error: 'Post not found' });
+		}
+
+		const userLikeRef = ref(db, `users/${userId}/likes/${postId}`);
+		const userLikeSnapshot = await get(userLikeRef);
+
+		if (userLikeSnapshot.exists()) {
+			// Unlike
+			await remove(userLikeRef);
+			await remove(ref(db, `posts/${postId}/likes/${userId}`));
+			return res.json({ message: 'Post unliked' });
+		} else {
+			// Like
+			await set(userLikeRef, true);
+			await set(ref(db, `posts/${postId}/likes/${userId}`), true);
+			return res.json({ message: 'Post liked' });
+		}
+	} catch (error) {
+		console.error('Error toggling like:', error);
 		return res.status(500).json({ error: 'Internal Server Error' });
 	}
 }

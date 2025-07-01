@@ -9,6 +9,10 @@ export async function getLatestPosts(userId) {
 		const postsSnapshot = await get(postsRef);
 		const postsData = postsSnapshot.val();
 
+		// Get the list of posts liked by the current user
+		const likedSnap = await get(ref(db, `users/${userId}/likes`));
+		const likedPostIds = likedSnap.exists() ? Object.keys(likedSnap.val()) : [];
+
 		for (const key in postsData) {
 			if (postsData.hasOwnProperty(key)) {
 				const post = postsData[key];
@@ -16,6 +20,14 @@ export async function getLatestPosts(userId) {
 				// Get author's profile picture
 				const profilePictureUrl = await getProfilePictureUrl(post.uid);
 				post.profilePictureUrl = profilePictureUrl;
+
+				// Add like status
+				post.isLikedByCurrentUser = likedPostIds.includes(key);
+
+				// Get like count for current post
+				const likedCountSnap = await get(ref(db, `posts/` + key + '/likes'));
+				const likeCount = likedCountSnap.exists() ? Object.keys(likedCountSnap.val()).length : 0;
+				post.likeCount = likeCount;
 
 				// Skip follow check if the post belongs to the current user
 				if (post.uid === userId) {
