@@ -25,9 +25,8 @@ export async function getLatestPosts(userId) {
 				post.isLikedByCurrentUser = likedPostIds.includes(key);
 
 				// Get like count for current post
-				const likedCountSnap = await get(ref(db, `posts/` + key + '/likes'));
-				const likeCount = likedCountSnap.exists() ? Object.keys(likedCountSnap.val()).length : 0;
-				post.likeCount = likeCount;
+				const likeList = await getPostLikes(key);
+				post.likeCount = likeList.length;
 
 				// Skip follow check if the post belongs to the current user
 				if (post.uid === userId) {
@@ -77,5 +76,16 @@ export async function getUserPostCount(userId) {
 	} catch (error) {
 		console.error('Error fetching posts:', error);
 		return '';
+	}
+}
+
+// @desc    Get post likes list by post ID
+export async function getPostLikes(postId) {
+	try {
+		const likesSnap = await get(ref(db, `posts/` + postId + '/likes'));
+		return likesSnap.exists() ? Object.keys(likesSnap.val()) : [];
+	} catch (error) {
+		console.error('Error fetching likes:', error);
+		return [];
 	}
 }

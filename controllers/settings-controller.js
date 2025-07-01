@@ -3,6 +3,7 @@ import { updatePassword, signInWithEmailAndPassword, deleteUser } from 'firebase
 import { update, remove, ref, query, orderByChild, equalTo, get } from 'firebase/database';
 import { getUserData } from '../services/user-service.js';
 import { getFilename } from '../services/file-service.js';
+import { getPostLikes } from '../services/post-service.js';
 import { validateNewPassword } from '../services/validation-service.js';
 import { getFollowersList, getFollowingList } from '../services/follow-service.js';
 
@@ -219,6 +220,7 @@ export async function deleteAccount(req, res) {
 
 	try {
 		const { userData, userRef } = await getUserData(userId);
+		const username = userData.username.toLowerCase();
 		const user = auth.currentUser;
 
 		if (!user) {
@@ -231,17 +233,25 @@ export async function deleteAccount(req, res) {
 
 		// Remove existing posts from this user
 		if (snapshot.exists()) {
-			snapshot.forEach((postSnapshot) => {
-				const postKey = postSnapshot.key;
+			const postsData = snapshot.val();
 
-				remove(ref(db, `posts/${postKey}`))
-					.then(() => {
-						console.log(`Post ${postKey} deleted successfully.`);
-					})
-					.catch((error) => {
-						console.error(`Error deleting post ${postKey}:`, error);
-					});
-			});
+			for (const postKey in postsData) {
+				if (postsData.hasOwnProperty(postKey)) {
+					const likedBy = await getPostLikes(postKey);
+
+					// Remove the like reference from each user's likes list
+					for (const likerId of likedBy) {
+						const userLikeRef = ref(db, `users/${likerId}/likes/${postKey}`);
+						await remove(userLikeRef);
+						console.log(`Removed like reference to post ${postKey} from user ${likerId}`);
+					}
+
+					// Delete the post itself
+					const postRef = ref(db, `posts/${postKey}`);
+					await remove(postRef);
+					console.log(`Post ${postKey} deleted successfully.`);
+				}
+			}
 		} else {
 			console.log('No posts found for this user.');
 		}
@@ -271,7 +281,7 @@ export async function deleteAccount(req, res) {
 		await Promise.all([...removeFollowers, ...removeFollowing]);
 
 		// Remove main user data and reference
-		await remove(ref(db, `usernames/${userData.username}`));
+		await remove(ref(db, `usernames/${username}`));
 		await remove(userRef);
 		await deleteUser(user);
 
