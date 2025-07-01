@@ -1,5 +1,6 @@
 import { ref, push, update, get, remove, set } from 'firebase/database';
 import { db } from '../config/firebase-config.js';
+import { getPostLikes } from '../services/post-service.js';
 
 // @route   POST /post
 // @desc    Handles post submission and writes to DB
@@ -69,11 +70,18 @@ export async function deletePost(req, res) {
 			return res.status(403).json({ error: 'Forbidden: You do not own this post' });
 		}
 
+		// Remove all like references from users who liked this post
+		const likedBy = await getPostLikes(postId);
+
+		for (const likerId of likedBy) {
+			const userLikeRef = ref(db, `users/${likerId}/likes/${postId}`);
+			await remove(userLikeRef);
+			console.log(`Removed like reference to post ${postId} from user ${likerId}`);
+		}
+
+		// Delete post from global posts and from user's personal posts
 		const userPostRef = ref(db, `users/${userId}/posts/${postId}`);
-		await Promise.all([
-			remove(postRef), // Delete from `posts/${postId}`
-			remove(userPostRef), // Delete from `users/${userId}/posts/${postId}`
-		]);
+		await Promise.all([remove(postRef), remove(userPostRef)]);
 
 		return res.json({ message: 'Post deleted successfully' });
 	} catch (error) {
