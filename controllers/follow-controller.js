@@ -1,5 +1,5 @@
-import { getIdFromUsername } from '../services/userService.js';
-import { db } from '../config/firebaseConfig.js';
+import { getIdFromUsername } from '../services/user-service.js';
+import { db } from '../config/firebase-config.js';
 import { ref, get, set, remove } from 'firebase/database';
 
 // @route   POST /follow

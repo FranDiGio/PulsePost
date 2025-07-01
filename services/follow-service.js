@@ -1,4 +1,4 @@
-import { db } from '../config/firebaseConfig.js';
+import { db } from '../config/firebase-config.js';
 import { ref, get } from 'firebase/database';
 
 // @desc    Gets follower/following counts by userId (used in profile render)

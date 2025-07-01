@@ -1,6 +1,6 @@
 import express from 'express';
 import multer from 'multer';
-import { ensureAuthenticated } from '../controllers/authController.js';
+import { ensureAuthenticated } from '../controllers/auth-controller.js';
 import {
 	uploadProfilePicture,
 	deleteProfilePicture,
@@ -9,7 +9,7 @@ import {
 	updateBiography,
 	resetPassword,
 	deleteAccount,
-} from '../controllers/settingsController.js';
+} from '../controllers/settings-controller.js';
 
 const router = express.Router();
 const upload = multer();

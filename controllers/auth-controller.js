@@ -1,7 +1,7 @@
-import { auth, db } from '../config/firebaseConfig.js';
+import { auth, db } from '../config/firebase-config.js';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { ref, set, update, get, child } from 'firebase/database';
-import { validateSignUp, checkValidUsername } from '../services/validationService.js';
+import { validateSignUp, checkValidUsername } from '../services/validation-service.js';
 
 // @middleware
 // @desc    Ensures user is authenticated before accessing protected routes

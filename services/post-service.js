@@ -1,6 +1,6 @@
-import { getProfilePictureUrl } from '../services/userService.js';
+import { getProfilePictureUrl } from './user-service.js';
 import { ref, get } from 'firebase/database';
-import { db } from '../config/firebaseConfig.js';
+import { db } from '../config/firebase-config.js';
 
 // @desc    Retrieves latest posts and adds follow info & author profile pics
 export async function getLatestPosts(userId) {

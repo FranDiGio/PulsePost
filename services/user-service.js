@@ -1,4 +1,4 @@
-import { db } from '../config/firebaseConfig.js';
+import { db } from '../config/firebase-config.js';
 import { ref, get } from 'firebase/database';
 
 // @desc    Retrieves data and reference for a specific user

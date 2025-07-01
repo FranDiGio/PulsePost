@@ -2,10 +2,10 @@
 	"name": "5.0-blog-capstone-project",
 	"version": "1.0.0",
 	"description": "Blog project",
-	"main": "index.js",
+	"main": "server.js",
 	"type": "module",
 	"scripts": {
-		"start": "node index.js",
+		"start": "node server.js",
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,scss,md,html,ejs}\""
 	},

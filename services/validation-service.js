@@ -1,6 +1,6 @@
 import { ref, query, orderByChild, equalTo, get } from 'firebase/database';
-import { db } from '../config/firebaseConfig.js';
-import UserValidationResult from '../models/UserValidationResult.mjs';
+import { db } from '../config/firebase-config.js';
+import UserValidationResult from '../models/user-validation-result.mjs';
 
 export async function checkValidUsername(username) {
 	if (!username) return "Username field can't be empty";

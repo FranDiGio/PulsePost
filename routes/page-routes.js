@@ -1,6 +1,6 @@
 import express from 'express';
-import { ensureAuthenticated } from '../controllers/authController.js';
-import { loadFeed, loadProfile } from '../controllers/viewController.js';
+import { ensureAuthenticated } from '../controllers/auth-controller.js';
+import { loadFeed, loadProfile } from '../controllers/page-controller.js';
 
 const router = express.Router();
 

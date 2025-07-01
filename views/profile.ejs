@@ -20,7 +20,7 @@
 		<link href="/styles/global.css" rel="stylesheet" />
 		<link href="/styles/feed.css" rel="stylesheet" />
 		<link href="/styles/profile.css" rel="stylesheet" />
-		<link href="/styles/backgrounds.css" rel="stylesheet" />
+		<link href="/styles/background.css" rel="stylesheet" />
 	</head>
 
 	<body class="row d-flex justify-content-center m-0">
@@ -95,17 +95,17 @@
 		<!-- Create Post Modal -->
 		<%- include('partials/posts/create-post-modal.ejs') %>
 		<!-- Main Settings Modal -->
-		<%- include('partials/settings-modals/00-main-settings.ejs') %>
+		<%- include('partials/settings-modals/main-settings.ejs') %>
 		<!-- Profile Picture Settings Modal -->
-		<%- include('partials/settings-modals/01-picture-settings.ejs') %>
+		<%- include('partials/settings-modals/picture-settings.ejs') %>
 		<!-- Profile Background Settings Modal -->
-		<%- include('partials/settings-modals/02-background-settings.ejs') %>
+		<%- include('partials/settings-modals/background-settings.ejs') %>
 		<!-- Biography Settings Modal -->
-		<%- include('partials/settings-modals/03-biography-settings.ejs') %>
+		<%- include('partials/settings-modals/biography-settings.ejs') %>
 		<!-- Password Settings Modal -->
-		<%- include('partials/settings-modals/04-password-settings.ejs') %>
+		<%- include('partials/settings-modals/password-settings.ejs') %>
 		<!-- Account Settings Modal -->
-		<%- include('partials/settings-modals/05-account-settings.ejs') %>
+		<%- include('partials/settings-modals/account-settings.ejs') %>
 
 		<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 		<script
@@ -113,15 +113,16 @@
 			integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
 			crossorigin="anonymous"
 		></script>
-		<script src="/js/handlers/misc.js" charset="utf-8"></script>
-		<script src="/js/handlers/sign-out.js" charset="utf-8"></script>
-		<script src="/js/handlers/posts-new.js" charset="utf-8"></script>
-		<script src="/js/handlers/posts-delete.js" charset="utf-8"></script>
+		<script src="/js/handlers/users/sign-out.js" charset="utf-8"></script>
+		<script src="/js/handlers/posts/create.js" charset="utf-8"></script>
+		<script src="/js/handlers/posts/delete.js" charset="utf-8"></script>
+		<script src="/js/handlers/posts/like.js" charset="utf-8"></script>
+		<script src="/js/ui/misc.js" charset="utf-8"></script>
 		<script src="/js/ui/date-format.js" charset="utf-8"></script>
-		<script src="/js/settings/01-picture-settings-handler.js" charset="utf-8"></script>
-		<script src="/js/settings/02-background-settings-handler.js" charset="utf-8"></script>
-		<script src="/js/settings/03-bio-settings-handler.js" charset="utf-8"></script>
-		<script src="/js/settings/04-password-settings-handler.js" charset="utf-8"></script>
-		<script src="/js/settings/05-account-settings-handler.js" charset="utf-8"></script>
+		<script src="/js/handlers/settings/profile-picture.js" charset="utf-8"></script>
+		<script src="/js/handlers/settings/background.js" charset="utf-8"></script>
+		<script src="/js/handlers/settings/biography.js" charset="utf-8"></script>
+		<script src="/js/handlers/settings/password.js" charset="utf-8"></script>
+		<script src="/js/handlers/settings/account.js" charset="utf-8"></script>
 	</body>
 </html>

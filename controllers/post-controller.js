@@ -1,5 +1,5 @@
 import { ref, push, update, get, remove, set } from 'firebase/database';
-import { db } from '../config/firebaseConfig.js';
+import { db } from '../config/firebase-config.js';
 
 // @route   POST /post
 // @desc    Handles post submission and writes to DB

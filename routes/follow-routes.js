@@ -1,12 +1,12 @@
 import express from 'express';
-import { ensureAuthenticated } from '../controllers/authController.js';
+import { ensureAuthenticated } from '../controllers/auth-controller.js';
 import {
 	followUser,
 	unfollowUser,
 	getFollowing,
 	getFollowers,
 	getFollowStats,
-} from '../controllers/followController.js';
+} from '../controllers/follow-controller.js';
 
 const router = express.Router();
 

@@ -1,7 +1,7 @@
-import { getLatestPosts, getUserPostCount, getUserPosts } from '../services/postService.js';
-import { getFollowStatsById } from '../services/followService.js';
-import { getProfilePictureUrl, getProfileBackgroundUrl, getUserBiography } from '../services/userService.js';
-import { db } from '../config/firebaseConfig.js';
+import { getLatestPosts, getUserPostCount, getUserPosts } from '../services/post-service.js';
+import { getFollowStatsById } from '../services/follow-service.js';
+import { getProfilePictureUrl, getProfileBackgroundUrl, getUserBiography } from '../services/user-service.js';
+import { db } from '../config/firebase-config.js';
 import { ref, get } from 'firebase/database';
 
 // @route   GET /feed

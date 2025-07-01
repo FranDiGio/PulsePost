@@ -3,11 +3,11 @@ import bodyParser from 'body-parser';
 import session from 'express-session';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
-import authRoutes from './routes/authRoutes.js';
-import followRoutes from './routes/followRoutes.js';
-import postRoutes from './routes/postRoutes.js';
-import settingsRoutes from './routes/settingsRoutes.js';
-import viewRoutes from './routes/viewRoutes.js';
+import authRoutes from './routes/auth-routes.js';
+import followRoutes from './routes/follow-routes.js';
+import postRoutes from './routes/post-routes.js';
+import settingsRoutes from './routes/settings-routes.js';
+import viewRoutes from './routes/page-routes.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
