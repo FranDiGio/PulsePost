@@ -11,16 +11,4 @@ document.addEventListener('DOMContentLoaded', function () {
 		const formattedText = text.replace(/\n/g, '<br>');
 		postContent.innerHTML = formattedText;
 	});
-
-	// Initialize character counter for new post and bio content
-	function updateCharCount(textareaId, charCountId, maxChars) {
-		const textarea = document.getElementById(textareaId);
-		const charCount = document.getElementById(charCountId);
-
-		textarea.addEventListener('input', () => {
-			const remaining = maxChars - textarea.value.length;
-			charCount.textContent = remaining;
-		});
-	}
-	updateCharCount('postContent', 'postCharCount', 1500);
 });
