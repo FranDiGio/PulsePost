@@ -11,7 +11,6 @@
     min-height: 180px;
     max-width: 200px;
     max-height: 200px;
-    bottom: 100px;
 }
 
 .profile-photo {
@@ -30,5 +29,5 @@
         -moz-border-radius: 0px 0px 15px 15px;
         -ms-border-radius: 0px 0px 15px 15px;
         border-radius: 0px 0px 15px 15px;
-}
+    }
 }

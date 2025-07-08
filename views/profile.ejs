@@ -36,27 +36,49 @@
 				/>
 			</div>
 
-			<div class="row justify-content-center position-relative m-0">
-				<div
-					class="col-3 d-flex justify-content-center align-items-center position-relative profile-circle rounded-circle bg-white"
-				>
-					<img src="<%= profilePictureUrl %>" class="profile-photo rounded-circle" alt="profile picture" />
+			<div class="row justify-content-center position-relative m-0" style="isolation: isolate">
+				<div class="position-relative" style="width: 200px">
+					<div class="position-absolute start-0 translate-middle-y" style="top: 0; width: 200px; z-index: 1">
+						<div
+							class="d-flex justify-content-center align-items-center profile-circle rounded-circle bg-white position-relative mx-auto"
+						>
+							<img
+								src="<%= profilePictureUrl %>"
+								class="profile-photo rounded-circle"
+								alt="profile picture"
+							/>
+						</div>
+					</div>
 				</div>
-				<div class="col-6">
-					<div class="row w-auto ms-2 mt-2 px-2 pt-1 rounded bg-light">
+				<div class="col-6 ms-md-3">
+					<div class="row w-auto mt-2 px-2 pt-1 rounded bg-light">
 						<h3><%= profileUsername %></h3>
 					</div>
-					<div class="row w-auto ms-2 mt-2 px-2 pt-2 rounded bg-light">
+					<div class="row w-auto mt-2 px-2 pt-2 rounded bg-light">
 						<p class="text-break"><%= profileBio %></p>
 					</div>
 				</div>
 			</div>
 
-			<div class="d-block d-lg-none" style="height: 20px"></div>
+			<!-- Horizontal metrics for small screens -->
+			<div class="row d-md-none col-11 justify-content-between no-wrap text-center ms-4 py-4">
+				<div class="bg-light rounded col-3 py-1">
+					<h5>Followers</h5>
+					<p class="mb-0"><%= profileStats.followers %></p>
+				</div>
+				<div class="bg-light rounded col-3 py-1">
+					<h5>Following</h5>
+					<p class="mb-0"><%= profileStats.following %></p>
+				</div>
+				<div class="bg-light rounded col-3 py-1">
+					<h5>Posts</h5>
+					<p class="mb-0"><%= profileStats.posts %></p>
+				</div>
+			</div>
 
-			<div class="row justify-content-center mb-5 me-0" style="max-height: 200px">
-				<div class="col-3 profile-metrics">
-					<div class="pt-2 ps-2 mx-3">
+			<div class="row justify-content-center m-0" style="max-height: 200px">
+				<div class="d-none d-md-block profile-metrics" style="width: 200px">
+					<div class="pt-2 ps-2 mx-1">
 						<h4>Followers</h4>
 						<p class="lead mb-3"><%= profileStats.followers %></p>
 						<h4>Following</h4>
@@ -65,8 +87,8 @@
 						<p class="lead pb-1"><%= profileStats.posts %></p>
 					</div>
 				</div>
-				<div class="col-6 px-3 ms-4">
-					<div class="bg-light rounded pb-1">
+				<div class="col-11 col-md-6 ms-md-3">
+					<div class="row w-auto mt-2 px-1 pt-1 bg-light rounded">
 						<div class="px-3">
 							<h2 class="p-2 pt-3 w-100 border-bottom">Posts</h2>
 						</div>
