@@ -1,7 +1,7 @@
 .profile-background {
-    min-height: 250px; 
+    min-height: 300px; 
     overflow-y: hidden;
-    height: 250px;
+    height: 300px;
 }
 
 .profile-circle, .profile-metrics {
