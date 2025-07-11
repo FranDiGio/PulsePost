@@ -18,13 +18,13 @@
 			crossorigin="anonymous"
 		/>
 		<link href="/styles/global.css" rel="stylesheet" />
-		<link href="/styles/feed.css" rel="stylesheet" />
+		<link href="/styles/list-hover.css" rel="stylesheet" />
 		<link href="/styles/profile.css" rel="stylesheet" />
 		<link href="/styles/background.css" rel="stylesheet" />
 	</head>
 
 	<body class="row d-flex justify-content-center m-0">
-		<%- include('partials/navbars/navbar-profile.ejs') %>
+		<%- include('partials/navbars/navbar-user.ejs') %>
 
 		<div class="h-100 col-12 col-xxl-8 px-0 m-0">
 			<div class="w-100 profile-background position-relative">
@@ -142,13 +142,15 @@
 			integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
 			crossorigin="anonymous"
 		></script>
-		<script src="/js/handlers/users/sign-out.js" charset="utf-8"></script>
 		<script src="/js/handlers/posts/create.js" charset="utf-8"></script>
-		<script src="/js/handlers/posts/delete.js" charset="utf-8"></script>
 		<script src="/js/handlers/posts/like.js" charset="utf-8"></script>
+		<script src="/js/handlers/users/follow.js" charset="utf-8"></script>
+		<script src="/js/handlers/users/sign-out.js" charset="utf-8"></script>
 		<script src="/js/ui/misc.js" charset="utf-8"></script>
 		<script src="/js/ui/char-count.js" charset="utf-8"></script>
 		<script src="/js/ui/date-format.js" charset="utf-8"></script>
+		<script src="/js/ui/tooltips.js" charset="utf-8"></script>
+		<script src="/js/ui/toggle-content.js" charset="utf-8"></script>
 		<script src="/js/handlers/settings/profile-picture.js" charset="utf-8"></script>
 		<script src="/js/handlers/settings/background.js" charset="utf-8"></script>
 		<script src="/js/handlers/settings/biography.js" charset="utf-8"></script>

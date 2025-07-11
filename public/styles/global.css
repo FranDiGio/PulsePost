@@ -1,4 +1,8 @@
-/* Global styles in PulsePost */
+.header-icon {
+    width: 100%;
+    max-width: 30px;
+    height: auto;
+}
 
 .page-link, .dropdown-item, .nav-link, .list-group-item {
     cursor: pointer;
@@ -6,4 +10,57 @@
 
 .char-counter {
     font-size: small;
+}
+
+.hidden {
+    display: none;
+}
+
+.arrow {
+  display: inline-block;
+  margin-left: 5px;
+  transition: transform 0.1s ease;
+  -webkit-transition: transform 0.1s ease;
+  -moz-transition: transform 0.1s ease;
+  -ms-transition: transform 0.1s ease;
+  -o-transition: transform 0.1s ease;
+}
+
+.arrow.down {
+  transform: rotate(90deg);
+}
+
+.like-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    outline: none;
+}
+
+.heart-icon {
+    width: 18px;
+    height: 18px;
+    display: inline-block;
+    background: url('/svg/heart.svg') no-repeat center center;
+    background-size: contain;
+    transition: background 0.3s;
+}
+
+.heart-icon.filled {
+    background: url('/svg/heart-fill.svg') no-repeat center center;
+    background-size: contain;
+}
+
+.open-sans-title {
+    font-family: 'Open Sans', sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
+    font-variation-settings: 'wdth' 100;
+}
+
+.icon-sm {
+  height: 1em;
+  width: 1em;
+  vertical-align: middle;
 }

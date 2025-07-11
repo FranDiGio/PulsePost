@@ -24,7 +24,7 @@
 	</head>
 
 	<body class="bg-light">
-		<%- include('partials/navbars/navbar-feed.ejs') %>
+		<%- include('partials/navbars/navbar-user.ejs') %>
 
 		<div class="container-fluid">
 			<div class="row d-flex justify-content-center">
@@ -139,14 +139,12 @@
 		<!-- Account Settings Modal -->
 		<%- include('partials/settings-modals/account-settings.ejs') %>
 
-		<script src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 		<script
 			src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
 			integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
 			crossorigin="anonymous"
 		></script>
-
 		<script src="/js/handlers/posts/create.js" charset="utf-8"></script>
 		<script src="/js/handlers/posts/like.js" charset="utf-8"></script>
 		<script src="/js/handlers/users/follow.js" charset="utf-8"></script>
