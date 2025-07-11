@@ -52,17 +52,36 @@ export async function getLatestPosts(userId) {
 	}
 }
 
-// @desc    Gets all posts created by the given user
-export async function getUserPosts(userId) {
+// @desc    Gets all posts created by the given user with like info
+export async function getUserPosts(profileId, currentUserId) {
 	try {
-		const postsRef = ref(db, `users/` + userId + '/posts');
+		const postsRef = ref(db, `users/${profileId}/posts`);
 		const postsSnapshot = await get(postsRef);
 		const postsData = postsSnapshot.val();
 
+		if (!postsData) return {};
+
+		// Get the list of posts liked by the current user
+		const likedSnap = await get(ref(db, `users/${currentUserId}/likes`));
+		const likedPostIds = likedSnap.exists() ? Object.keys(likedSnap.val()) : [];
+
+		for (const key in postsData) {
+			if (postsData.hasOwnProperty(key)) {
+				const post = postsData[key];
+
+				// Add like status
+				post.isLikedByCurrentUser = likedPostIds.includes(key);
+
+				// Get like count for current post
+				const likeList = await getPostLikes(key);
+				post.likeCount = likeList.length;
+			}
+		}
+
 		return postsData;
 	} catch (error) {
-		console.error('Error fetching posts:', error);
-		return '';
+		console.error('Error fetching user posts:', error);
+		return {};
 	}
 }
 

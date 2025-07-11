@@ -42,10 +42,16 @@
 			</div>
 			<div class="card-footer d-flex justify-content-between">
 				<div class="d-flex">
-					<button id="like-button" class="like-button p-0">
+					<button class="like-button p-0" data-post-id="<%= key %>">
+						<% if (posts[key].isLikedByCurrentUser) { %>
+						<i class="heart-icon filled"></i>
+						<% } else { %>
 						<i class="heart-icon"></i>
+						<% } %>
 					</button>
-					<p class="text-muted my-0 ms-2 py-0" style="font-size: 0.8rem">1000 Likes</p>
+					<p class="like-count text-muted my-0 ms-2 py-0" style="font-size: 0.8rem">
+						<%= posts[key].likeCount %>
+					</p>
 				</div>
 				<p class="timestamp text-muted my-0 py-0" style="font-size: 0.8rem">
 					<%= posts[key].createdTimestamp %>

@@ -56,7 +56,7 @@ export async function loadProfile(req, res) {
 			const profilePictureUrl = await getProfilePictureUrl(profileId);
 			const profileBackgroundUrl = await getProfileBackgroundUrl(profileId);
 			const profileBio = await getUserBiography(profileId);
-			const posts = await getUserPosts(profileId);
+			const posts = await getUserPosts(profileId, userId);
 			const { followersCount, followingCount } = await getFollowStatsById(profileId);
 			const postCount = await getUserPostCount(profileId);
 			const profileStats = { followers: followersCount, following: followingCount, posts: postCount };
