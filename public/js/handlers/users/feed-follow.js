@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				modalUsernameBody.textContent = username;
 				unfollowModal.show();
 			} else {
-				handleFollowAction(this, username, isFollowing);
+				handleFollowAction(username, isFollowing);
 			}
 		});
 	});
@@ -26,14 +26,14 @@ document.addEventListener('DOMContentLoaded', function () {
 	confirmUnfollowBtn.addEventListener('click', function () {
 		if (pendingUnfollow) {
 			const username = pendingUnfollow.dataset.username;
-			handleFollowAction(pendingUnfollow, username, true);
+			handleFollowAction(username, true);
 			unfollowModal.hide();
 			pendingUnfollow = null;
 		}
 	});
 
 	// Handles the HTTP request for both 'follow' and 'unfollow'
-	async function handleFollowAction(button, username, isFollowing) {
+	async function handleFollowAction(username, isFollowing) {
 		try {
 			const res = await fetch(isFollowing ? '/unfollow' : '/follow', {
 				method: 'POST',

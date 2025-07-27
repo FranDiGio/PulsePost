@@ -40,7 +40,7 @@
 	<!-- Post Details -->
 	<div class="col-8">
 		<div class="card border-secondary">
-			<div class="card-header">
+			<div class="card-header d-flex justify-content-between">
 				<ul class="nav nav-tabs card-header-tabs">
 					<li class="nav-item">
 						<a class="nav-link active">Post</a>
@@ -49,6 +49,7 @@
 						<a class="nav-link">Comments</a>
 					</li>
 				</ul>
+				<p class="d-flex d-xl-none text-muted mb-0 pt-2" style="font-size: 0.8rem"><%= posts[key].author %></p>
 			</div>
 			<div class="card-body">
 				<h5 class="card-title pb-1"><%= posts[key].title %></h5>

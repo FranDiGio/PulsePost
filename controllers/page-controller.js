@@ -38,16 +38,23 @@ export async function loadProfile(req, res) {
 		const userBackgroundUrl = await getProfileBackgroundUrl(userId);
 		const userBio = await getUserBiography(userId);
 
-		// Selected profile
+		// Selected user
 		const username = req.params.username;
 		const sanitizedUsername = username.trim().toLowerCase();
 		const idSnapshot = await get(ref(db, `usernames/` + sanitizedUsername));
 		const profileId = idSnapshot.val();
 
-		// Check if selected profile = current user
+		// Check if selected user = current user
 		let isSelf = false;
 		if (req.session.username === req.params.username) {
 			isSelf = true;
+		}
+
+		// Check if current user follows the selected user
+		let isFollowing = false;
+		if (!isSelf) {
+			const followSnap = await get(ref(db, `users/${userId}/following/${profileId}`));
+			isFollowing = followSnap.exists();
 		}
 
 		if (profileId == null) {
@@ -57,6 +64,8 @@ export async function loadProfile(req, res) {
 			const profileBackgroundUrl = await getProfileBackgroundUrl(profileId);
 			const profileBio = await getUserBiography(profileId);
 			const posts = await getUserPosts(profileId, userId);
+
+			// Profile Stats
 			const { followersCount, followingCount } = await getFollowStatsById(profileId);
 			const postCount = await getUserPostCount(profileId);
 			const profileStats = { followers: followersCount, following: followingCount, posts: postCount };
@@ -72,6 +81,7 @@ export async function loadProfile(req, res) {
 				profileBio: profileBio,
 				profileStats: profileStats,
 				isSelf: isSelf,
+				isFollowing: isFollowing,
 				posts: posts,
 			});
 		}
