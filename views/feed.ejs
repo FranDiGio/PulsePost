@@ -52,22 +52,41 @@
 									The Art of Unlearning
 								</a>
 							</li>
-							<li>
-								<a
-									style="cursor: pointer"
-									data-bs-toggle="modal"
-									data-bs-target="#postModal"
-									class="d-block list-add rounded p-2 mb-2 fs-6 fw-bold text-center text-primary"
-								>
-									+
-								</a>
-							</li>
 						</ul>
 					</div>
 				</div>
 
 				<!-- Main content -->
 				<div class="col-12 col-lg-8 col-xxl-6 bg-light mb-5">
+					<div class="d-flex flex-nowrap pt-4 mb-2">
+						<div class="col-2 col-lg-3 d-inline-flex justify-content-end align-items-start me-4">
+							<div class="d-flex flex-nowrap dropdown-center border rounded-5 bg-light px-2 py-1">
+								<p class="d-xl-block d-none mx-2 my-2"><%= username %></p>
+								<a
+									class="d-block link-body-emphasis text-decoration-none"
+									role="button"
+									data-bs-toggle="dropdown"
+								>
+									<img
+										src="<%= userPictureUrl %>"
+										width="40"
+										height="40"
+										alt="profile-picture"
+										class="rounded-circle"
+									/>
+								</a>
+							</div>
+						</div>
+						<div
+							class="col-8 fake-input-bar bg-white border rounded px-3 py-2 mt-1 mb-4 d-flex align-items-center"
+							data-bs-toggle="modal"
+							data-bs-target="#postModal"
+							role="button"
+						>
+							<span class="text-muted">What's on your mind today?</span>
+						</div>
+					</div>
+
 					<% if (locals.posts) { %><%- include('partials/posts/feed-posts.ejs') %><% } %>
 				</div>
 
