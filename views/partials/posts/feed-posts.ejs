@@ -43,22 +43,50 @@
 			<div class="card-header d-flex justify-content-between">
 				<ul class="nav nav-tabs card-header-tabs">
 					<li class="nav-item">
-						<a class="nav-link active">Post</a>
+						<a class="nav-link post-tab active">Post</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link">Comments</a>
+						<a class="nav-link comments-tab">Comments</a>
 					</li>
 				</ul>
 				<p class="d-flex d-xl-none text-muted mb-0 pt-2" style="font-size: 0.8rem"><%= posts[key].author %></p>
 			</div>
-			<div class="card-body">
-				<h5 class="card-title pb-1"><%= posts[key].title %></h5>
-				<p class="card-text post-content mb-1 overflow-hidden"><%= posts[key].content %></p>
 
-				<button type="button" class="btn text-muted p-0 px-1 read-more-btn" style="font-size: 0.8rem">
-					Show more
-				</button>
+			<div class="card-body">
+				<div class="m-0 p-0 post-section">
+					<h5 class="card-title pb-1"><%= posts[key].title %></h5>
+					<p class="card-text post-content mb-1 overflow-hidden"><%= posts[key].content %></p>
+
+					<button type="button" class="btn text-muted p-0 px-1 read-more-btn" style="font-size: 0.8rem">
+						Show more
+					</button>
+				</div>
+				<div class="m-0 p-0 comments-section d-none">
+					<div class="container-fluid px-0">
+						<div class="d-flex align-items-center border rounded-5 bg-light px-3 py-2 gap-2">
+							<a class="d-flex">
+								<img
+									src="<%= userPictureUrl %>"
+									width="40"
+									height="40"
+									alt="profile-picture"
+									class="rounded-circle"
+								/>
+							</a>
+
+							<div
+								class="flex-grow-1 fake-input-bar bg-white border rounded px-3 py-2"
+								data-bs-toggle="modal"
+								data-bs-target="#commentModal"
+								role="button"
+							>
+								<span class="text-muted">Add a comment</span>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
+
 			<div class="card-footer d-flex justify-content-between">
 				<div class="d-flex">
 					<button class="like-button p-0" data-post-id="<%= key %>">
