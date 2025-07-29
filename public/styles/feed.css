@@ -57,3 +57,22 @@
 .fixed-sidebar-right::-webkit-scrollbar-thumb:hover {
     background: #909090; /* Lighter color of the scrollbar thumb on hover */
 }
+
+
+/* Custom breakpoint at 1600px */
+  @media (min-width: 1600px) {
+    .col-custom-3 {
+      flex: 0 0 auto;
+      width: 25%; /* 3 out of 12 columns */
+    }
+
+    .col-custom-6 {
+      flex: 0 0 auto;
+      width: 50%; /* 6 out of 12 columns */
+    }
+
+    .col-custom-8 {
+      flex: 0 0 auto;
+      width: 66.6%; /* 6 out of 12 columns */
+    }
+  }

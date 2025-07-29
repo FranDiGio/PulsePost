@@ -81,7 +81,7 @@
 			<div class="row justify-content-center m-0 mx-1" style="max-height: 200px">
 				<div class="d-none d-md-block profile-metrics" style="width: 200px">
 					<div class="pt-2 ps-2 mx-1">
-						<% if(!isSelf) { %>
+						<% if (!isSelf) { %>
 						<div class="pe-2 mb-4">
 							<button
 								type="button"
@@ -142,7 +142,7 @@
 		<script src="/js/handlers/posts/create.js" charset="utf-8"></script>
 		<script src="/js/handlers/posts/delete.js" charset="utf-8"></script>
 		<script src="/js/handlers/posts/like.js" charset="utf-8"></script>
-		<script src="/js/handlers/users/profile-follow.js" charset="utf-8"></script>
+		<% if (!isSelf) { %><script src="/js/handlers/users/profile-follow.js" charset="utf-8"></script><% } %>
 		<script src="/js/handlers/users/sign-out.js" charset="utf-8"></script>
 		<script src="/js/ui/misc.js" charset="utf-8"></script>
 		<script src="/js/ui/char-count.js" charset="utf-8"></script>
