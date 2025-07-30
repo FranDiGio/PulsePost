@@ -5,15 +5,15 @@ document.addEventListener('DOMContentLoaded', function () {
 	const titleInput = document.getElementById('postTitle');
 	const contentInput = document.getElementById('postContent');
 
-	//  Logic for Submitting Post
+	// Handle submission
 	postForm.addEventListener('submit', async function (e) {
 		e.preventDefault();
 
 		submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
 		submitBtn.disabled = true;
 
-		const title = document.getElementById('postTitle').value;
-		const content = document.getElementById('postContent').value;
+		const title = titleInput.value;
+		const content = contentInput.value;
 
 		const formData = new URLSearchParams();
 		formData.append('title', title);
@@ -29,69 +29,55 @@ document.addEventListener('DOMContentLoaded', function () {
 			});
 
 			if (response.ok) {
-				postForm.reset();
-				window.location.reload();
+				window.location.reload(); // let the server handle full refresh after success
 			} else {
-				resetFields();
 				const error = await response.json();
 				setInvalidFields(error);
 			}
 		} catch (error) {
 			console.error('Error submitting post:', error);
+		} finally {
+			submitBtn.innerHTML = 'Submit';
+			submitBtn.disabled = false;
 		}
 	});
 
-	//  UI Handling After Submission
 	postModal.addEventListener('hidden.bs.modal', function () {
+		postForm.reset();
+		resetFields();
 		submitBtn.innerHTML = 'Submit';
 		submitBtn.disabled = false;
-		titleInput.value = '';
-		contentInput.value = '';
-		resetFields();
 	});
 
 	function setInvalidFields(error) {
-		const currentTitle = document.getElementById('postTitle');
-		const currentContent = document.getElementById('postContent');
+		resetFields(); // Clear previous errors
 
-		switch (error.errorCode) {
-			case 'empty-fields':
-				currentTitle.classList.add('is-invalid');
-				currentContent.classList.add('is-invalid');
-				titleInput.setAttribute('data-bs-title', error.message);
-				break;
-			case 'title-too-long':
-				currentTitle.classList.add('is-invalid');
-				currentTitle.setAttribute('data-bs-title', error.message);
-				break;
-			case 'content-too-long':
-				currentContent.classList.add('is-invalid');
-				currentContent.setAttribute('data-bs-title', error.message);
-				break;
+		if (error.errorCode === 'empty-fields') {
+			titleInput.classList.add('is-invalid');
+			contentInput.classList.add('is-invalid');
+			titleInput.setAttribute('data-bs-title', error.message);
+		}
+		if (error.errorCode === 'title-too-long') {
+			titleInput.classList.add('is-invalid');
+			titleInput.setAttribute('data-bs-title', error.message);
+		}
+		if (error.errorCode === 'content-too-long') {
+			contentInput.classList.add('is-invalid');
+			contentInput.setAttribute('data-bs-title', error.message);
 		}
 
-		// Reset tooltips
-		const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-		tooltipTriggerList.forEach(function (tooltipTriggerEl) {
-			new bootstrap.Tooltip(tooltipTriggerEl);
+		// Refresh tooltips
+		[titleInput, contentInput].forEach((el) => {
+			new bootstrap.Tooltip(el);
 		});
 	}
 
 	function resetFields() {
-		titleInput.classList.remove('is-invalid');
-		contentInput.classList.remove('is-invalid');
-
-		// Dispose of existing tooltips
-		const titleTooltipInstance = bootstrap.Tooltip.getInstance(titleInput);
-		if (titleTooltipInstance) {
-			titleTooltipInstance.dispose();
-		}
-		const contentTooltipInstance = bootstrap.Tooltip.getInstance(contentInput);
-		if (contentTooltipInstance) {
-			contentTooltipInstance.dispose();
-		}
-
-		titleInput.removeAttribute('data-bs-title');
-		contentInput.removeAttribute('data-bs-title');
+		[titleInput, contentInput].forEach((el) => {
+			el.classList.remove('is-invalid');
+			const instance = bootstrap.Tooltip.getInstance(el);
+			if (instance) instance.dispose();
+			el.removeAttribute('data-bs-title');
+		});
 	}
 });
