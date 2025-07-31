@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	updateCharCount('postContent', 'postCharCount', 1500);
 	updateCharCount('bioContent', 'bioCharCount', 160);
+	updateCharCount('commentContent', 'commentCharCount', 300);
 
 	// Recalculate count when modal is shown
 	document.getElementById('postModal')?.addEventListener('shown.bs.modal', function () {
@@ -26,5 +27,10 @@ document.addEventListener('DOMContentLoaded', function () {
 	document.getElementById('biographyModal')?.addEventListener('shown.bs.modal', function () {
 		const event = new Event('input', { bubbles: true });
 		document.getElementById('bioContent')?.dispatchEvent(event);
+	});
+
+	document.getElementById('biographyModal')?.addEventListener('shown.bs.modal', function () {
+		const event = new Event('input', { bubbles: true });
+		document.getElementById('commentContent')?.dispatchEvent(event);
 	});
 });

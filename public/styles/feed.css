@@ -10,6 +10,17 @@
 	box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
 
+.fake-comment-bar {
+	border-radius: 8px;
+	cursor: text;
+	transition: box-shadow 0.2s ease-in-out;
+}
+
+.fake-comment-bar:hover {
+	box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+
 .fixed-sidebar-left {
     position: fixed;
     top: 60px;
