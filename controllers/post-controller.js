@@ -90,6 +90,63 @@ export async function deletePost(req, res) {
 	}
 }
 
+// @route   POST /posts/:postId/comments
+// @desc    Creates a comment at /comments/{postId}/{commentId} and updates lightweight fields under /posts/{postId}
+export async function submitComment(req, res) {
+	const { postId } = req.params;
+	const { comment } = req.body;
+	const userId = req.session.userId;
+	const username = req.session.username;
+
+	// basic validation + normalize
+	const body = (comment || '')
+		.replace(/\r\n/g, '\n')
+		.replace(/\n{3,}/g, '\n\n')
+		.trim();
+	if (!body) {
+		return res.status(400).json({ errorCode: 'empty-fields', message: 'Comment cannot be empty.' });
+	}
+	if (body.length > 300) {
+		return res
+			.status(400)
+			.json({ errorCode: 'content-too-long', message: 'Comment cannot exceed 300 characters.' });
+	}
+
+	const snap = await get(ref(db, `posts/${postId}`));
+	if (!snap.exists()) {
+		return res.status(404).json({ errorCode: 'post-not-found', message: 'Post does not exist.' });
+	}
+
+	const nowMs = Date.now();
+	const nowIso = new Date(nowMs).toISOString();
+
+	// create the comment key
+	const commentRef = push(ref(db, `comments/${postId}`));
+	const commentId = commentRef.key;
+
+	const commentData = {
+		postId,
+		uid: userId,
+		author: username,
+		comment: body,
+		createdAtMs: nowMs,
+		createdAtIso: nowIso,
+	};
+
+	const updates = {
+		[`/comments/${postId}/${commentId}`]: commentData,
+		[`/posts/${postId}/commentCount`]: (snap.val()?.commentCount || 0) + 1,
+	};
+
+	try {
+		await update(ref(db), updates);
+		return res.status(201).json({ ok: true, comment: commentData });
+	} catch (err) {
+		console.error('Error submitting comment:', err);
+		return res.status(500).json({ errorCode: 'server-error', message: 'Error submitting comment' });
+	}
+}
+
 // @route   PUT /likes/:postId
 // @desc    Toggles like status for a post
 export async function toggleLike(req, res) {

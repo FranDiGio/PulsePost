@@ -63,7 +63,13 @@
 				</div>
 				<div class="m-0 p-0 comments-section d-none">
 					<div class="container-fluid px-0">
-						<div class="d-flex align-items-center border rounded-5 bg-light ps-2 pe-4 py-2 gap-2">
+						<div
+							class="d-flex fake-input-bar align-items-center border rounded-5 bg-light ps-2 pe-4 py-2 gap-2"
+							data-bs-toggle="modal"
+							data-bs-target="#commentModal"
+							data-post-id="<%= key %>"
+							role="button"
+						>
 							<a class="d-flex">
 								<img
 									src="<%= userPictureUrl %>"
@@ -74,12 +80,7 @@
 								/>
 							</a>
 
-							<div
-								class="flex-grow-1 fake-comment-bar bg-light px-2 py-2"
-								data-bs-toggle="modal"
-								data-bs-target="#commentModal"
-								role="button"
-							>
+							<div class="flex-grow-1 bg-light px-2 py-2">
 								<span class="text-muted">Add a comment</span>
 							</div>
 						</div>
