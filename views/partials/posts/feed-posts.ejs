@@ -46,7 +46,10 @@
 						<a class="nav-link post-tab active">Post</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link comments-tab">Comments</a>
+						<a class="nav-link comments-tab">
+							Comments
+							<span>(<%= posts[key].commentCount || 0 %>)</span>
+						</a>
 					</li>
 				</ul>
 				<p class="d-flex d-xl-none text-muted mb-0 pt-2" style="font-size: 0.8rem"><%= posts[key].author %></p>
@@ -84,6 +87,12 @@
 								<span class="text-muted">Add a comment</span>
 							</div>
 						</div>
+
+						<% if (!posts[key].commentCount || posts[key].commentCount === 0) { %>
+						<div class="d-flex justify-content-center fst-italic mt-4">
+							<p class="text-body-secondary">💬 Looks quiet here... leave a comment?</p>
+						</div>
+						<% } %>
 					</div>
 				</div>
 			</div>

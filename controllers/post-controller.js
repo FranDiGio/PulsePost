@@ -29,6 +29,7 @@ export async function submitPost(req, res) {
 		author: username,
 		title: title,
 		content: sanitizedContent,
+		commentCount: 0,
 		createdTimestamp: new Date().toISOString(),
 	};
 
