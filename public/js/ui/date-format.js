@@ -10,8 +10,8 @@ document.addEventListener('DOMContentLoaded', function () {
 	});
 });
 
-function timeSince(dateString) {
-	const date = new Date(dateString);
+function timeSince(dateIso) {
+	const date = new Date(dateIso);
 	if (isNaN(date)) {
 		return 'Invalid date';
 	}
@@ -33,4 +33,21 @@ function timeSince(dateString) {
 	if (interval > 1) return interval + ' minutes ago';
 
 	return Math.floor(seconds) + ' seconds ago';
+}
+
+function timeSinceShort(ms) {
+	if (!ms) return '';
+	const seconds = Math.floor((Date.now() - ms) / 1000);
+
+	if (seconds < 60) return `${seconds}s`;
+	const minutes = Math.floor(seconds / 60);
+	if (minutes < 60) return `${minutes}m`;
+	const hours = Math.floor(minutes / 60);
+	if (hours < 24) return `${hours}h`;
+	const days = Math.floor(hours / 24);
+	if (days < 30) return `${days}d`;
+	const months = Math.floor(days / 30);
+	if (months < 12) return `${months}mo`;
+	const years = Math.floor(months / 12);
+	return `${years}y`;
 }

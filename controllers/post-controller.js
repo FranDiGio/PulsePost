@@ -1,4 +1,4 @@
-import { ref, push, update, get, remove, set } from 'firebase/database';
+import { ref, push, update, get, remove, set, orderByChild, limitToFirst, startAt, query } from 'firebase/database';
 import { db } from '../config/firebase-config.js';
 import { getPostLikes } from '../services/post-service.js';
 
@@ -145,6 +145,55 @@ export async function submitComment(req, res) {
 	} catch (err) {
 		console.error('Error submitting comment:', err);
 		return res.status(500).json({ errorCode: 'server-error', message: 'Error submitting comment' });
+	}
+}
+
+// @route   GET /posts/:postId/comments?limit=5[&afterTs=...&afterId=...]
+// @desc    Returns a page of comments sorted by createdAtMs ASC with look-ahead
+export async function getCommentsPage(req, res) {
+	const { postId } = req.params;
+	const limit = Math.min(parseInt(req.query.limit || '5', 10), 50);
+	const afterTs = req.query.afterTs ? Number(req.query.afterTs) : null;
+	const afterId = req.query.afterId || null;
+
+	try {
+		let q;
+		if (afterTs != null && afterId) {
+			// Start from the last seen row (inclusive); will drop after fetching
+			q = query(
+				ref(db, `comments/${postId}`),
+				orderByChild('createdAtMs'),
+				startAt(afterTs, afterId),
+				limitToFirst(limit + 1),
+			);
+		} else {
+			// First page
+			q = query(ref(db, `comments/${postId}`), orderByChild('createdAtMs'), limitToFirst(limit + 1));
+		}
+
+		const snap = await get(q);
+		if (!snap.exists()) {
+			return res.json({ items: [], next: null });
+		}
+
+		const entries = Object.entries(snap.val());
+
+		// Drop overlap row if using a cursor
+		let rows = afterTs != null && afterId ? entries.slice(1) : entries;
+
+		// Use look-ahead to decide if more pages exist
+		const hasMore = rows.length > limit;
+		if (hasMore) rows = rows.slice(0, limit);
+
+		const items = rows.map(([id, data]) => ({ id, ...data }));
+
+		const last = items[items.length - 1];
+		const next = hasMore && last ? { afterTs: last.createdAtMs, afterId: last.id } : null;
+
+		return res.json({ items, next });
+	} catch (err) {
+		console.error('getCommentsPage error:', err);
+		return res.status(500).json({ errorCode: 'server-error', message: 'Failed to load comments' });
 	}
 }
 
