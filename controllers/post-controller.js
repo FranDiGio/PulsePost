@@ -75,7 +75,7 @@ export async function deletePost(req, res) {
 			return res.status(403).json({ error: 'Forbidden: You do not own this post' });
 		}
 
-		// Remove all like references from users who liked this post
+		// Delete all like references from users who liked this post
 		const likedBy = await getPostLikes(postId);
 
 		for (const likerId of likedBy) {
@@ -84,9 +84,10 @@ export async function deletePost(req, res) {
 			console.log(`Removed like reference to post ${postId} from user ${likerId}`);
 		}
 
-		// Delete post from global posts and from user's personal posts
 		const userPostRef = ref(db, `users/${userId}/posts/${postId}`);
-		await Promise.all([remove(postRef), remove(userPostRef)]);
+		const commentsPostRef = ref(db, `comments/${postId}`);
+
+		await Promise.all([remove(postRef), remove(userPostRef), remove(commentsPostRef)]);
 
 		return res.json({ message: 'Post deleted successfully' });
 	} catch (error) {
