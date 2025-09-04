@@ -45,15 +45,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
 			// First open: fetch first page
 			if (!st.loaded) {
-				commentsList.textContent = 'Loading comments…';
+				commentsList.innerHTML = `
+				<div class="d-flex justify-content-center mt-4 mb-2">
+					<div class="spinner-border text-primary" role="status">
+						<span class="visually-hidden">Loading...</span>
+					</div>
+				</div>`;
+
 				try {
 					const { items, next } = await fetchPage(postId, PAGE_SIZE);
 					commentsList.innerHTML = '';
 					if (!items.length) {
 						commentsList.innerHTML = `
-              <div class="d-flex justify-content-center fst-italic mt-4">
-                <p class="text-body-secondary mb-0">💬 Looks quiet here... leave a comment?</p>
-              </div>`;
+							<div class="d-flex justify-content-center fst-italic mt-4 mb-2">
+								<p class="text-body-secondary mb-0">💬 Looks quiet here... leave a comment?</p>
+							</div>`;
+
 						loadMoreBtn.classList.add('d-none');
 						st.loaded = true;
 						st.next = null;
