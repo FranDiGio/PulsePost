@@ -139,7 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			row.innerHTML = `
         <div class="d-flex align-items-start gap-2">
           <div class="fw-semibold">${escapeHtml(c.author ?? 'Unknown')}</div>
-          <div class="text-muted small">${timeSinceShort(c.createdAtMs)}</div>
+          <div class="text-muted small">${timeSinceMs(c.createdAtMs)}</div>
         </div>
         <div class="mt-1">${escapeHtml(c.comment ?? '')}</div>
       `;

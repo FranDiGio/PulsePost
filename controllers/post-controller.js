@@ -24,13 +24,17 @@ export async function submitPost(req, res) {
 	// Replace multiple consecutive line breaks with a double line break
 	let sanitizedContent = content.replace(/\n{3,}/g, '\n\n').trim();
 
+	const nowMs = Date.now();
+	const nowIso = new Date(nowMs).toISOString();
+
 	const postData = {
 		uid: userId,
 		author: username,
 		title: title,
 		content: sanitizedContent,
 		commentCount: 0,
-		createdTimestamp: new Date().toISOString(),
+		createdAtMs: nowMs,
+		createdAtIso: nowIso,
 	};
 
 	const newPostRef = push(ref(db, 'posts'));
@@ -126,7 +130,6 @@ export async function submitComment(req, res) {
 	const commentId = commentRef.key;
 
 	const commentData = {
-		postId,
 		uid: userId,
 		author: username,
 		comment: body,
