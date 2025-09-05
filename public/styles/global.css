@@ -51,6 +51,12 @@
     background-size: contain;
 }
 
+.read-more-btn.btn,
+.comments-load-more.btn {
+  border: 0;
+  background: transparent;
+}
+
 .open-sans-title {
     font-family: 'Open Sans', sans-serif;
     font-optical-sizing: auto;

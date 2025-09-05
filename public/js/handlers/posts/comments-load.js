@@ -31,7 +31,8 @@ document.addEventListener('DOMContentLoaded', () => {
 			if (!loadMoreBtn) {
 				loadMoreBtn = document.createElement('button');
 				loadMoreBtn.type = 'button';
-				loadMoreBtn.className = 'btn btn-link p-0 comments-load-more d-none';
+				loadMoreBtn.className = 'btn text-muted p-0 comments-load-more d-none shadow-none';
+				loadMoreBtn.style.fontSize = '0.8rem';
 				loadMoreBtn.textContent = 'Load more';
 				loadMoreBtn.dataset.postId = postId;
 				container.appendChild(loadMoreBtn);
