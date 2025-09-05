@@ -246,9 +246,12 @@ export async function deleteAccount(req, res) {
 						console.log(`Removed like reference to post ${postKey} from user ${likerId}`);
 					}
 
-					// Delete the post itself
+					// Delete the post and comments
 					const postRef = ref(db, `posts/${postKey}`);
+					const commentsRef = ref(db, `comments/${postKey}`);
+
 					await remove(postRef);
+					await remove(commentsRef);
 					console.log(`Post ${postKey} deleted successfully.`);
 				}
 			}

@@ -51,6 +51,24 @@
     background-size: contain;
 }
 
+.read-more-btn.btn,
+.comments-load-more.btn {
+  border: 0;
+  background: transparent;
+}
+
+.fake-input-bar {
+	background-color: white;
+	border: 1px solid #ced4da;
+	border-radius: 8px;
+	cursor: text;
+	transition: box-shadow 0.2s ease-in-out;
+}
+
+.fake-input-bar:hover {
+	box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
 .open-sans-title {
     font-family: 'Open Sans', sans-serif;
     font-optical-sizing: auto;

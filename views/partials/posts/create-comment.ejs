@@ -7,14 +7,14 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 			</div>
 			<div class="modal-body">
-				<form action="/comment" method="POST" id="commentForm">
+				<form action="" method="POST" id="commentForm">
 					<div class="mb-3">
 						<textarea
 							class="form-control"
 							id="commentContent"
 							rows="6"
 							maxlength="300"
-							name="content"
+							name="comment"
 							data-bs-toggle="tooltip"
 							data-bs-placement="right"
 							placeholder="Add a comment"
@@ -28,7 +28,7 @@
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-				<button type="submit" id="submitBtn" class="btn btn-primary" form="commentForm">Submit</button>
+				<button type="submit" id="commentSubmitBtn" class="btn btn-primary" form="commentForm">Submit</button>
 			</div>
 		</div>
 	</div>
