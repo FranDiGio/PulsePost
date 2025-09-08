@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
 	const postForm = document.getElementById('postForm');
 	const postModal = document.getElementById('postModal');
-	const submitBtn = document.getElementById('submitBtn');
+	const submitBtn = document.getElementById('postSubmitBtn');
 	const titleInput = document.getElementById('postTitle');
 	const contentInput = document.getElementById('postContent');
 

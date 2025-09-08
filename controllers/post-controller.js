@@ -1,4 +1,4 @@
-import { ref, push, update, get, remove, set } from 'firebase/database';
+import { ref, push, update, get, remove, set, orderByChild, limitToFirst, startAt, query } from 'firebase/database';
 import { db } from '../config/firebase-config.js';
 import { getPostLikes } from '../services/post-service.js';
 
@@ -87,7 +87,7 @@ export async function deletePost(req, res) {
 			return res.status(403).json({ error: 'Forbidden: You do not own this post' });
 		}
 
-		// Remove all like references from users who liked this post
+		// Delete all like references from users who liked this post
 		const likedBy = await getPostLikes(postId);
 
 		for (const likerId of likedBy) {
@@ -96,14 +96,120 @@ export async function deletePost(req, res) {
 			console.log(`Removed like reference to post ${postId} from user ${likerId}`);
 		}
 
-		// Delete post from global posts and from user's personal posts
 		const userPostRef = ref(db, `users/${userId}/posts/${postId}`);
-		await Promise.all([remove(postRef), remove(userPostRef)]);
+		const commentsPostRef = ref(db, `comments/${postId}`);
+
+		await Promise.all([remove(postRef), remove(userPostRef), remove(commentsPostRef)]);
 
 		return res.json({ message: 'Post deleted successfully' });
 	} catch (error) {
 		console.error('Error deleting post:', error);
 		return res.status(500).json({ error: 'Internal Server Error' });
+	}
+}
+
+// @route   POST /posts/:postId/comments
+// @desc    Creates a comment at /comments/{postId}/{commentId} and updates lightweight fields under /posts/{postId}
+export async function submitComment(req, res) {
+	const { postId } = req.params;
+	const { comment } = req.body;
+	const userId = req.session.userId;
+	const username = req.session.username;
+
+	// basic validation + normalize
+	const body = (comment || '')
+		.replace(/\r\n/g, '\n')
+		.replace(/\n{3,}/g, '\n\n')
+		.trim();
+	if (!body) {
+		return res.status(400).json({ errorCode: 'empty-fields', message: 'Comment cannot be empty.' });
+	}
+	if (body.length > 300) {
+		return res
+			.status(400)
+			.json({ errorCode: 'content-too-long', message: 'Comment cannot exceed 300 characters.' });
+	}
+
+	const snap = await get(ref(db, `posts/${postId}`));
+	if (!snap.exists()) {
+		return res.status(404).json({ errorCode: 'post-not-found', message: 'Post does not exist.' });
+	}
+
+	const nowMs = Date.now();
+	const nowIso = new Date(nowMs).toISOString();
+
+	// create the comment key
+	const commentRef = push(ref(db, `comments/${postId}`));
+	const commentId = commentRef.key;
+
+	const commentData = {
+		uid: userId,
+		author: username,
+		comment: body,
+		createdAtMs: nowMs,
+		createdAtIso: nowIso,
+	};
+
+	const updates = {
+		[`/comments/${postId}/${commentId}`]: commentData,
+		[`/posts/${postId}/commentCount`]: (snap.val()?.commentCount || 0) + 1,
+	};
+
+	try {
+		await update(ref(db), updates);
+		return res.status(201).json({ ok: true, comment: commentData });
+	} catch (err) {
+		console.error('Error submitting comment:', err);
+		return res.status(500).json({ errorCode: 'server-error', message: 'Error submitting comment' });
+	}
+}
+
+// @route   GET /posts/:postId/comments?limit=5[&afterTs=...&afterId=...]
+// @desc    Returns a page of comments sorted by createdAtMs ASC with look-ahead
+export async function getCommentsPage(req, res) {
+	const { postId } = req.params;
+	const limit = Math.min(parseInt(req.query.limit || '5', 10), 50);
+	const afterTs = req.query.afterTs ? Number(req.query.afterTs) : null;
+	const afterId = req.query.afterId || null;
+
+	try {
+		let q;
+		if (afterTs != null && afterId) {
+			// Start from the last seen row (inclusive); will drop after fetching
+			q = query(
+				ref(db, `comments/${postId}`),
+				orderByChild('createdAtMs'),
+				startAt(afterTs, afterId),
+				limitToFirst(limit + 1),
+			);
+		} else {
+			// First page
+			q = query(ref(db, `comments/${postId}`), orderByChild('createdAtMs'), limitToFirst(limit + 1));
+		}
+
+		const snap = await get(q);
+		if (!snap.exists()) {
+			return res.json({ items: [], next: null });
+		}
+
+		const entries = Object.entries(snap.val());
+
+		// Drop overlap row if using a cursor
+		let rows = afterTs != null && afterId ? entries.slice(1) : entries;
+
+		// Use look-ahead to decide if more pages exist
+		const hasMore = rows.length > limit;
+		if (hasMore) rows = rows.slice(0, limit);
+
+		const items = rows.map(([id, data]) => ({ id, ...data }));
+
+		const last = items[items.length - 1];
+		const next = hasMore && last ? { afterTs: last.createdAtMs, afterId: last.id } : null;
+
+		return res.json({ items, next });
+	} catch (err) {
+		console.error('getCommentsPage error:', err);
+		return res.status(500).json({ errorCode: 'server-error', message: 'Failed to load comments' });
 	}
 }
 

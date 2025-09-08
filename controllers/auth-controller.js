@@ -33,8 +33,8 @@ export async function signUp(req, res) {
 			email: email,
 			bio: "I'm new here! be nice ;-;",
 			profilePicture: 'N/A',
-			createdAt: new Date().toISOString(),
-			lastLogged: new Date().toISOString(),
+			createdAtIso: new Date().toISOString(),
+			lastLoginAtIso: new Date().toISOString(),
 		});
 
 		// Map the username to the userId
@@ -56,7 +56,7 @@ export async function signUp(req, res) {
 }
 
 // @route   POST /login
-// @desc    Logs in the user, updates lastLogged, and sets session
+// @desc    Logs in the user, updates lastLoginAtIso, and sets session
 export async function login(req, res) {
 	const { email, password } = req.body;
 
