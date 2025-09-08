@@ -9,36 +9,53 @@ export async function submitPost(req, res) {
 	const userId = req.session.userId;
 	const username = req.session.username;
 
-	if (!title || !content) {
+	const trimmedTitle = (title || '').trim();
+	const trimmedContent = (content || '').trim();
+
+	if (!trimmedTitle || !trimmedContent) {
 		return res.status(400).json({ errorCode: 'empty-fields', message: 'Title and content cannot be empty.' });
 	}
-	if (title.length > 100) {
+	if (trimmedTitle.length > 100) {
 		return res.status(400).json({ errorCode: 'title-too-long', message: 'Title cannot exceed 100 characters.' });
 	}
-	if (content.length > 1500) {
+	if (trimmedContent.length > 1500) {
 		return res
 			.status(400)
 			.json({ errorCode: 'content-too-long', message: 'Content cannot exceed 1500 characters.' });
 	}
 
-	// Replace multiple consecutive line breaks with a double line break
-	let sanitizedContent = content.replace(/\n{3,}/g, '\n\n').trim();
+	// Normalize content (collapse 3+ newlines to 2)
+	const sanitizedContent = trimmedContent.replace(/\r\n/g, '\n').replace(/\n{3,}/g, '\n\n');
 
+	const nowMs = Date.now();
+	const nowIso = new Date(nowMs).toISOString();
+
+	// Full post document
 	const postData = {
 		uid: userId,
 		author: username,
-		title: title,
+		title: trimmedTitle,
 		content: sanitizedContent,
-		createdTimestamp: new Date().toISOString(),
+		commentCount: 0,
+		createdAtMs: nowMs,
+		createdAtIso: nowIso,
+	};
+
+	// Lightweight user ref
+	const userPostRef = {
+		title: trimmedTitle,
+		commentCount: 0,
+		createdAtMs: nowMs,
+		createdAtIso: nowIso,
 	};
 
 	const newPostRef = push(ref(db, 'posts'));
 	const newPostId = newPostRef.key;
 
-	// Prepare updates to add the post in both 'posts' and 'users/{userId}/posts'
-	const updates = {};
-	updates[`/posts/${newPostId}`] = postData;
-	updates[`/users/${userId}/posts/${newPostId}`] = postData;
+	const updates = {
+		[`/posts/${newPostId}`]: postData,
+		[`/users/${userId}/posts/${newPostId}`]: userPostRef,
+	};
 
 	try {
 		await update(ref(db), updates);
