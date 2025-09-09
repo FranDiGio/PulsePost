@@ -26,10 +26,8 @@ export async function getIdFromUsername(username) {
 }
 
 // @desc    Retrieves profile picture URL or default
-export async function getProfilePictureUrl(userId) {
+export async function getUserProfilePictureUrl(userData) {
 	try {
-		const { userData } = await getUserData(userId);
-
 		if (userData && userData.profilePicture && userData.profilePicture !== 'N/A') {
 			return userData.profilePicture;
 		} else {
@@ -42,10 +40,8 @@ export async function getProfilePictureUrl(userId) {
 }
 
 // @desc    Retrieves profile background URL or default
-export async function getProfileBackgroundUrl(userId) {
+export async function getUserProfileBackgroundUrl(userData) {
 	try {
-		const { userData } = await getUserData(userId);
-
 		if (userData && userData.profileBackground && userData.profileBackground !== 'N/A') {
 			return userData.profileBackground;
 		} else {
@@ -58,10 +54,8 @@ export async function getProfileBackgroundUrl(userId) {
 }
 
 // @desc    Retrieves biography text for a given user
-export async function getUserBiography(userId) {
+export async function getUserBiography(userData) {
 	try {
-		const { userData } = await getUserData(userId);
-
 		if (userData && userData.bio) {
 			return userData.bio;
 		} else {

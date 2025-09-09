@@ -1,9 +1,9 @@
-import { getProfilePictureUrl } from './user-service.js';
-import { ref, get } from 'firebase/database';
+import { getUserData, getUserProfilePictureUrl } from './user-service.js';
+import { ref, get, query, orderByChild, limitToLast } from 'firebase/database';
 import { db } from '../config/firebase-config.js';
 
 // @desc    Retrieves latest posts and adds follow info & author profile pics
-export async function getLatestPosts(userId) {
+export async function getLatestPosts(userData, userId) {
 	try {
 		const postsRef = ref(db, `posts`);
 		const postsSnapshot = await get(postsRef);
@@ -18,7 +18,7 @@ export async function getLatestPosts(userId) {
 				const post = postsData[key];
 
 				// Get author's profile picture
-				const profilePictureUrl = await getProfilePictureUrl(post.uid);
+				const profilePictureUrl = await getUserProfilePictureUrl(userData);
 				post.profilePictureUrl = profilePictureUrl;
 
 				// Add like status
@@ -53,32 +53,44 @@ export async function getLatestPosts(userId) {
 }
 
 // @desc    Gets all posts created by the given user with like info
-export async function getUserPosts(profileId, currentUserId) {
+export async function getUserPosts(profileId, currentUserId, limit = 5) {
 	try {
-		const postsRef = ref(db, `users/${profileId}/posts`);
-		const postsSnapshot = await get(postsRef);
-		const postsData = postsSnapshot.val();
+		// Read lightweight refs from /users/{uid}/posts (sorted by createdAtMs)
+		const lightSnap = await get(
+			query(ref(db, `users/${profileId}/posts`), orderByChild('createdAtMs'), limitToLast(limit)),
+		);
+		if (!lightSnap.exists()) return {};
 
-		if (!postsData) return {};
+		const lightMap = lightSnap.val();
 
-		// Get the list of posts liked by the current user
+		const orderedIds = Object.entries(lightMap)
+			.sort(([, a], [, b]) => (b.createdAtMs || 0) - (a.createdAtMs || 0))
+			.map(([postId]) => postId);
+
 		const likedSnap = await get(ref(db, `users/${currentUserId}/likes`));
-		const likedPostIds = likedSnap.exists() ? Object.keys(likedSnap.val()) : [];
+		const likedSet = likedSnap.exists() ? new Set(Object.keys(likedSnap.val())) : new Set();
 
-		for (const key in postsData) {
-			if (postsData.hasOwnProperty(key)) {
-				const post = postsData[key];
+		const fullSnaps = await Promise.all(orderedIds.map((id) => get(ref(db, `posts/${id}`))));
 
-				// Add like status
-				post.isLikedByCurrentUser = likedPostIds.includes(key);
+		// Merge full post with lightweight fields + isLiked flag
+		const result = {};
+		fullSnaps.forEach((snap, idx) => {
+			const postId = orderedIds[idx];
+			const full = snap.val() || {};
+			const light = lightMap[postId] || {};
 
-				// Get like count for current post
-				const likeList = await getPostLikes(key);
-				post.likeCount = likeList.length;
-			}
-		}
+			result[postId] = {
+				id: postId,
+				...full,
+				title: full.title ?? light.title,
+				createdAtMs: full.createdAtMs ?? light.createdAtMs ?? 0,
+				createdAtIso: full.createdAtIso ?? light.createdAtIso ?? null,
+				isLikedByCurrentUser: likedSet.has(postId),
+				likeCount: typeof full.likeCount === 'number' ? full.likeCount : 0,
+			};
+		});
 
-		return postsData;
+		return result;
 	} catch (error) {
 		console.error('Error fetching user posts:', error);
 		return {};

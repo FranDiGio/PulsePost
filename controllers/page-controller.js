@@ -1,6 +1,11 @@
 import { getLatestPosts, getUserPostCount, getUserPosts } from '../services/post-service.js';
 import { getFollowStatsById } from '../services/follow-service.js';
-import { getProfilePictureUrl, getProfileBackgroundUrl, getUserBiography } from '../services/user-service.js';
+import {
+	getUserProfilePictureUrl,
+	getUserProfileBackgroundUrl,
+	getUserBiography,
+	getUserData,
+} from '../services/user-service.js';
 import { db } from '../config/firebase-config.js';
 import { ref, get } from 'firebase/database';
 
@@ -9,10 +14,11 @@ import { ref, get } from 'firebase/database';
 export async function loadFeed(req, res) {
 	try {
 		const userId = req.session.userId;
-		const userPictureUrl = await getProfilePictureUrl(userId);
-		const userBackgroundUrl = await getProfileBackgroundUrl(userId);
-		const userBio = await getUserBiography(userId);
-		const posts = await getLatestPosts(userId);
+		const { userData } = await getUserData(userId);
+		const userPictureUrl = await getUserProfilePictureUrl(userData);
+		const userBackgroundUrl = await getUserProfileBackgroundUrl(userData);
+		const userBio = await getUserBiography(userData);
+		const posts = await getLatestPosts(userData, userId);
 
 		await res.render('feed.ejs', {
 			username: req.session.username,
@@ -34,9 +40,10 @@ export async function loadProfile(req, res) {
 	try {
 		// Current user
 		const userId = req.session.userId;
-		const userPictureUrl = await getProfilePictureUrl(userId);
-		const userBackgroundUrl = await getProfileBackgroundUrl(userId);
-		const userBio = await getUserBiography(userId);
+		const { userData } = await getUserData(userId);
+		const userPictureUrl = await getUserProfilePictureUrl(userData);
+		const userBackgroundUrl = await getUserProfileBackgroundUrl(userData);
+		const userBio = await getUserBiography(userData);
 
 		// Selected user
 		const username = req.params.username;
@@ -60,9 +67,10 @@ export async function loadProfile(req, res) {
 		if (profileId == null) {
 			res.status(404).render('error.ejs', { error: '404: Page Not Found' });
 		} else {
-			const profilePictureUrl = await getProfilePictureUrl(profileId);
-			const profileBackgroundUrl = await getProfileBackgroundUrl(profileId);
-			const profileBio = await getUserBiography(profileId);
+			const { userData: profileData } = await getUserData(profileId);
+			const profilePictureUrl = await getUserProfilePictureUrl(profileData);
+			const profileBackgroundUrl = await getUserProfileBackgroundUrl(profileData);
+			const profileBio = await getUserBiography(profileData);
 			const posts = await getUserPosts(profileId, userId);
 
 			// Profile Stats

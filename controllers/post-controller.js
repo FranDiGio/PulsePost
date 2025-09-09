@@ -44,7 +44,6 @@ export async function submitPost(req, res) {
 	// Lightweight user ref
 	const userPostRef = {
 		title: trimmedTitle,
-		commentCount: 0,
 		createdAtMs: nowMs,
 		createdAtIso: nowIso,
 	};
