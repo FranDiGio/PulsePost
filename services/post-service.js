@@ -1,5 +1,5 @@
 import { getUserData, getUserProfilePictureUrl } from './user-service.js';
-import { ref, get, query, orderByChild, limitToLast } from 'firebase/database';
+import { ref, get, query, orderByChild, limitToLast, endAt } from 'firebase/database';
 import { db } from '../config/firebase-config.js';
 
 // @desc    Retrieves latest posts and adds follow info & author profile pics
@@ -52,14 +52,19 @@ export async function getLatestPosts(userData, userId) {
 	}
 }
 
-// @desc    Gets all posts created by the given user with like info
-export async function getUserPosts(profileId, currentUserId, limit = 5) {
+// @desc  Fetch a page of posts for a user, newest -> older, using createdAtMs as cursor
+export async function fetchUserPostsPage(profileId, currentUserId, pageSize = 5, beforeTs = Number.MAX_SAFE_INTEGER) {
 	try {
-		// Read lightweight refs from /users/{uid}/posts (sorted by createdAtMs)
+		// Read lightweight refs ordered by createdAtMs and ending at the cursor
 		const lightSnap = await get(
-			query(ref(db, `users/${profileId}/posts`), orderByChild('createdAtMs'), limitToLast(limit)),
+			query(
+				ref(db, `users/${profileId}/posts`),
+				orderByChild('createdAtMs'),
+				endAt(beforeTs),
+				limitToLast(pageSize),
+			),
 		);
-		if (!lightSnap.exists()) return {};
+		if (!lightSnap.exists()) return { items: [], nextCursor: null };
 
 		const lightMap = lightSnap.val();
 
@@ -72,28 +77,28 @@ export async function getUserPosts(profileId, currentUserId, limit = 5) {
 
 		const fullSnaps = await Promise.all(orderedIds.map((id) => get(ref(db, `posts/${id}`))));
 
-		// Merge full post with lightweight fields + isLiked flag
-		const result = {};
-		fullSnaps.forEach((snap, idx) => {
+		const items = fullSnaps.map((snap, idx) => {
 			const postId = orderedIds[idx];
 			const full = snap.val() || {};
 			const light = lightMap[postId] || {};
-
-			result[postId] = {
+			return {
 				id: postId,
 				...full,
-				title: full.title ?? light.title,
+				title: full.title ?? light.title ?? '',
 				createdAtMs: full.createdAtMs ?? light.createdAtMs ?? 0,
 				createdAtIso: full.createdAtIso ?? light.createdAtIso ?? null,
 				isLikedByCurrentUser: likedSet.has(postId),
 				likeCount: typeof full.likeCount === 'number' ? full.likeCount : 0,
+				commentCount: typeof full.commentCount === 'number' ? full.commentCount : light.commentCount || 0,
 			};
 		});
 
-		return result;
-	} catch (error) {
-		console.error('Error fetching user posts:', error);
-		return {};
+		const oldest = items[items.length - 1];
+		const nextCursor = items.length < pageSize ? null : (oldest?.createdAtMs ?? null);
+		return { items, nextCursor };
+	} catch (e) {
+		console.error('fetchUserPostsPage error', e);
+		return { items: [], nextCursor: null };
 	}
 }
 

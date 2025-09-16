@@ -12,3 +12,17 @@ document.addEventListener('DOMContentLoaded', function () {
 		postContent.innerHTML = formattedText;
 	});
 });
+
+function escapeHtml(str) {
+	return String(str).replace(
+		/[&<>"']/g,
+		(ch) =>
+			({
+				'&': '&amp;',
+				'<': '&lt;',
+				'>': '&gt;',
+				'"': '&quot;',
+				"'": '&#39;',
+			})[ch],
+	);
+}

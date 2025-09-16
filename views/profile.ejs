@@ -109,7 +109,23 @@
 						</div>
 
 						<div class="px-3">
+						<!-- Data for loading posts -->
+						<div
+							id="posts-list"
+							data-profile-id="<%= profileId %>"
+							data-is-self="<%= isSelf ? 'true' : 'false' %>"
+							data-user-picture-url="<%= userPictureUrl %>"
+							data-next-cursor="<%= (typeof nextCursor !== 'undefined' && nextCursor !== null) ? nextCursor : '' %>"
+							data-initial-ids='<%- JSON.stringify(Object.keys(posts || {})) %>'
+						>
 							<% if (locals.posts) { %><%- include('partials/posts/profile-posts.ejs') %><% } %>
+						</div>
+
+						<div id="infinite-trigger" class="py-3 text-center">
+							<div id="infinite-spinner" class="spinner-border d-none" role="status" aria-label="Loading"></div>
+							<span id="infinite-text" class="text-muted">Scroll to load more</span>
+						</div>
+
 						</div>
 					</div>
 				</div>
@@ -141,19 +157,20 @@
 			integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
 			crossorigin="anonymous"
 		></script>
-		<script src="/js/handlers/posts/posts-create.js" charset="utf-8"></script>
-		<script src="/js/handlers/posts/posts-delete.js" charset="utf-8"></script>
-		<script src="/js/handlers/posts/comments-create.js" charset="utf-8"></script>
-		<script src="/js/handlers/posts/comments-load.js" charset="utf-8"></script>
-		<script src="/js/handlers/posts/like.js" charset="utf-8"></script>
-		<% if (!isSelf) { %><script src="/js/handlers/users/profile-follow.js" charset="utf-8"></script><% } %>
-		<script src="/js/handlers/users/sign-out.js" charset="utf-8"></script>
 		<script src="/js/ui/misc.js" charset="utf-8"></script>
 		<script src="/js/ui/char-count.js" charset="utf-8"></script>
 		<script src="/js/ui/date-format.js" charset="utf-8"></script>
 		<script src="/js/ui/tooltips.js" charset="utf-8"></script>
 		<script src="/js/ui/toggle-post-content.js" charset="utf-8"></script>
 		<script src="/js/ui/toggle-post-tabs.js" charset="utf-8"></script>
+		<script src="/js/handlers/posts/posts-create.js" charset="utf-8"></script>
+		<script src="/js/handlers/posts/posts-delete.js" charset="utf-8"></script>
+		<script src="/js/handlers/posts/posts-profile-load.js" charset="utf-8"></script>
+		<script src="/js/handlers/posts/comments-create.js" charset="utf-8"></script>
+		<script src="/js/handlers/posts/comments-load.js" charset="utf-8"></script>
+		<script src="/js/handlers/posts/like.js" charset="utf-8"></script>
+		<script src="/js/handlers/users/sign-out.js" charset="utf-8"></script>
+		<% if (!isSelf) { %><script src="/js/handlers/users/profile-follow.js" charset="utf-8"></script><% } %>
 		<script src="/js/handlers/settings/profile-picture.js" charset="utf-8"></script>
 		<script src="/js/handlers/settings/background.js" charset="utf-8"></script>
 		<script src="/js/handlers/settings/biography.js" charset="utf-8"></script>

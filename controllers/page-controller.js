@@ -1,4 +1,4 @@
-import { getLatestPosts, getUserPostCount, getUserPosts } from '../services/post-service.js';
+import { getLatestPosts, getUserPostCount, fetchUserPostsPage } from '../services/post-service.js';
 import { getFollowStatsById } from '../services/follow-service.js';
 import {
 	getUserProfilePictureUrl,
@@ -71,7 +71,21 @@ export async function loadProfile(req, res) {
 			const profilePictureUrl = await getUserProfilePictureUrl(profileData);
 			const profileBackgroundUrl = await getUserProfileBackgroundUrl(profileData);
 			const profileBio = await getUserBiography(profileData);
-			const posts = await getUserPosts(profileId, userId);
+
+			// First page of posts
+			const firstPageSize = 5;
+			const { items: firstItems, nextCursor } = await fetchUserPostsPage(
+				profileId,
+				userId,
+				firstPageSize,
+				Number.MAX_SAFE_INTEGER,
+			);
+
+			// Convert array to object keyed by id
+			const posts = firstItems.reduce((acc, post) => {
+				acc[post.id] = post;
+				return acc;
+			}, {});
 
 			// Profile Stats
 			const { followersCount, followingCount } = await getFollowStatsById(profileId);
@@ -91,6 +105,8 @@ export async function loadProfile(req, res) {
 				isSelf: isSelf,
 				isFollowing: isFollowing,
 				posts: posts,
+				profileId: profileId,
+				nextCursor: nextCursor,
 			});
 		}
 	} catch (error) {

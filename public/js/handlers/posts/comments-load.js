@@ -14,8 +14,8 @@ document.addEventListener('DOMContentLoaded', () => {
 			if (!commentsSection) return;
 
 			const trigger = commentsSection.querySelector('[data-post-id]');
-			const postId = trigger?.dataset?.postId;
-			if (!postId) return console.error('Missing data-post-id');
+			const postId = trigger?.dataset?.postId || card?.querySelector('.like-button')?.dataset?.postId; // fallback
+			if (!postId) return console.error('Missing postId');
 
 			const container = trigger.closest('.container-fluid') || commentsSection;
 
@@ -135,6 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 		const res = await fetch(`/posts/${encodeURIComponent(postId)}/comments?${params.toString()}`, {
 			headers: { Accept: 'application/json' },
+			credentials: 'same-origin',
 		});
 		if (!res.ok) throw new Error(`Failed to fetch comments: ${res.status}`);
 		return res.json(); // { items, next }
@@ -153,19 +154,5 @@ document.addEventListener('DOMContentLoaded', () => {
       `;
 			listNode.appendChild(row);
 		}
-	}
-
-	function escapeHtml(s) {
-		return String(s).replace(
-			/[&<>"']/g,
-			(ch) =>
-				({
-					'&': '&amp;',
-					'<': '&lt;',
-					'>': '&gt;',
-					'"': '&quot;',
-					"'": '&#39;',
-				})[ch],
-		);
 	}
 });

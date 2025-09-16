@@ -1,6 +1,6 @@
 import { ref, push, update, get, remove, set, orderByChild, limitToFirst, startAt, query } from 'firebase/database';
 import { db } from '../config/firebase-config.js';
-import { getPostLikes } from '../services/post-service.js';
+import { fetchUserPostsPage, getPostLikes } from '../services/post-service.js';
 
 // @route   POST /post
 // @desc    Handles post submission and writes to DB
@@ -107,6 +107,27 @@ export async function deletePost(req, res) {
 	}
 }
 
+// @route   GET /posts/:userId
+// @desc    Return a paginated list of a user's posts
+export async function getUserPostsPage(req, res) {
+	try {
+		const profileId = req.params.userId;
+		const currentUserId = req.session.userId;
+		const limit = Math.min(Number(req.query.limit) || 10, 30);
+		const beforeTs = req.query.beforeTs ? Number(req.query.beforeTs) : Number.MAX_SAFE_INTEGER;
+
+		if (!Number.isFinite(beforeTs)) {
+			return res.status(400).json({ error: 'Invalid beforeTs' });
+		}
+
+		const { items, nextCursor } = await fetchUserPostsPage(profileId, currentUserId, limit, beforeTs);
+		res.json({ items, nextCursor });
+	} catch (e) {
+		console.error('GET /posts/:userId/ error', e);
+		res.status(500).json({ error: 'Failed to load posts' });
+	}
+}
+
 // @route   POST /posts/:postId/comments
 // @desc    Creates a comment at /comments/{postId}/{commentId} and updates lightweight fields under /posts/{postId}
 export async function submitComment(req, res) {
@@ -115,7 +136,6 @@ export async function submitComment(req, res) {
 	const userId = req.session.userId;
 	const username = req.session.username;
 
-	// basic validation + normalize
 	const body = (comment || '')
 		.replace(/\r\n/g, '\n')
 		.replace(/\n{3,}/g, '\n\n')
@@ -137,7 +157,6 @@ export async function submitComment(req, res) {
 	const nowMs = Date.now();
 	const nowIso = new Date(nowMs).toISOString();
 
-	// create the comment key
 	const commentRef = push(ref(db, `comments/${postId}`));
 	const commentId = commentRef.key;
 

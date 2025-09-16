@@ -6,11 +6,13 @@ import { validateSignUp, checkValidUsername } from '../services/validation-servi
 // @middleware
 // @desc    Ensures user is authenticated before accessing protected routes
 export function ensureAuthenticated(req, res, next) {
-	if (req.session.username && req.session.userId) {
-		return next();
-	} else {
-		res.redirect('/login');
+	if (req.session && req.session.userId) return next();
+
+	if (req.xhr || req.headers.accept.indexOf('json') > -1) {
+		return res.status(401).json({ error: 'Not authenticated' });
 	}
+
+	res.redirect('/login');
 }
 
 // @route   POST /signup
