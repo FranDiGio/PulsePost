@@ -61,9 +61,9 @@
 				if (!post?.id || renderedSet.has(post.id)) continue;
 				renderedSet.add(post.id);
 
-				const el = document.createElement('div');
-				el.className = 'd-flex flex-nowrap pt-4 m-2';
-				el.innerHTML = `
+				const element = document.createElement('div');
+				element.className = 'd-flex flex-nowrap pt-4 m-2';
+				element.innerHTML = `
 					<div class="col-12">
 						<div class="card border-secondary">
 						<div class="card-header">
@@ -153,16 +153,17 @@
 								${post.likeCount || 0}
 							</p>
 							</div>
-							<p class="timestamp text-muted my-0 py-0" style="font-size: 0.8rem">
+							<p class="timestamp text-muted my-0 py-0" style="font-size: 0.8rem" data-ms="${post.createdAtMs}">
 							${post.createdAtMs}
 							</p>
 						</div>
 						</div>
 					</div>
 					`;
-				frag.appendChild(el);
+				frag.appendChild(element);
 			}
-
+			
+			if (window.formatTimestamps) window.formatTimestamps(frag);
 			list.appendChild(frag);
 			nextCursor = nc;
 
