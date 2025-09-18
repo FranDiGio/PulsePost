@@ -1,37 +1,47 @@
-document.addEventListener('DOMContentLoaded', function () {
+(function () {
+  // Delegated click handler for dynamically-added .like-button 
+  document.addEventListener('click', async (e) => {
+    const btn = e.target.closest('.like-button');
+    if (!btn) return;
 
-    // Like button interaction
-    document.querySelectorAll('.like-button').forEach((button) => {
-        button.addEventListener('click', async function () {
-            const heartIcon = this.querySelector('.heart-icon');
-            const postId = this.dataset.postId;
-            const likeCountElement = this.closest('.d-flex').querySelector('.like-count');
-            let currentCount = parseInt(likeCountElement.textContent, 10);
+    // Avoid double-submits
+    if (btn.dataset.loading === '1') return;
+    btn.dataset.loading = '1';
 
-            // Toggle UI
-            const isNowLiked = !heartIcon.classList.contains('filled');
-            heartIcon.classList.toggle('filled');
-            likeCountElement.textContent = isNowLiked ? currentCount + 1 : currentCount - 1;
+    const heart = btn.querySelector('.heart-icon');
+    const postId = btn.dataset.postId;
+    const countEl = btn.closest('.d-flex')?.querySelector('.like-count');
 
-            try {
-                const res = await fetch(`/likes/${postId}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                });
+    if (!heart || !postId || !countEl) {
+      btn.dataset.loading = '';
+      return;
+    }
 
-                if (!res.ok) {
-                    console.error('Failed to toggle like');
-                    // Revert the UI if server fails
-                    heartIcon.classList.toggle('filled');
-                }
-            } catch (err) {
-                console.error('Error sending like request:', err);
-                // Revert the UI if there's an error
-                heartIcon.classList.toggle('filled');
-            }
-        });
-    });
+    const currentCount = Number.parseInt(countEl.textContent.trim(), 10) || 0;
 
-});
+    // Optimistic toggle
+    const wasLiked = heart.classList.contains('filled');
+    const nowLiked = !wasLiked;
+    heart.classList.toggle('filled', nowLiked);
+    countEl.textContent = String(Math.max(0, currentCount + (nowLiked ? 1 : -1)));
+
+    try {
+      const res = await fetch(`/likes/${encodeURIComponent(postId)}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        credentials: 'same-origin',
+      });
+
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    } catch (err) {
+      console.error('Like toggle failed:', err);
+      // Revert optimistic UI on failure
+      heart.classList.toggle('filled', wasLiked);
+      countEl.textContent = String(currentCount);
+    } finally {
+      btn.dataset.loading = '';
+    }
+  });
+
+})();

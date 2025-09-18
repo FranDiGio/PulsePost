@@ -26,7 +26,6 @@
 
 	let loading = false;
 	let observing = false;
-	let hasUserScrolled = false;
 
 	// Show/hide spinner
 	function setLoadingUI(isLoading) {
@@ -162,7 +161,7 @@
 					`;
 				frag.appendChild(element);
 			}
-			
+
 			if (window.formatTimestamps) window.formatTimestamps(frag);
 			list.appendChild(frag);
 			nextCursor = nc;

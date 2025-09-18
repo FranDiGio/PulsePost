@@ -1,4 +1,4 @@
-import { getUserData, getUserProfilePictureUrl } from './user-service.js';
+import { getUserProfilePictureUrl } from './user-service.js';
 import { ref, get, query, orderByChild, limitToLast, endAt } from 'firebase/database';
 import { db } from '../config/firebase-config.js';
 
@@ -23,10 +23,6 @@ export async function getLatestPosts(userData, userId) {
 
 				// Add like status
 				post.isLikedByCurrentUser = likedPostIds.includes(key);
-
-				// Get like count for current post
-				const likeList = await getPostLikes(key);
-				post.likeCount = likeList.length;
 
 				// Skip follow check if the post belongs to the current user
 				if (post.uid === userId) {
