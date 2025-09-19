@@ -9,20 +9,25 @@
 	const isSelf = list.dataset.isSelf === 'true';
 	const profileId = list.dataset.profileId || '';
 	const nextCursorStr = list.dataset.nextCursor || '';
-	let nextCursor = nextCursorStr !== '' ? Number(nextCursorStr) : null;
-
-	if (nextCursor === null) {
-		if (spinner) spinner.classList.add('d-none');
-		if (label) label.textContent = renderedIds.length ? 'No more posts' : 'No posts yet';
-	} else {
-		window.addEventListener('scroll', enableObserverOnce, { once: true, passive: true });
-	}
 
 	let renderedIds = [];
 	try {
 		renderedIds = JSON.parse(list.dataset.initialIds || '[]');
 	} catch {}
 	const renderedSet = new Set(renderedIds);
+
+	let nextCursor = nextCursorStr !== '' ? Number(nextCursorStr) : null;
+	if (nextCursor === null) {
+		if (spinner) spinner.classList.add('d-none');
+		if (renderedIds.length) {
+			if (label) label.textContent = 'No more posts';
+		} else {
+			if (label) label.textContent = '';
+		}
+	} else {
+		if (label) label.textContent = '';
+		window.addEventListener('scroll', enableObserverOnce, { once: true, passive: true });
+	}
 
 	let loading = false;
 	let observing = false;

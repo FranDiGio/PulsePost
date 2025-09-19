@@ -78,21 +78,21 @@
 				</div>
 			</div>
 
-			<div class="row justify-content-center m-0 mx-1" style="max-height: 200px">
+			<div class="row justify-content-center m-0 mx-1" style="min-height: 200px">
 				<div class="d-none d-md-block profile-metrics" style="width: 200px">
-					<div class="pt-2 ps-2 mx-1">
+					<div class="py-2 ps-2 mx-1">
 						<% if (!isSelf) { %>
-						<div class="pe-2 mb-4">
-							<button
-								type="button"
-								class="btn <%= isFollowing ? "btn-outline-secondary" : "btn-outline-primary" %> w-100 p-1"
-								id="follow-btn"
-								data-following="<%= isFollowing %>"
-								data-username="<%= profileUsername %>"
-							>
-								<%= isFollowing ? "Following" : "Follow" %>
-							</button>
-						</div>
+							<div class="pe-2 mb-4">
+								<button
+									type="button"
+									class="btn <%= isFollowing ? "btn-outline-secondary" : "btn-outline-primary" %> w-100 p-1"
+									id="follow-btn"
+									data-following="<%= isFollowing %>"
+									data-username="<%= profileUsername %>"
+								>
+									<%= isFollowing ? "Following" : "Follow" %>
+								</button>
+							</div>
 						<% } %>
 						<h4>Followers</h4>
 						<p class="lead mb-3"><%= profileStats.followers %></p>
@@ -102,7 +102,7 @@
 						<p class="lead pb-1"><%= profileStats.posts %></p>
 					</div>
 				</div>
-				<div class="col-11 col-md-6 ms-md-3 ms-xl-5 p-0">
+				<div class="col-11 col-md-6 ms-md-3 ms-xl-5 p-0 pb-5">
 					<div class="row w-auto mt-2 px-1 pt-1 bg-light rounded border border-dark-subtle">
 						<div class="px-3">
 							<h4 class="pt-3 ps-1 pb-1 mb-0 w-100 border-bottom">Posts</h4>
@@ -118,12 +118,20 @@
 							data-next-cursor="<%= (typeof nextCursor !== 'undefined' && nextCursor !== null) ? nextCursor : '' %>"
 							data-initial-ids='<%- JSON.stringify(Object.keys(posts || {})) %>'
 						>
-							<% if (locals.posts) { %><%- include('partials/posts/profile-posts.ejs') %><% } %>
+							<% if (locals.posts && Object.keys(posts).length) { %>
+								<%- include('partials/posts/profile-posts.ejs') %>
+							<% } else { %>
+								<div class="text-center text-body-secondary pt-1">
+									<p class="mt-5">
+										<%= isSelf ? "You haven't posted yet." : "This user hasn’t posted yet."%>
+									</p>
+								</div>
+							<% } %>
 						</div>
 
-						<div id="infinite-trigger" class="py-3 text-center">
-							<div id="infinite-spinner" class="spinner-border d-none" role="status" aria-label="Loading"></div>
-							<span id="infinite-text" class="text-muted">Scroll to load more</span>
+						<div id="infinite-trigger" class="py-4 text-center">
+							<div id="infinite-spinner" class="spinner-border d-none" role="status"></div>
+							<span id="infinite-text" class="text-muted"></span>
 						</div>
 
 						</div>
