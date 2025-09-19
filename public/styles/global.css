@@ -57,6 +57,18 @@
   background: transparent;
 }
 
+#home-btn:focus,
+#trending-btn:focus {
+  outline: none;
+}
+
+#home-btn:focus img,
+#trending-btn:focus img {
+  outline: none;
+  background-color: rgba(13, 110, 253, 0.1);
+  border-radius: .5rem;     
+}
+
 .fake-input-bar {
 	background-color: white;
 	border: 1px solid #ced4da;
