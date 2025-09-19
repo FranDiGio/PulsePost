@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 
 		commentForm.action = `/posts/${encodeURIComponent(postId)}/comments`;
-		resetField();
+		resetFields();
 		submitBtn.disabled = false;
 		submitBtn.textContent = 'Submit';
 	});
@@ -37,7 +37,6 @@ document.addEventListener('DOMContentLoaded', function () {
 			});
 
 			if (res.ok) {
-				// keep spinner showing until navigation
 				window.location.reload();
 				return;
 			} else {
@@ -58,13 +57,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	commentModal.addEventListener('hidden.bs.modal', function () {
 		commentForm.reset();
-		resetField();
+		resetFields();
 		submitBtn.innerHTML = 'Submit';
 		submitBtn.disabled = false;
 	});
 
 	function setInvalid(error) {
-		resetField();
+		resetFields();
 		const input = document.getElementById('commentContent');
 
 		if (error?.errorCode === 'empty-fields' || error?.errorCode === 'content-too-long') {
@@ -74,14 +73,14 @@ document.addEventListener('DOMContentLoaded', function () {
 		} else if (error?.errorCode === 'post-not-found') {
 			console.error(error.message);
 		} else {
-			// generic error tooltip
+			// Generic error tooltip
 			input.classList.add('is-invalid');
 			input.setAttribute('data-bs-title', error?.message || 'Something went wrong.');
 			new bootstrap.Tooltip(input);
 		}
 	}
 
-	function resetField() {
+	function resetFields() {
 		const input = document.getElementById('commentContent');
 		input.classList.remove('is-invalid');
 		const tip = bootstrap.Tooltip.getInstance(input);

@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', function () {
 	const titleInput = document.getElementById('postTitle');
 	const contentInput = document.getElementById('postContent');
 
-	// Handle submission
 	postForm.addEventListener('submit', async function (e) {
 		e.preventDefault();
 
@@ -20,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		formData.append('content', content);
 
 		try {
-			const response = await fetch(postForm.action, {
+			const res = await fetch(postForm.action, {
 				method: postForm.method,
 				headers: {
 					'Content-Type': 'application/x-www-form-urlencoded',
@@ -28,18 +27,19 @@ document.addEventListener('DOMContentLoaded', function () {
 				body: formData.toString(),
 			});
 
-			if (response.ok) {
-				window.location.reload(); // let the server handle full refresh after success
+			if (res.ok) {
+				window.location.reload();
+				return;
 			} else {
-				const error = await response.json();
-				setInvalidFields(error);
+				const err = await res.json();
+				setInvalidFields(err);
 			}
-		} catch (error) {
-			console.error('Error submitting post:', error);
-		} finally {
-			submitBtn.innerHTML = 'Submit';
-			submitBtn.disabled = false;
+		} catch (err) {
+			console.error('Error submitting post:', err);
 		}
+
+		submitBtn.innerHTML = 'Submit';
+		submitBtn.disabled = false;
 	});
 
 	postModal.addEventListener('hidden.bs.modal', function () {
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	});
 
 	function setInvalidFields(error) {
-		resetFields(); // Clear previous errors
+		resetFields();
 
 		if (error.errorCode === 'empty-fields') {
 			titleInput.classList.add('is-invalid');
