@@ -1,40 +1,58 @@
-document.addEventListener('DOMContentLoaded', () => {
-	const deleteLinks = document.querySelectorAll('.delete-post-link');
-	let postIdToDelete = null;
+(() => {
+  let postIdToDelete = null;
 
-	deleteLinks.forEach((link) => {
-		link.addEventListener('click', (event) => {
-			event.preventDefault();
-			postIdToDelete = link.dataset.key;
-		});
-	});
+  // Delegate click
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('.delete-post-link');
+    if (!link) return;
 
-	const confirmDeleteButton = document.getElementById('confirmDeletePostButton');
-	confirmDeleteButton.addEventListener('click', async () => {
-		if (postIdToDelete) {
-			try {
-				confirmDeleteButton.disabled = true;
-				confirmDeleteButton.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
+    e.preventDefault();
+    postIdToDelete = link.dataset.key || null;
+  });
 
-				const response = await fetch('/post', {
-					method: 'DELETE',
-					headers: {
-						'Content-Type': 'application/json',
-					},
-					body: JSON.stringify({ postId: postIdToDelete }),
-				});
+  const confirmBtn = document.getElementById('confirmDeletePostButton');
+  if (!confirmBtn) return;
 
-				const result = await response.json();
+  const modalEl = document.getElementById('confirmDeletePostModal');
+  if (modalEl) {
+    modalEl.addEventListener('hidden.bs.modal', () => {
+      postIdToDelete = null;
+      confirmBtn.disabled = false;
+      confirmBtn.innerHTML = '<p class="m-0 p-0">Confirm</p>';
+    });
+  }
 
-				if (response.ok) {
-					window.location.reload();
-				} else {
-					alert(result.error);
-				}
-			} catch (error) {
-				console.error('Error deleting post:', error);
-				alert('Failed to delete the post. Please try again.');
-			}
-		}
-	});
-});
+  confirmBtn.addEventListener('click', async () => {
+    if (!postIdToDelete) return;
+
+    try {
+      confirmBtn.disabled = true;
+      confirmBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
+
+      const res = await fetch('/post', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
+        body: JSON.stringify({ postId: postIdToDelete }),
+      });
+
+      const payload = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        console.error('Delete failed:', payload);
+        alert(payload?.error || 'Failed to delete the post.');
+        confirmBtn.disabled = false;
+        confirmBtn.innerHTML = '<p class="m-0 p-0">Confirm</p>';
+        return;
+      }
+
+      window.location.reload();
+
+    } catch (err) {
+      console.error('Error deleting post:', err);
+      alert('Network error. Please try again.');
+      confirmBtn.disabled = false;
+      confirmBtn.innerHTML = '<p class="m-0 p-0">Confirm</p>';
+    }
+  });
+})();
