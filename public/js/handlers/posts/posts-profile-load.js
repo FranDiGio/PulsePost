@@ -167,7 +167,9 @@
 				frag.appendChild(element);
 			}
 
+			if (window.truncatePostContents) window.truncatePostContents(frag);
 			if (window.formatTimestamps) window.formatTimestamps(frag);
+			
 			list.appendChild(frag);
 			nextCursor = nc;
 

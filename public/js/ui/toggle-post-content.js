@@ -1,75 +1,112 @@
-document.addEventListener('DOMContentLoaded', function () {
-	const readMoreButtons = document.querySelectorAll('.read-more-btn');
-	const postContents = document.querySelectorAll('.post-content');
+(() => {
+  const CHAR_LIMIT = 700;
+  const BR_LIMIT = 6;
 
-	const charLimit = 700;
-	const breaklineLimit = 6;
+  function computeTruncatedHTML(fullHTML) {
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = fullHTML;
 
-	postContents.forEach((content, index) => {
-		const fullHTML = content.innerHTML;
-		const tempDiv = document.createElement('div');
-		tempDiv.innerHTML = fullHTML;
+    let charCount = 0;
+    let brCount = 0;
+    let out = '';
 
-		let charCount = 0;
-		let breakCount = 0;
-		let truncatedHTML = '';
+    for (const node of tempDiv.childNodes) {
+      const nodeHTML = node.outerHTML || node.textContent || '';
+      const nodeText = node.textContent || '';
+      const nodeBreaks =
+        (nodeText.match(/\n/g) || []).length +
+        (nodeHTML.match(/<br\s*\/?>/gi) || []).length;
 
-		for (const node of tempDiv.childNodes) {
-			const nodeHTML = node.outerHTML || node.textContent;
-			const nodeText = node.textContent || '';
-			const nodeBreaks = (nodeText.match(/\n/g) || []).length + (nodeHTML.match(/<br\s*\/?>/gi) || []).length;
+      const wouldExceedChars = charCount + nodeText.length > CHAR_LIMIT;
+      const wouldExceedBreaks = brCount + nodeBreaks > BR_LIMIT;
 
-			if (charCount + nodeText.length > charLimit || breakCount + nodeBreaks > breaklineLimit) break;
+      if (wouldExceedChars || wouldExceedBreaks) {
+        if (out === '' && nodeText) {
+          const remainingChars = Math.max(0, CHAR_LIMIT - charCount);
+          const remainingBreaks = Math.max(0, BR_LIMIT - brCount);
 
-			charCount += nodeText.length;
-			breakCount += nodeBreaks;
-			truncatedHTML += nodeHTML;
-		}
+          let snippet = nodeText.slice(0, remainingChars);
+          const lines = snippet.split('\n');
+          if (lines.length > remainingBreaks) {
+            snippet = lines.slice(0, remainingBreaks).join('\n');
+          }
+          out += snippet.replace(/\n/g, '<br>');
+        }
+        break;
+      }
 
-		const needsTruncation =
-			charCount < content.textContent.length || breakCount < (content.textContent.match(/\n/g) || []).length;
+      charCount += nodeText.length;
+      brCount += nodeBreaks;
+      out += nodeHTML;
+    }
 
-		if (needsTruncation) {
-			content.innerHTML = truncatedHTML + '...';
-			content.setAttribute('data-full-text', fullHTML);
-			readMoreButtons[index].style.display = 'inline';
-		} else {
-			readMoreButtons[index].style.display = 'none';
-		}
-	});
+    return out.trimEnd() + '<span class="ellipsis">...</span>';
+  }
 
-	readMoreButtons.forEach((button, index) => {
-		button.addEventListener('click', function () {
-			const content = postContents[index];
-			const fullText = content.getAttribute('data-full-text');
+  function processOne(section) {
+    const content = section.querySelector('.post-content');
+    const btn = section.querySelector('.read-more-btn');
+    if (!content || !btn) return;
 
-			if (button.textContent.trim() === 'Show more') {
-				content.innerHTML = fullText;
-				button.textContent = 'Show less';
-			} else {
-				const tempDiv = document.createElement('div');
-				tempDiv.innerHTML = fullText;
+    // Avoid double-processing
+    if (content.dataset.truncateProcessed === '1') return;
 
-				let charCount = 0;
-				let breakCount = 0;
-				let truncatedHTML = '';
+    const fullHTML = content.innerHTML;
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = fullHTML;
 
-				for (const node of tempDiv.childNodes) {
-					const nodeHTML = node.outerHTML || node.textContent;
-					const nodeText = node.textContent || '';
-					const nodeBreaks =
-						(nodeText.match(/\n/g) || []).length + (nodeHTML.match(/<br\s*\/?>/gi) || []).length;
+    const textLen = tempDiv.textContent.length;
+    const brs = (fullHTML.match(/<br\s*\/?>/gi) || []).length + (tempDiv.textContent.match(/\n/g) || []).length;
 
-					if (charCount + nodeText.length > charLimit || breakCount + nodeBreaks > breaklineLimit) break;
+    const needsTrunc = textLen > CHAR_LIMIT || brs > BR_LIMIT;
 
-					charCount += nodeText.length;
-					breakCount += nodeBreaks;
-					truncatedHTML += nodeHTML;
-				}
+    if (needsTrunc) {
+      const truncated = computeTruncatedHTML(fullHTML);
+      content.innerHTML = truncated;
+      content.setAttribute('data-full-text', fullHTML);
+      btn.style.display = 'inline';
+    } else {
+      btn.style.display = 'none';
+    }
 
-				content.innerHTML = truncatedHTML + '...';
-				button.textContent = 'Show more';
-			}
-		});
-	});
-});
+    content.dataset.truncateProcessed = '1';
+  }
+
+  function truncatePostContents(root = document) {
+    root.querySelectorAll('.post-section').forEach(processOne);
+  }
+
+  // Delegated click
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.read-more-btn');
+    if (!btn) return;
+
+    const section = btn.closest('.post-section');
+    const content = section?.querySelector('.post-content');
+    if (!content) return;
+
+    const full = content.getAttribute('data-full-text');
+    if (btn.textContent.trim() === 'Show more') {
+      // Expand
+      if (full) {
+        content.innerHTML = full;
+        btn.textContent = 'Show less';
+      }
+    } else {
+      // Collapse
+      const fullHTML = full || content.innerHTML;
+      const truncated = computeTruncatedHTML(fullHTML);
+      content.innerHTML = truncated;
+      if (!full) content.setAttribute('data-full-text', fullHTML);
+      btn.textContent = 'Show more';
+    }
+  });
+
+  // Initial pass for SSR
+  document.addEventListener('DOMContentLoaded', () => {
+    truncatePostContents(document);
+  });
+
+  // Expose for CSR
+  window.truncatePostContents = truncatePostContents;
+})();

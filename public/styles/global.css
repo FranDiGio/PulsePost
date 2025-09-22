@@ -94,3 +94,8 @@
   width: 1em;
   vertical-align: middle;
 }
+
+.ellipsis {
+  white-space: nowrap;
+  margin-left: 2px; 
+}
