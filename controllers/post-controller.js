@@ -1,4 +1,16 @@
-import { ref, push, update, get, remove, set, orderByChild, limitToFirst, startAt, query, runTransaction } from 'firebase/database';
+import {
+	ref,
+	push,
+	update,
+	get,
+	remove,
+	set,
+	orderByChild,
+	limitToFirst,
+	startAt,
+	query,
+	runTransaction,
+} from 'firebase/database';
 import { db } from '../config/firebase-config.js';
 import { fetchUserPostsPage, getPostLikes } from '../services/post-service.js';
 
@@ -164,7 +176,7 @@ export async function submitComment(req, res) {
 	const commentData = {
 		uid: userId,
 		author: username,
-		comment: body,
+		content: body,
 		createdAtMs: nowMs,
 		createdAtIso: nowIso,
 	};
@@ -180,6 +192,40 @@ export async function submitComment(req, res) {
 	} catch (err) {
 		console.error('Error submitting comment:', err);
 		return res.status(500).json({ errorCode: 'server-error', message: 'Error submitting comment' });
+	}
+}
+
+// @route   DELETE /posts/:postId/comments/:commentId
+// @desc    Delete a specific comment on a post
+export async function deleteComment(req, res) {
+	try {
+		const { postId, commentId } = req.params;
+		const userId = req.session.userId;
+		console.log('Deleting comment', commentId, 'on post', postId, 'by user', userId);
+
+		const commentRef = ref(db, `comments/${postId}/${commentId}`);
+		const snap = await get(commentRef);
+		if (!snap.exists()) {
+			return res.status(404).json({ error: 'Comment not found' });
+		}
+
+		const comment = snap.val();
+		if (comment.uid !== userId) {
+			return res.status(403).json({ error: 'Forbidden: You do not own this comment' });
+		}
+
+		await remove(commentRef);
+
+		const countRef = ref(db, `posts/${postId}/commentCount`);
+		await runTransaction(countRef, (curr) => {
+			const n = Number(curr) || 0;
+			return n > 0 ? n - 1 : 0;
+		});
+
+		return res.json({ message: 'Comment deleted' });
+	} catch (err) {
+		console.error('Error deleting comment:', err);
+		return res.status(500).json({ error: 'Internal Server Error' });
 	}
 }
 
@@ -235,47 +281,46 @@ export async function getCommentsPage(req, res) {
 // @route   PUT /likes/:postId
 // @desc    Toggles like status for a post; returns { likeCount, isLiked }
 export async function toggleLike(req, res) {
-  try {
-    const { postId } = req.params;
-    const userId = req.session.userId;
+	try {
+		const { postId } = req.params;
+		const userId = req.session.userId;
 
-    const postRef = ref(db, `posts/${postId}`);
-    const postSnap = await get(postRef);
-    if (!postSnap.exists()) return res.status(404).json({ error: 'Post not found' });
+		const postRef = ref(db, `posts/${postId}`);
+		const postSnap = await get(postRef);
+		if (!postSnap.exists()) return res.status(404).json({ error: 'Post not found' });
 
-    const userLikeRef = ref(db, `users/${userId}/likes/${postId}`);
-    const postUserLikeRef = ref(db, `posts/${postId}/likes/${userId}`);
-    const likeCountRef = ref(db, `posts/${postId}/likeCount`);
+		const userLikeRef = ref(db, `users/${userId}/likes/${postId}`);
+		const postUserLikeRef = ref(db, `posts/${postId}/likes/${userId}`);
+		const likeCountRef = ref(db, `posts/${postId}/likeCount`);
 
-    const likedSnap = await get(userLikeRef);
-    const alreadyLiked = likedSnap.exists();
+		const likedSnap = await get(userLikeRef);
+		const alreadyLiked = likedSnap.exists();
 
-    let isLiked;
-    let txResult;
+		let isLiked;
+		let txResult;
 
-    if (alreadyLiked) {
-      // Unlike
-      await Promise.all([remove(userLikeRef), remove(postUserLikeRef)]);
-      txResult = await runTransaction(likeCountRef, (count) => {
-        count = Number.isFinite(count) ? count : 0;
-        return Math.max(0, count - 1);
-      });
-      isLiked = false;
-    } else {
-      // Like
-      await Promise.all([set(userLikeRef, true), set(postUserLikeRef, true)]);
-      txResult = await runTransaction(likeCountRef, (count) => {
-        count = Number.isFinite(count) ? count : 0;
-        return count + 1;
-      });
-      isLiked = true;
-    }
+		if (alreadyLiked) {
+			// Unlike
+			await Promise.all([remove(userLikeRef), remove(postUserLikeRef)]);
+			txResult = await runTransaction(likeCountRef, (count) => {
+				count = Number.isFinite(count) ? count : 0;
+				return Math.max(0, count - 1);
+			});
+			isLiked = false;
+		} else {
+			// Like
+			await Promise.all([set(userLikeRef, true), set(postUserLikeRef, true)]);
+			txResult = await runTransaction(likeCountRef, (count) => {
+				count = Number.isFinite(count) ? count : 0;
+				return count + 1;
+			});
+			isLiked = true;
+		}
 
-    const likeCount = Number(txResult?.snapshot?.val()) || 0;
-    return res.json({ likeCount, isLiked });
-
-  } catch (error) {
-    console.error('Error toggling like:', error);
-    return res.status(500).json({ error: 'Internal Server Error' });
-  }
+		const likeCount = Number(txResult?.snapshot?.val()) || 0;
+		return res.json({ likeCount, isLiked });
+	} catch (error) {
+		console.error('Error toggling like:', error);
+		return res.status(500).json({ error: 'Internal Server Error' });
+	}
 }

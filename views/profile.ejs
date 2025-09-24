@@ -157,7 +157,11 @@
 		<!-- Account Settings Modal -->
 		<%- include('partials/settings-modals/account-settings.ejs') %>
 		<!-- Unfollow Confirmation Modal -->
-		<%- include('partials/misc/unfollow.ejs') %>
+		<%- include('partials/confirmation-modals/unfollow.ejs') %>
+		<!-- "Confirm Delete Post" Modal -->
+		<%- include('partials/confirmation-modals/delete-post.ejs') %>
+		<!-- "Confirm Delete Comment" Modal -->
+		<%- include('partials/confirmation-modals/delete-comment.ejs') %>
 
 		<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 		<script
@@ -175,6 +179,7 @@
 		<script src="/js/handlers/posts/posts-delete.js" charset="utf-8"></script>
 		<script src="/js/handlers/posts/posts-profile-load.js" charset="utf-8"></script>
 		<script src="/js/handlers/posts/comments-create.js" charset="utf-8"></script>
+		<script src="/js/handlers/posts/comments-delete.js" charset="utf-8"></script>
 		<script src="/js/handlers/posts/comments-load.js" charset="utf-8"></script>
 		<script src="/js/handlers/posts/like.js" charset="utf-8"></script>
 		<script src="/js/handlers/users/sign-out.js" charset="utf-8"></script>
