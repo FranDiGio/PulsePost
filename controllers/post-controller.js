@@ -201,16 +201,23 @@ export async function deleteComment(req, res) {
 	try {
 		const { postId, commentId } = req.params;
 		const userId = req.session.userId;
-		console.log('Deleting comment', commentId, 'on post', postId, 'by user', userId);
 
 		const commentRef = ref(db, `comments/${postId}/${commentId}`);
-		const snap = await get(commentRef);
-		if (!snap.exists()) {
+		const commentSnap = await get(commentRef);
+
+		const postRef = ref(db, `posts/${postId}`);
+		const postSnap = await get(postRef);
+
+		if (!commentSnap.exists() || !postSnap.exists()) {
 			return res.status(404).json({ error: 'Comment not found' });
 		}
 
-		const comment = snap.val();
-		if (comment.uid !== userId) {
+		const comment = commentSnap.val();
+		const post = postSnap.val();
+
+		console.log(post.uid, userId);
+
+		if (comment.uid !== userId && post.uid !== userId) {
 			return res.status(403).json({ error: 'Forbidden: You do not own this comment' });
 		}
 
