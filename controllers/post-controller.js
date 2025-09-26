@@ -238,9 +238,13 @@ export async function getCommentsPage(req, res) {
 	const afterId = req.query.afterId || null;
 
 	try {
+		// Fetch post owner
+		const currentUserId = req.session.userId;
+		const postOwnerSnap = await get(ref(db, `posts/${postId}/uid`));
+		const postOwnerId = postOwnerSnap.exists() ? postOwnerSnap.val() : null;
+
 		let q;
 		if (afterTs != null && afterId) {
-			// Start from the last seen row (inclusive); will drop after fetching
 			q = query(
 				ref(db, `comments/${postId}`),
 				orderByChild('createdAtMs'),
@@ -248,7 +252,6 @@ export async function getCommentsPage(req, res) {
 				limitToFirst(limit + 1),
 			);
 		} else {
-			// First page
 			q = query(ref(db, `comments/${postId}`), orderByChild('createdAtMs'), limitToFirst(limit + 1));
 		}
 
@@ -259,14 +262,15 @@ export async function getCommentsPage(req, res) {
 
 		const entries = Object.entries(snap.val());
 
-		// Drop overlap row if using a cursor
 		let rows = afterTs != null && afterId ? entries.slice(1) : entries;
-
-		// Use look-ahead to decide if more pages exist
 		const hasMore = rows.length > limit;
 		if (hasMore) rows = rows.slice(0, limit);
 
-		const items = rows.map(([id, data]) => ({ id, ...data }));
+		const items = rows.map(([id, data]) => ({
+			id,
+			...data,
+			canDelete: data.uid === currentUserId || postOwnerId === currentUserId,
+		}));
 
 		const last = items[items.length - 1];
 		const next = hasMore && last ? { afterTs: last.createdAtMs, afterId: last.id } : null;

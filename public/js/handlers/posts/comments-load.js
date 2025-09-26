@@ -143,40 +143,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	function renderComments(listNode, items, postId) {
 		for (const comment of items) {
-			console.log('Render comment', comment.id);
 			const row = document.createElement('div');
 			row.className = 'mb-3';
 			row.innerHTML = `
-			<div class="d-flex align-items-start gap-2">
-				<div class="fw-semibold">${escapeHtml(comment.author ?? 'Unknown')}</div>
-				<div class="text-muted small">${timeSinceMs(comment.createdAtMs)}</div>
-				<ul class="nav ms-auto">
-					<li class="nav-item ms-auto">
-						<a
-						class="flex-shrink-0 overflow-hidden pe-1 pt-0 pb-2"
-						style="max-height: 30px; cursor: pointer"
-						data-bs-toggle="dropdown"
-						>
-						<img alt="options icon" src="/svg/three-dots-vertical.svg" />
-						</a>
-						<ul class="dropdown-menu text-small rounded">
-							<li>
-								<a
-								class="dropdown-item delete-comment-link"
-								data-bs-toggle="modal"
-								data-post-id="${postId}"
-								data-comment-id="${comment.id}"
-								data-bs-target="#confirmDeleteCommentModal"
-								>
-								Delete comment
-								</a>
-							</li>
-						</ul>
-					</li>
-				</ul>
-			</div>
-			<div class="mt-1">${escapeHtml(comment.content ?? '')}</div>
-      `;
+      <div class="d-flex align-items-start gap-2">
+        <div class="fw-semibold">${escapeHtml(comment.author ?? 'Unknown')}</div>
+        <div class="text-muted small">${timeSinceMs(comment.createdAtMs)}</div>
+        ${
+			comment.canDelete
+				? `
+          <ul class="nav ms-auto">
+            <li class="nav-item ms-auto">
+              <a class="flex-shrink-0 overflow-hidden pe-1 pt-0 pb-2"
+                 style="max-height: 30px; cursor: pointer"
+                 data-bs-toggle="dropdown">
+                <img alt="options icon" src="/svg/three-dots-vertical.svg" />
+              </a>
+              <ul class="dropdown-menu text-small rounded">
+                <li>
+                  <a class="dropdown-item delete-comment-link"
+                     data-bs-toggle="modal"
+                     data-post-id="${postId}"
+                     data-comment-id="${comment.id}"
+                     data-bs-target="#confirmDeleteCommentModal">
+                    Delete comment
+                  </a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        `
+				: ''
+		}
+      </div>
+      <div class="mt-1">${escapeHtml(comment.content ?? '')}</div>
+    `;
 			listNode.appendChild(row);
 		}
 	}
