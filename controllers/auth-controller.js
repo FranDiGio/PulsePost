@@ -15,9 +15,9 @@ export function ensureAuthenticated(req, res, next) {
 	res.redirect('/login');
 }
 
-// @route   POST /signup
+// @route   POST /users
 // @desc    Creates a new user and initializes profile in database
-export async function signUp(req, res) {
+export async function createUser(req, res) {
 	const { username, email, password } = req.body;
 	const newUser = { username, email, password };
 
@@ -57,9 +57,9 @@ export async function signUp(req, res) {
 	}
 }
 
-// @route   POST /login
+// @route   POST /sessions
 // @desc    Logs in the user, updates lastLoginAtIso, and sets session
-export async function login(req, res) {
+export async function createSession(req, res) {
 	const { email, password } = req.body;
 
 	if (!req.session.failedAttempts) {
@@ -119,15 +119,14 @@ export async function login(req, res) {
 	}
 }
 
-// @route   GET /signout
+// @route   DELETE /sessions/me
 // @desc    Destroys the session and logs out the user
-export async function signOut(req, res) {
+export async function destroySession(req, res) {
 	try {
 		req.session.destroy((err) => {
-			if (err) {
-				return res.status(500).send('Unable to sign out');
-			}
-			res.redirect('/login');
+			if (err) return res.status(500).json({ error: 'Unable to sign out' });
+			res.clearCookie('connect.sid');
+			res.sendStatus(204);
 		});
 	} catch (error) {
 		console.error('Error during sign-out:', error);

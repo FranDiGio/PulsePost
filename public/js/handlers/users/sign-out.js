@@ -1,10 +1,11 @@
 function signOut() {
-	fetch('/signout', {
-		method: 'POST',
+	fetch('/sessions/me', {
+		method: 'DELETE',
+		credentials: 'same-origin',
 	})
-		.then((response) => {
-			if (response.ok) {
-				window.location.href = '/login';
+		.then((res) => {
+			if (res.ok) {
+				window.location.href = '/login/';
 			} else {
 				alert('Sign out failed');
 			}
