@@ -19,8 +19,8 @@ document.addEventListener('DOMContentLoaded', function () {
 		formData.append('content', content);
 
 		try {
-			const res = await fetch(postForm.action, {
-				method: postForm.method,
+			const res = await fetch('/posts', {
+				method: 'POST',
 				headers: {
 					'Content-Type': 'application/x-www-form-urlencoded',
 				},

@@ -14,7 +14,7 @@ import {
 import { db } from '../config/firebase-config.js';
 import { fetchUserPostsPage, getPostLikes } from '../services/post-service.js';
 
-// @route   POST /post
+// @route   POST /posts
 // @desc    Handles post submission and writes to DB
 export async function submitPost(req, res) {
 	const { title, content } = req.body;
@@ -78,11 +78,11 @@ export async function submitPost(req, res) {
 	}
 }
 
-// @route   DELETE /post
+// @route   DELETE /posts/:postId
 // @desc    Deletes a post if the user is the owner
 export async function deletePost(req, res) {
 	try {
-		const { postId } = req.body;
+		const postId = req.params.postId;
 		const userId = req.session.userId;
 
 		const postRef = ref(db, `posts/${postId}`);
@@ -289,9 +289,9 @@ export async function getCommentsPage(req, res) {
 	}
 }
 
-// @route   PUT /likes/:postId
-// @desc    Toggles like status for a post; returns { likeCount, isLiked }
-export async function toggleLike(req, res) {
+// @route   POST /posts/:postId/likes
+// @desc    Adds a like from the current user; returns { likeCount, isLiked: true }
+export async function addLike(req, res) {
 	try {
 		const { postId } = req.params;
 		const userId = req.session.userId;
@@ -307,31 +307,54 @@ export async function toggleLike(req, res) {
 		const likedSnap = await get(userLikeRef);
 		const alreadyLiked = likedSnap.exists();
 
-		let isLiked;
-		let txResult;
-
-		if (alreadyLiked) {
-			// Unlike
-			await Promise.all([remove(userLikeRef), remove(postUserLikeRef)]);
-			txResult = await runTransaction(likeCountRef, (count) => {
-				count = Number.isFinite(count) ? count : 0;
-				return Math.max(0, count - 1);
-			});
-			isLiked = false;
-		} else {
-			// Like
+		if (!alreadyLiked) {
 			await Promise.all([set(userLikeRef, true), set(postUserLikeRef, true)]);
-			txResult = await runTransaction(likeCountRef, (count) => {
+			await runTransaction(likeCountRef, (count) => {
 				count = Number.isFinite(count) ? count : 0;
 				return count + 1;
 			});
-			isLiked = true;
 		}
 
-		const likeCount = Number(txResult?.snapshot?.val()) || 0;
-		return res.json({ likeCount, isLiked });
-	} catch (error) {
-		console.error('Error toggling like:', error);
+		const finalCountSnap = await get(likeCountRef);
+		const likeCount = Number(finalCountSnap.val()) || 0;
+		return res.json({ likeCount, isLiked: true });
+	} catch (err) {
+		console.error('Error adding like:', err);
+		return res.status(500).json({ error: 'Internal Server Error' });
+	}
+}
+
+// @route   DELETE /posts/:postId/likes
+// @desc    Removes the current user's like; returns { likeCount, isLiked: false }
+export async function removeLike(req, res) {
+	try {
+		const { postId } = req.params;
+		const userId = req.session.userId;
+
+		const postRef = ref(db, `posts/${postId}`);
+		const postSnap = await get(postRef);
+		if (!postSnap.exists()) return res.status(404).json({ error: 'Post not found' });
+
+		const userLikeRef = ref(db, `users/${userId}/likes/${postId}`);
+		const postUserLikeRef = ref(db, `posts/${postId}/likes/${userId}`);
+		const likeCountRef = ref(db, `posts/${postId}/likeCount`);
+
+		const likedSnap = await get(userLikeRef);
+		const isLiked = likedSnap.exists();
+
+		if (isLiked) {
+			await Promise.all([remove(userLikeRef), remove(postUserLikeRef)]);
+			await runTransaction(likeCountRef, (count) => {
+				count = Number.isFinite(count) ? count : 0;
+				return Math.max(0, count - 1);
+			});
+		}
+
+		const finalCountSnap = await get(likeCountRef);
+		const likeCount = Number(finalCountSnap.val()) || 0;
+		return res.json({ likeCount, isLiked: false });
+	} catch (err) {
+		console.error('Error removing like:', err);
 		return res.status(500).json({ error: 'Internal Server Error' });
 	}
 }

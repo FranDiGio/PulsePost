@@ -7,17 +7,19 @@ import {
 	submitComment,
 	deleteComment,
 	getCommentsPage,
-	toggleLike,
+	addLike,
+	removeLike,
 } from '../controllers/post-controller.js';
 
 const router = express.Router();
 
-router.post('/post', ensureAuthenticated, submitPost);
-router.delete('/post', ensureAuthenticated, deletePost);
+router.post('/posts', ensureAuthenticated, submitPost);
+router.delete('/posts/:postId', ensureAuthenticated, deletePost);
 router.get('/posts/:userId', ensureAuthenticated, getUserPostsPage);
 router.post('/posts/:postId/comments', ensureAuthenticated, submitComment);
 router.delete('/posts/:postId/comments/:commentId', ensureAuthenticated, deleteComment);
 router.get('/posts/:postId/comments', ensureAuthenticated, getCommentsPage);
-router.put('/likes/:postId', ensureAuthenticated, toggleLike);
+router.post('/posts/:postId/likes', ensureAuthenticated, addLike);
+router.delete('/posts/:postId/likes', ensureAuthenticated, removeLike);
 
 export default router;
