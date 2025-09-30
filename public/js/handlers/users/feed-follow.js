@@ -35,10 +35,9 @@ document.addEventListener('DOMContentLoaded', function () {
 	// Handles the HTTP request for both 'follow' and 'unfollow'
 	async function handleFollowAction(username, isFollowing) {
 		try {
-			const res = await fetch(isFollowing ? '/unfollow' : '/follow', {
-				method: 'POST',
+			const res = await fetch(`/users/${encodeURIComponent(username)}/followers`, {
+				method: isFollowing ? 'DELETE' : 'POST',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ targetUser: username }),
 			});
 
 			if (res.ok) {

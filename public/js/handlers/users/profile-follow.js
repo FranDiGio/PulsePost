@@ -50,10 +50,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
 		// Send request in background
 		try {
-			const res = await fetch(isFollowing ? '/unfollow' : '/follow', {
-				method: 'POST',
+			const res = await fetch(`/users/${encodeURIComponent(username)}/followers`, {
+				method: isFollowing ? 'DELETE' : 'POST',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ targetUser: username }),
 			});
 
 			if (!res.ok) {

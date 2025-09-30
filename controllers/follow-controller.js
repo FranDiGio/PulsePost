@@ -2,10 +2,11 @@ import { getIdFromUsername } from '../services/user-service.js';
 import { db } from '../config/firebase-config.js';
 import { ref, get, set, remove } from 'firebase/database';
 
-// @route   POST /follow
+// @route   POST /users/:username/followers
 // @desc    Follows the specified user
 export async function followUser(req, res) {
-	const { targetUser } = req.body;
+	const targetUser = req.params.username;
+
 	const userId = req.session.userId;
 	const username = req.session.username;
 
@@ -33,10 +34,10 @@ export async function followUser(req, res) {
 	}
 }
 
-// @route   POST /unfollow
+// @route   DELETE /users/:username/followers
 // @desc    Unfollows the specified user
 export async function unfollowUser(req, res) {
-	const { targetUser } = req.body;
+	const targetUser = req.params.username;
 	const userId = req.session.userId;
 
 	const { uid: targetId, error } = await getIdFromUsername(targetUser);
@@ -60,13 +61,15 @@ export async function unfollowUser(req, res) {
 	}
 }
 
-// @route   GET /followers
-// @desc    Returns list of followers for the current user
+// @route   GET /users/:username/followers
+// @desc    Returns list of followers for the specified user
 export async function getFollowers(req, res) {
 	try {
-		const userId = req.session.userId;
+		const targetUser = req.params.username;
+		const { uid: targetId, error } = await getIdFromUsername(targetUser);
+		if (error) return res.status(400).json({ error });
 
-		const followersRef = ref(db, `users/` + userId + '/followers');
+		const followersRef = ref(db, `users/` + targetId + '/followers');
 		const followersSnapshot = await get(followersRef);
 		const followersData = followersSnapshot.val();
 
@@ -77,13 +80,15 @@ export async function getFollowers(req, res) {
 	}
 }
 
-// @route   GET /following
-// @desc    Returns list of users the current user is following
+// @route   GET /users/:username/following
+// @desc    Returns list of users the specified user is following
 export async function getFollowing(req, res) {
 	try {
-		const userId = req.session.userId;
+		const targetUser = req.params.username;
+		const { uid: targetId, error } = await getIdFromUsername(targetUser);
+		if (error) return res.status(400).json({ error });
 
-		const followingRef = ref(db, `users/` + userId + '/following');
+		const followingRef = ref(db, `users/` + targetId + '/following');
 		const followingSnapshot = await get(followingRef);
 		const followingData = followingSnapshot.val();
 
@@ -94,7 +99,7 @@ export async function getFollowing(req, res) {
 	}
 }
 
-// @route   GET /follow/stats/:username
+// @route   GET /users/:username/follow-stats
 // @desc    Returns follower/following count for the given username
 export async function getFollowStats(req, res) {
 	try {

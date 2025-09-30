@@ -10,10 +10,10 @@ import {
 
 const router = express.Router();
 
-router.post('/follow', ensureAuthenticated, followUser);
-router.post('/unfollow', ensureAuthenticated, unfollowUser);
-router.get('/followers', ensureAuthenticated, getFollowers);
-router.get('/following', ensureAuthenticated, getFollowing);
-router.get('/follow/stats/:username', getFollowStats);
+router.post('/users/:username/followers', ensureAuthenticated, followUser);
+router.delete('/users/:username/followers', ensureAuthenticated, unfollowUser);
+router.get('/users/:username/followers', getFollowers);
+router.get('/users/:username/following', getFollowing);
+router.get('/users/:username/follow-stats', getFollowStats);
 
 export default router;
