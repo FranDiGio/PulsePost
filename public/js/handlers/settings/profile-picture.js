@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			saveButton.disabled = true;
 			saveButton.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
 
-			fetch('/picture', {
+			fetch('/users/me/picture', {
 				method: 'POST',
 				body: formData,
 			})
@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		confirmDeletePicButton.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
 		confirmDeletePicButton.disabled = true;
 
-		fetch('/picture', {
+		fetch('/users/me/picture', {
 			method: 'DELETE',
 		})
 			.then((response) => {

@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			saveButton.disabled = true;
 			saveButton.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
 
-			fetch('/background', {
+			fetch('/users/me/background', {
 				method: 'POST',
 				body: formData,
 			})
@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		confirmDeleteBgButton.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
 		confirmDeleteBgButton.disabled = true;
 
-		fetch('/background', {
+		fetch('/users/me/background', {
 			method: 'DELETE',
 		})
 			.then((response) => {

@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		const formData = new URLSearchParams();
 		formData.append('bioContent', trimmedBioContent);
 
-		const response = await fetch('/bio', {
+		const response = await fetch('/users/me/bio', {
 			method: 'PUT',
 			headers: {
 				'Content-Type': 'application/x-www-form-urlencoded',
