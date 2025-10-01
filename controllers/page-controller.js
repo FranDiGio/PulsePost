@@ -18,7 +18,7 @@ export async function loadFeed(req, res) {
 		const userPictureUrl = await getUserProfilePictureUrl(userData);
 		const userBackgroundUrl = await getUserProfileBackgroundUrl(userData);
 		const userBio = await getUserBiography(userData);
-		const posts = await getLatestPosts(userData, userId);
+		const posts = await getLatestPosts(userId);
 
 		await res.render('feed.ejs', {
 			username: req.session.username,

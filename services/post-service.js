@@ -2,49 +2,61 @@ import { getUserProfilePictureUrl } from './user-service.js';
 import { ref, get, query, orderByChild, limitToLast, endAt } from 'firebase/database';
 import { db } from '../config/firebase-config.js';
 
-// @desc    Retrieves latest posts and adds follow info & author profile pics
-export async function getLatestPosts(userData, userId) {
+// @desc Retrieves latest posts and decorates with: profilePictureUrl, isLikedByCurrentUser, isFollowedByCurrentUser
+export async function getLatestPosts(userId) {
+	const DEFAULT_PIC = '/images/default-profile.png';
+
 	try {
-		const postsRef = ref(db, `posts`);
-		const postsSnapshot = await get(postsRef);
-		const postsData = postsSnapshot.val();
+		// Fetch all posts
+		const postsSnap = await get(ref(db, 'posts'));
+		const posts = postsSnap.val() || {};
 
-		// Get the list of posts liked by the current user
+		// Liked posts of current user
 		const likedSnap = await get(ref(db, `users/${userId}/likes`));
-		const likedPostIds = likedSnap.exists() ? Object.keys(likedSnap.val()) : [];
+		const likedSet = new Set(Object.keys(likedSnap.val() || {}));
 
-		for (const key in postsData) {
-			if (postsData.hasOwnProperty(key)) {
-				const post = postsData[key];
+		// Following list of current user
+		const followingSnap = await get(ref(db, `users/${userId}/following`));
+		const followingSet = new Set(Object.keys(followingSnap.val() || {}));
 
-				// Get author's profile picture
-				const profilePictureUrl = await getUserProfilePictureUrl(userData);
-				post.profilePictureUrl = profilePictureUrl;
+		// Unique authorIds from posts
+		const authorIds = new Set(
+			Object.values(posts)
+				.map((p) => p.uid)
+				.filter(Boolean),
+		);
 
-				// Add like status
-				post.isLikedByCurrentUser = likedPostIds.includes(key);
+		// Fetch each author's profile picture once
+		const profilePicByUid = new Map();
+		await Promise.all(
+			[...authorIds].map(async (aid) => {
+				const picSnap = await get(ref(db, `users/${aid}/profilePicture`));
+				const pic = picSnap.val();
+				profilePicByUid.set(aid, pic && pic !== 'N/A' ? pic : DEFAULT_PIC);
+			}),
+		);
 
-				// Skip follow check if the post belongs to the current user
-				if (post.uid === userId) {
-					post.isFollowedByCurrentUser = null;
-					continue;
-				}
+		// Decorate posts with computed fields
+		for (const [postId, post] of Object.entries(posts)) {
+			const authorUid = post.uid;
 
-				// Resolve author's UID from their username
-				const author = post.author.toLowerCase();
-				const authorIdSnap = await get(ref(db, `usernames/${author}`));
-				const authorId = authorIdSnap.val();
+			post.profilePictureUrl = authorUid ? profilePicByUid.get(authorUid) || DEFAULT_PIC : DEFAULT_PIC;
 
-				// Check if current user follows the author
-				const followSnap = await get(ref(db, `users/${authorId}/followers/${userId}`));
-				post.isFollowedByCurrentUser = followSnap.exists();
+			post.isLikedByCurrentUser = likedSet.has(postId);
+
+			if (authorUid === userId) {
+				post.isFollowedByCurrentUser = null;
+			} else if (authorUid) {
+				post.isFollowedByCurrentUser = followingSet.has(authorUid);
+			} else {
+				post.isFollowedByCurrentUser = false;
 			}
 		}
 
-		return postsData;
-	} catch (error) {
-		console.error('Error fetching posts:', error);
-		return '';
+		return posts;
+	} catch (err) {
+		console.error('Error fetching posts:', err);
+		return {};
 	}
 }
 
