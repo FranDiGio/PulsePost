@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 			if (response.ok) {
 				confirmButton.disabled = true;
-				confirmButton.innerHTML = 'Confirm';
+				confirmButton.innerHTML = 'Delete';
 				showSuccessMessage();
 			} else {
 				console.error('Error deleting account:', await response.text());

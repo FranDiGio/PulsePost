@@ -99,8 +99,8 @@ document.addEventListener('DOMContentLoaded', function () {
 		saveButton.innerHTML = 'Save';
 		saveButton.disabled = true;
 
-		// Enable "Confirm" button and override the spinner
-		confirmDeletePicButton.innerHTML = 'Confirm';
+		// Enable "Delete" button and override the spinner
+		confirmDeletePicButton.innerHTML = 'Delete';
 		confirmDeletePicButton.disabled = false;
 	});
 
