@@ -3,9 +3,12 @@ document.addEventListener('DOMContentLoaded', function () {
 	const commentModal = document.getElementById('commentModal');
 	const submitBtn = document.getElementById('commentSubmitBtn');
 
+	let currentPostId = null;
+
 	commentModal.addEventListener('show.bs.modal', function (event) {
 		const trigger = event.relatedTarget;
 		const postId = trigger?.dataset?.postId || null;
+		currentPostId = postId;
 
 		if (!postId) {
 			console.error('Missing data-post-id for comment trigger');
@@ -31,13 +34,27 @@ document.addEventListener('DOMContentLoaded', function () {
 
 		try {
 			const res = await fetch(commentForm.action, {
-				method: commentForm.method,
-				headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+				method: 'POST',
+				headers: { 'Content-Type': 'application/x-www-form-urlencoded', Accept: 'application/json' },
 				body: formData.toString(),
+				credentials: 'same-origin',
 			});
 
 			if (res.ok) {
-				window.location.reload();
+				bootstrap.Modal.getOrCreateInstance(commentModal).hide();
+
+				// Reset UI
+				commentForm.reset();
+				resetFields();
+				submitBtn.innerHTML = 'Submit';
+				submitBtn.disabled = false;
+
+				// Refresh post comments
+				document.dispatchEvent(
+					new CustomEvent('comment:created', {
+						detail: { postId: currentPostId },
+					}),
+				);
 				return;
 			} else {
 				let err;
@@ -73,7 +90,6 @@ document.addEventListener('DOMContentLoaded', function () {
 		} else if (error?.errorCode === 'post-not-found') {
 			console.error(error.message);
 		} else {
-			// Generic error tooltip
 			input.classList.add('is-invalid');
 			input.setAttribute('data-bs-title', error?.message || 'Something went wrong.');
 			new bootstrap.Tooltip(input);

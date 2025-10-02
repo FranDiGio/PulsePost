@@ -4,9 +4,76 @@ document.addEventListener('DOMContentLoaded', () => {
 	// Per-post state: { loaded: bool, loading: bool, next: {afterTs, afterId} | null }
 	const commentsState = new Map();
 
-	// Event delegation: handle clicks on Comments tab and Load more button
+	function getPostCardById(postId) {
+		return document.querySelector(`.like-button[data-post-id="${postId}"]`)?.closest('.card') || null;
+	}
+
+	function getCommentsUIForPost(postId) {
+		const card = getPostCardById(postId);
+		if (!card) return {};
+		const commentsSection = card.querySelector('.comments-section');
+		if (!commentsSection) return {};
+		const container = commentsSection.querySelector('.container-fluid') || commentsSection;
+
+		let list = container.querySelector('.comments-list');
+		let loadMoreBtn = container.querySelector('.comments-load-more');
+
+		return { card, commentsSection, container, list, loadMoreBtn };
+	}
+
+	async function reloadFirstPage(postId, pageSize = PAGE_SIZE) {
+		const { list, loadMoreBtn } = getCommentsUIForPost(postId);
+		if (!list) return;
+
+		// Spinner while fetching
+		list.innerHTML = `
+		<div class="d-flex justify-content-center mt-4 mb-2">
+			<div class="spinner-border text-primary" role="status">
+			<span class="visually-hidden">Loading...</span>
+			</div>
+		</div>`;
+
+		// Reset state
+		commentsState.set(postId, { loaded: false, loading: false, next: null });
+
+		try {
+			const { items, next } = await fetchPage(postId, pageSize);
+			list.innerHTML = '';
+
+			if (!items.length) {
+				list.innerHTML = `
+				<div class="d-flex justify-content-center fst-italic mt-4 mb-2">
+					<p class="text-body-secondary mb-0">💬 Looks quiet here... leave a comment?</p>
+				</div>`;
+
+				if (loadMoreBtn) loadMoreBtn.classList.add('d-none');
+				commentsState.set(postId, { loaded: true, loading: false, next: null });
+				return;
+			}
+
+			renderComments(list, items, postId);
+			commentsState.set(postId, { loaded: true, loading: false, next });
+
+			if (loadMoreBtn) {
+				if (next) {
+					loadMoreBtn.dataset.next = JSON.stringify(next);
+					loadMoreBtn.classList.remove('d-none');
+					loadMoreBtn.disabled = false;
+					loadMoreBtn.textContent = 'Load more';
+				} else {
+					loadMoreBtn.classList.add('d-none');
+					loadMoreBtn.dataset.next = '';
+				}
+			}
+		} catch (err) {
+			console.error('Reload comments failed:', err);
+			list.textContent = 'Couldn’t load comments. Try again.';
+		}
+	}
+
+	// Open tab / Load more
 	document.addEventListener('click', async (e) => {
-		// --- Open Comments tab ---
+		// Open Comments tab
 		const tab = e.target.closest('.comments-tab');
 		if (tab) {
 			const card = tab.closest('.card');
@@ -49,24 +116,25 @@ document.addEventListener('DOMContentLoaded', () => {
 				commentsList.innerHTML = `
 				<div class="d-flex justify-content-center mt-4 mb-2">
 					<div class="spinner-border text-primary" role="status">
-						<span class="visually-hidden">Loading...</span>
+					<span class="visually-hidden">Loading...</span>
 					</div>
 				</div>`;
 
 				try {
 					const { items, next } = await fetchPage(postId, PAGE_SIZE);
 					commentsList.innerHTML = '';
+
 					if (!items.length) {
 						commentsList.innerHTML = `
-							<div class="d-flex justify-content-center fst-italic mt-4 mb-2">
-								<p class="text-body-secondary mb-0">💬 Looks quiet here... leave a comment?</p>
-							</div>`;
-
+						<div class="d-flex justify-content-center fst-italic mt-4 mb-2">
+							<p class="text-body-secondary mb-0">💬 Looks quiet here... leave a comment?</p>
+						</div>`;
 						loadMoreBtn.classList.add('d-none');
 						st.loaded = true;
 						st.next = null;
 						return;
 					}
+
 					renderComments(commentsList, items, postId);
 					st.loaded = true;
 					st.next = next;
@@ -85,7 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			return;
 		}
 
-		// --- Load more button ---
+		// Load more button
 		const moreBtn = e.target.closest('.comments-load-more');
 		if (moreBtn) {
 			const postId = moreBtn.dataset.postId;
@@ -127,16 +195,19 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 	});
 
-	async function fetchPage(postId, limit = 5, cursor = null) {
+	async function fetchPage(postId, limit = PAGE_SIZE, cursor = null) {
 		const params = new URLSearchParams({ limit: String(limit) });
-		if (cursor?.afterTs != null && cursor?.afterId) {
-			params.set('afterTs', String(cursor.afterTs));
-			params.set('afterId', cursor.afterId);
+
+		if (cursor?.beforeTs != null && cursor?.beforeId) {
+			params.set('beforeTs', String(cursor.beforeTs));
+			params.set('beforeId', cursor.beforeId);
 		}
+
 		const res = await fetch(`/posts/${encodeURIComponent(postId)}/comments?${params.toString()}`, {
 			headers: { Accept: 'application/json' },
 			credentials: 'same-origin',
 		});
+
 		if (!res.ok) throw new Error(`Failed to fetch comments: ${res.status}`);
 		return res.json(); // { items, next }
 	}
@@ -146,39 +217,56 @@ document.addEventListener('DOMContentLoaded', () => {
 			const row = document.createElement('div');
 			row.className = 'mb-3';
 			row.innerHTML = `
-      <div class="d-flex align-items-start gap-2">
-        <div class="fw-semibold">${escapeHtml(comment.author ?? 'Unknown')}</div>
-        <div class="text-muted small">${timeSinceMs(comment.createdAtMs)}</div>
-        ${
-			comment.canDelete
-				? `
-          <ul class="nav ms-auto">
-            <li class="nav-item ms-auto">
-              <a class="flex-shrink-0 overflow-hidden pe-1 pt-0 pb-2"
-                 style="max-height: 30px; cursor: pointer"
-                 data-bs-toggle="dropdown">
-                <img alt="options icon" src="/svg/three-dots-vertical.svg" />
-              </a>
-              <ul class="dropdown-menu text-small rounded">
-                <li>
-                  <a class="dropdown-item delete-comment-link"
-                     data-bs-toggle="modal"
-                     data-post-id="${postId}"
-                     data-comment-id="${comment.id}"
-                     data-bs-target="#confirmDeleteCommentModal">
-                    Delete comment
-                  </a>
-                </li>
-              </ul>
-            </li>
-          </ul>
-        `
-				: ''
-		}
-      </div>
-      <div class="mt-1">${escapeHtml(comment.content ?? '')}</div>
-    `;
+        <div class="d-flex align-items-start gap-2">
+          <div class="fw-semibold">${escapeHtml(comment.author ?? 'Unknown')}</div>
+          <div class="text-muted small">${timeSinceMs(comment.createdAtMs)}</div>
+          ${
+				comment.canDelete
+					? `
+            <ul class="nav ms-auto">
+              <li class="nav-item ms-auto">
+                <a class="flex-shrink-0 overflow-hidden pe-1 pt-0 pb-2"
+                   style="max-height: 30px; cursor: pointer"
+                   data-bs-toggle="dropdown">
+                  <img alt="options icon" src="/svg/three-dots-vertical.svg" />
+                </a>
+                <ul class="dropdown-menu text-small rounded">
+                  <li>
+                    <a class="dropdown-item delete-comment-link"
+                       data-bs-toggle="modal"
+                       data-post-id="${postId}"
+                       data-comment-id="${comment.id}"
+                       data-bs-target="#confirmDeleteCommentModal">
+                      Delete comment
+                    </a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          `
+					: ''
+			}
+        </div>
+        <div class="mt-1">${escapeHtml(comment.content ?? '')}</div>
+      `;
 			listNode.appendChild(row);
 		}
 	}
+
+	// After submit: clear & re-fetch
+	document.addEventListener('comment:created', (e) => {
+		const postId = e.detail?.postId;
+		if (!postId) return;
+
+		// Optimistically bump "Comments (N)" badge if visible
+		const card = getPostCardById(postId);
+		const badge = card?.querySelector('.comments-tab span');
+		if (badge) {
+			const m = badge.textContent.match(/\((\d+)\)/);
+			const n = m ? parseInt(m[1], 10) : 0;
+			badge.textContent = `(${n + 1})`;
+		}
+
+		reloadFirstPage(postId);
+	});
 });

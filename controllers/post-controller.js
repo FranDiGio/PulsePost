@@ -6,10 +6,10 @@ import {
 	remove,
 	set,
 	orderByChild,
-	limitToFirst,
-	startAt,
+	endAt,
 	query,
 	runTransaction,
+	limitToLast,
 } from 'firebase/database';
 import { db } from '../config/firebase-config.js';
 import { fetchUserPostsPage, getPostLikes } from '../services/post-service.js';
@@ -236,13 +236,13 @@ export async function deleteComment(req, res) {
 	}
 }
 
-// @route   GET /posts/:postId/comments?limit=5[&afterTs=...&afterId=...]
-// @desc    Returns a page of comments sorted by createdAtMs ASC with look-ahead
+// @route   GET /posts/:postId/comments?limit=5[&beforeTs=...&beforeId=...]
+// @desc    Returns a page of comments sorted by createdAtMs DESC with look-ahead
 export async function getCommentsPage(req, res) {
 	const { postId } = req.params;
 	const limit = Math.min(parseInt(req.query.limit || '5', 10), 50);
-	const afterTs = req.query.afterTs ? Number(req.query.afterTs) : null;
-	const afterId = req.query.afterId || null;
+	const beforeTs = req.query.beforeTs ? Number(req.query.beforeTs) : null;
+	const beforeId = req.query.beforeId || null;
 
 	try {
 		// Fetch post owner
@@ -251,15 +251,15 @@ export async function getCommentsPage(req, res) {
 		const postOwnerId = postOwnerSnap.exists() ? postOwnerSnap.val() : null;
 
 		let q;
-		if (afterTs != null && afterId) {
+		if (beforeTs != null && beforeId) {
 			q = query(
 				ref(db, `comments/${postId}`),
 				orderByChild('createdAtMs'),
-				startAt(afterTs, afterId),
-				limitToFirst(limit + 1),
+				endAt(beforeTs, beforeId),
+				limitToLast(limit + 1),
 			);
 		} else {
-			q = query(ref(db, `comments/${postId}`), orderByChild('createdAtMs'), limitToFirst(limit + 1));
+			q = query(ref(db, `comments/${postId}`), orderByChild('createdAtMs'), limitToLast(limit + 1));
 		}
 
 		const snap = await get(q);
@@ -269,18 +269,21 @@ export async function getCommentsPage(req, res) {
 
 		const entries = Object.entries(snap.val());
 
-		let rows = afterTs != null && afterId ? entries.slice(1) : entries;
-		const hasMore = rows.length > limit;
-		if (hasMore) rows = rows.slice(0, limit);
+		let rows = beforeTs != null && beforeId ? entries.slice(0, -1) : entries;
+		const hasMore = entries.length > limit;
+		if (hasMore) {
+			rows = rows.slice(rows.length - limit);
+		}
 
-		const items = rows.map(([id, data]) => ({
+		const itemsAsc = rows.map(([id, data]) => ({
 			id,
 			...data,
 			canDelete: data.uid === currentUserId || postOwnerId === currentUserId,
 		}));
+		const items = itemsAsc.reverse(); // Newest first
 
 		const last = items[items.length - 1];
-		const next = hasMore && last ? { afterTs: last.createdAtMs, afterId: last.id } : null;
+		const next = hasMore && last ? { beforeTs: last.createdAtMs, beforeId: last.id } : null;
 
 		return res.json({ items, next });
 	} catch (err) {
