@@ -1,4 +1,4 @@
-import { getLatestPosts, getUserPostCount, fetchUserPostsPage } from '../services/post-service.js';
+import { fetchLatestPostsPage, getUserPostCount, fetchUserPostsPage } from '../services/post-service.js';
 import { getFollowStatsById } from '../services/follow-service.js';
 import {
 	getUserProfilePictureUrl,
@@ -18,15 +18,22 @@ export async function loadFeed(req, res) {
 		const userPictureUrl = await getUserProfilePictureUrl(userData);
 		const userBackgroundUrl = await getUserProfileBackgroundUrl(userData);
 		const userBio = await getUserBiography(userData);
-		const posts = await getLatestPosts(userId);
 
-		await res.render('feed.ejs', {
+		const firstPageSize = 5;
+		const { items: firstItems, nextCursor } = await fetchLatestPostsPage(
+			userId,
+			firstPageSize,
+			Number.MAX_SAFE_INTEGER,
+		);
+
+		res.render('feed.ejs', {
 			username: req.session.username,
-			userId: userId,
-			userPictureUrl: userPictureUrl,
-			userBackgroundUrl: userBackgroundUrl,
-			userBio: userBio,
-			posts: posts,
+			userId,
+			userPictureUrl,
+			userBackgroundUrl,
+			userBio,
+			firstItems,
+			nextCursor,
 		});
 	} catch (error) {
 		console.error('Error fetching user data:', error);

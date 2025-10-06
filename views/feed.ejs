@@ -87,7 +87,20 @@
 						</div>
 					</div>
 
-					<% if (locals.posts) { %><%- include('partials/posts/feed-posts.ejs') %><% } %>
+					<div
+						id="posts-list"
+						data-user-picture-url="/images/default-profile.png"
+						data-next-cursor="<%= nextCursor ?? '' %>"
+						data-initial-ids="<%- JSON.stringify((firstItems || []).map(p => p.id)) %>"
+					>
+						<% if (locals.firstItems && firstItems.length) { %> <%- include('partials/posts/feed-posts.ejs',
+						{ items: firstItems }) %> <% } %>
+					</div>
+
+					<div id="infinite-trigger" class="py-5 text-center">
+						<div id="infinite-spinner" class="spinner-border d-none" role="status"></div>
+						<span id="infinite-text" class="text-muted"></span>
+					</div>
 				</div>
 
 				<!-- Right sidebar -->
@@ -152,6 +165,7 @@
 		<script src="/js/ui/toggle-post-content.js" charset="utf-8"></script>
 		<script src="/js/ui/toggle-post-tabs.js" charset="utf-8"></script>
 		<script src="/js/handlers/posts/posts-create.js" charset="utf-8"></script>
+		<script src="/js/handlers/posts/posts-latest-load.js" charset="utf-8"></script>
 		<script src="/js/handlers/posts/comments-create.js" charset="utf-8"></script>
 		<script src="/js/handlers/posts/comments-delete.js" charset="utf-8"></script>
 		<script src="/js/handlers/posts/comments-load.js" charset="utf-8"></script>

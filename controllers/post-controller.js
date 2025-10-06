@@ -12,7 +12,7 @@ import {
 	limitToLast,
 } from 'firebase/database';
 import { db } from '../config/firebase-config.js';
-import { fetchUserPostsPage, getPostLikes } from '../services/post-service.js';
+import { fetchLatestPostsPage, fetchUserPostsPage, getPostLikes } from '../services/post-service.js';
 
 // @route   POST /posts
 // @desc    Handles post submission and writes to DB
@@ -117,6 +117,26 @@ export async function deletePost(req, res) {
 	} catch (error) {
 		console.error('Error deleting post:', error);
 		return res.status(500).json({ error: 'Internal Server Error' });
+	}
+}
+
+// @route   GET /posts/latest?limit=10[&beforeTs=...&beforeId=...]
+// @desc    Return a paginated list of the latest posts
+export async function getLatestPostsPage(req, res) {
+	try {
+		const userId = req.session.userId;
+		const limit = Math.min(Number(req.query.limit) || 10, 30);
+		const beforeTs = req.query.beforeTs ? Number(req.query.beforeTs) : Number.MAX_SAFE_INTEGER;
+
+		if (!Number.isFinite(beforeTs)) {
+			return res.status(400).json({ error: 'Invalid beforeTs' });
+		}
+
+		const { items, nextCursor } = await fetchLatestPostsPage(userId, limit, beforeTs);
+		res.json({ items, nextCursor });
+	} catch (e) {
+		console.error('GET /posts/latest error', e);
+		res.status(500).json({ error: 'Failed to load posts' });
 	}
 }
 

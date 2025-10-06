@@ -1,12 +1,12 @@
-<% Object.keys(posts).forEach(function(key) { %>
+<% Object.keys(items).forEach(function(key) { %>
 <div class="d-flex flex-nowrap pt-4">
 	<!-- Author Details -->
 	<div class="col-2 col-lg-3 d-inline-flex justify-content-end align-items-start me-4">
 		<div class="d-flex flex-nowrap dropdown-center border rounded-5 bg-white px-2 py-1">
-			<p class="d-xl-block d-none mx-2 my-2"><%= posts[key].author %></p>
+			<p class="d-xl-block d-none mx-2 my-2"><%= items[key].author %></p>
 			<a class="d-block link-body-emphasis text-decoration-none" role="button" data-bs-toggle="dropdown">
 				<img
-					src="<%= posts[key].profilePictureUrl %>"
+					src="<%= items[key].profilePictureUrl %>"
 					width="40"
 					height="40"
 					alt="profile-picture"
@@ -16,16 +16,16 @@
 
 			<ul class="dropdown-menu">
 				<li>
-					<a class="dropdown-item" href="/profile/<%= encodeURIComponent(posts[key].author) %>">Profile</a>
+					<a class="dropdown-item" href="/profile/<%= encodeURIComponent(items[key].author) %>">Profile</a>
 				</li>
-				<% if (posts[key].uid !== userId) { %>
+				<% if (items[key].uid !== userId) { %>
 				<li>
 					<a
 						class="dropdown-item follow-btn"
-						data-username="<%= posts[key].author %>"
-						data-following="<%= posts[key].isFollowedByCurrentUser %>"
+						data-username="<%= items[key].author %>"
+						data-following="<%= items[key].isFollowedByCurrentUser %>"
 					>
-						<% if (posts[key].isFollowedByCurrentUser) { %>
+						<% if (items[key].isFollowedByCurrentUser) { %>
 						<img class="icon-sm" alt="checkmark icon" src="/svg/check2.svg" />
 						Following <% } else { %>
 						<span class="text-primary">+</span>
@@ -48,18 +48,18 @@
 					<li class="nav-item">
 						<a class="nav-link comments-tab">
 							Comments
-							<span>(<%= posts[key].commentCount || 0 %>)</span>
+							<span>(<%= items[key].commentCount || 0 %>)</span>
 						</a>
 					</li>
 				</ul>
-				<p class="d-flex d-xl-none text-muted mb-0 pt-2" style="font-size: 0.8rem"><%= posts[key].author %></p>
+				<p class="d-flex d-xl-none text-muted mb-0 pt-2" style="font-size: 0.8rem"><%= items[key].author %></p>
 			</div>
 
 			<div class="card-body">
 				<!-- Post Section -->
 				<div class="m-0 p-0 post-section">
-					<h5 class="card-title pb-1"><%= posts[key].title %></h5>
-					<p class="card-text post-content mb-1 overflow-hidden"><%= posts[key].content %></p>
+					<h5 class="card-title pb-1"><%= items[key].title %></h5>
+					<p class="card-text post-content mb-1 overflow-hidden"><%= items[key].content %></p>
 
 					<button type="button" class="btn text-muted p-0 read-more-btn" style="font-size: 0.8rem">
 						Show more
@@ -97,17 +97,17 @@
 			<div class="card-footer d-flex justify-content-between">
 				<div class="d-flex">
 					<button class="like-button p-0" data-post-id="<%= key %>">
-						<% if (posts[key].isLikedByCurrentUser) { %>
+						<% if (items[key].isLikedByCurrentUser) { %>
 						<i class="heart-icon filled"></i>
 						<% } else { %>
 						<i class="heart-icon"></i>
 						<% } %>
 					</button>
 					<p class="like-count text-muted my-0 ms-2 py-0" style="font-size: 0.8rem">
-						<%= posts[key].likeCount %>
+						<%= items[key].likeCount %>
 					</p>
 				</div>
-				<p class="timestamp text-muted my-0 py-0" style="font-size: 0.8rem"><%= posts[key].createdAtMs %></p>
+				<p class="timestamp text-muted my-0 py-0" style="font-size: 0.8rem"><%= items[key].createdAtMs %></p>
 			</div>
 		</div>
 	</div>
