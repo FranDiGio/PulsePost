@@ -1,7 +1,7 @@
 import { ref, get, query, orderByChild, limitToLast, endAt } from 'firebase/database';
 import { db } from '../config/firebase-config.js';
 
-// @desc Retrieves latest posts and decorates with: profilePictureUrl, isLikedByCurrentUser, isFollowedByCurrentUser
+// @desc Retrieves latest posts by page size
 export async function fetchLatestPostsPage(userId, pageSize = 5, beforeTs = Number.MAX_SAFE_INTEGER) {
 	const DEFAULT_PIC = '/images/default-profile.png';
 
@@ -18,10 +18,7 @@ export async function fetchLatestPostsPage(userId, pageSize = 5, beforeTs = Numb
 			.map(([id, data]) => ({ id, ...data }))
 			.sort((a, b) => a.createdAtMs - b.createdAtMs);
 
-		console.log('Fetched posts count:', rowsAsc.length);
-		console.log('Page size:', pageSize);
-
-		// Keep look-ahead: if pageSize+1 fetched, drop the oldest one
+		// If pageSize+1 fetched, drop the oldest one
 		const hasMore = rowsAsc.length > pageSize;
 		const pageAsc = hasMore ? rowsAsc.slice(rowsAsc.length - pageSize) : rowsAsc;
 
@@ -59,7 +56,7 @@ export async function fetchLatestPostsPage(userId, pageSize = 5, beforeTs = Numb
 		}
 
 		// Cursor for next page (oldest item)
-		const last = items[items.length - 1];
+		const last = rowsAsc[0];
 		const nextCursor = hasMore && last ? last.createdAtMs : null;
 
 		return { items, nextCursor };
