@@ -66,7 +66,7 @@ export async function fetchLatestPostsPage(userId, pageSize = 5, beforeTs = Numb
 	}
 }
 
-// @desc  Fetch a page of posts for a user, newest -> older, using createdAtMs as cursor
+// @desc  	Fetch a page of posts for a user, newest -> older, using createdAtMs as cursor
 export async function fetchUserPostsPage(profileId, currentUserId, pageSize = 5, beforeTs = Number.MAX_SAFE_INTEGER) {
 	try {
 		// Read lightweight refs ordered by createdAtMs and ending at the cursor

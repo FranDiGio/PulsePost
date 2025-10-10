@@ -1,6 +1,6 @@
 import express from 'express';
 import { ensureAuthenticated } from '../controllers/auth-controller.js';
-import { loadFeed, loadProfile } from '../controllers/page-controller.js';
+import { loadFeed, loadProfile, loadTrending } from '../controllers/page-controller.js';
 
 const router = express.Router();
 
@@ -8,6 +8,7 @@ router.get('/', (req, res) => (req.session.username ? res.redirect('/feed/') : r
 router.get('/about/', (req, res) => res.render('about.ejs'));
 router.get('/contact/', (req, res) => res.render('contact.ejs'));
 router.get('/feed/', ensureAuthenticated, loadFeed);
+router.get('/feed/trending', ensureAuthenticated, loadTrending);
 router.get('/profile/:username', ensureAuthenticated, loadProfile);
 router.get('/signup/', (req, res) =>
 	res.render('sign-up.ejs', {

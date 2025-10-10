@@ -1,4 +1,4 @@
-import { ref, get, update } from 'firebase/database';
+import { ref, get, query, update, orderByChild, limitToLast } from 'firebase/database';
 import { db } from '../config/firebase-config.js';
 
 export const TRENDING_CFG = {
@@ -39,4 +39,80 @@ export async function recalcAndUpdateTrend(postId) {
 		trendScore: score,
 		trendScoreUpdatedAt: nowMs,
 	});
+}
+
+// @desc Retrieves "trending" posts by computed score
+export async function fetchTrendingPostsPage(userId, pageSize = 5, { afterId = null, fetchLimit = 500 } = {}) {
+	const DEFAULT_PIC = '/images/default-profile.png';
+
+	try {
+		const snap = await get(query(ref(db, 'posts'), orderByChild('createdAtMs'), limitToLast(fetchLimit)));
+		if (!snap.exists()) return { items: [], nextCursor: null };
+
+		const now = Date.now();
+
+		// Array-ify + compute score
+		const rows = Object.entries(snap.val()).map(([id, post]) => {
+			const trendScoreComputed = computeTrendScore(
+				{
+					likes: post.likeCount || 0,
+					comments: post.commentCount || 0,
+					createdAtMs: post.createdAtMs || now,
+				},
+				now,
+			);
+			return { id, trendScoreComputed, ...post };
+		});
+
+		// Sort by score desc, then createdAtMs desc
+		rows.sort((a, b) => {
+			if (b.trendScoreComputed !== a.trendScoreComputed) {
+				return b.trendScoreComputed - a.trendScoreComputed;
+			}
+			return (b.createdAtMs || 0) - (a.createdAtMs || 0);
+		});
+
+		// Offset-based pagination with afterId
+		let startIdx = 0;
+		if (afterId) {
+			const idx = rows.findIndex((r) => r.id === afterId);
+			startIdx = idx >= 0 ? idx + 1 : 0;
+		}
+
+		const page = rows.slice(startIdx, startIdx + pageSize);
+
+		// Post decoration
+		const [likedSnap, followingSnap] = await Promise.all([
+			get(ref(db, `users/${userId}/likes`)),
+			get(ref(db, `users/${userId}/following`)),
+		]);
+		const likedSet = new Set(Object.keys(likedSnap.val() || {}));
+		const followingSet = new Set(Object.keys(followingSnap.val() || {}));
+
+		const authorIds = new Set(page.map((p) => p.uid).filter(Boolean));
+		const profilePicByUid = new Map();
+		await Promise.all(
+			[...authorIds].map(async (aid) => {
+				const picSnap = await get(ref(db, `users/${aid}/profilePicture`));
+				const pic = picSnap.val();
+				profilePicByUid.set(aid, pic && pic !== 'N/A' ? pic : DEFAULT_PIC);
+			}),
+		);
+
+		for (const post of page) {
+			const authorUid = post.uid;
+			post.profilePictureUrl = authorUid ? profilePicByUid.get(authorUid) || DEFAULT_PIC : DEFAULT_PIC;
+			post.isLikedByCurrentUser = likedSet.has(post.id);
+			post.isFollowedByCurrentUser =
+				authorUid === userId ? null : authorUid ? followingSet.has(authorUid) : false;
+		}
+
+		const last = page[page.length - 1];
+		const nextCursor = page.length < pageSize ? null : (last?.id ?? null);
+
+		return { items: page, nextCursor };
+	} catch (err) {
+		console.error('fetchTrendingPostsPage error', err);
+		return { items: [], nextCursor: null };
+	}
 }

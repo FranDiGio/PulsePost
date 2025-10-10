@@ -57,7 +57,7 @@ export async function submitPost(req, res) {
 		createdAtMs: nowMs,
 		createdAtIso: nowIso,
 		trendScore: initialTrendScore,
-		trendScoreUpdatedAtMs: nowMs,
+		trendScoreUpdatedAt: nowMs,
 	};
 
 	// Lightweight user ref
