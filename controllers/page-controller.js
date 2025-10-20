@@ -35,6 +35,7 @@ export async function loadFeed(req, res) {
 			userBio,
 			firstItems,
 			nextCursor,
+			activeTab: 'home',
 		});
 	} catch (error) {
 		console.error('Error fetching user data:', error);
@@ -67,6 +68,7 @@ export async function loadTrending(req, res) {
 			userBio,
 			firstItems,
 			nextCursor,
+			activeTab: 'trending',
 		});
 	} catch (error) {
 		console.error('Error fetching user data:', error);

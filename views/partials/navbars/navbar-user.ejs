@@ -1,11 +1,18 @@
 <header class="container-fluid p-0 bg-light sticky-top shadow-sm">
 	<nav class="navbar navbar-expand-lg navbar-light bg-light">
 		<div class="container d-flex flex-nowrap">
+			<% const active = typeof activeTab === 'string' ? activeTab : null; %>
+
 			<!-- Home, Trending, and Search -->
 			<div class="d-none d-lg-flex align-items-center">
 				<a href="/feed/" class="col-2 me-1" id="home-btn">
 					<div class="flex-shrink-0 overflow-hidden my-3" style="max-height: 60px">
-						<img class="header-icon" alt="home icon" src="/svg/house.svg" style="max-height: 60px" />
+						<img 
+							class="header-icon" 
+							alt="home icon" 
+							src="<%= active === 'home' ? '/svg/home-blue.svg' : '/svg/home.svg' %>"
+							style="max-height: 60px" 
+						/>
 					</div>
 				</a>
 
@@ -15,7 +22,7 @@
 							class="header-icon"
 							id="trending-img"
 							alt="fire icon"
-							src="/svg/fire.svg"
+  							src="<%= active === 'trending' ? '/svg/fire-blue.svg' : '/svg/fire.svg' %>"
 							style="max-height: 60px"
 						/>
 					</div>
