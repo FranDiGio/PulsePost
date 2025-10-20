@@ -1,4 +1,4 @@
-import { ref, query, orderByChild, equalTo, get } from 'firebase/database';
+import { ref, get } from 'firebase/database';
 import { db } from '../config/firebase-config.js';
 import UserValidationResult from '../models/user-validation-result.mjs';
 

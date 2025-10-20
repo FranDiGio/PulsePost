@@ -1,4 +1,5 @@
-import { getLatestPosts, getUserPostCount, fetchUserPostsPage } from '../services/post-service.js';
+import { fetchLatestPostsPage, getUserPostCount, fetchUserPostsPage } from '../services/post-service.js';
+import { fetchTrendingPostsPage } from '../services/trending-service.js';
 import { getFollowStatsById } from '../services/follow-service.js';
 import {
 	getUserProfilePictureUrl,
@@ -10,7 +11,7 @@ import { db } from '../config/firebase-config.js';
 import { ref, get } from 'firebase/database';
 
 // @route   GET /feed
-// @desc    Loads the main feed with current user's details and latest posts
+// @desc    Loads the main feed with latest posts
 export async function loadFeed(req, res) {
 	try {
 		const userId = req.session.userId;
@@ -18,15 +19,56 @@ export async function loadFeed(req, res) {
 		const userPictureUrl = await getUserProfilePictureUrl(userData);
 		const userBackgroundUrl = await getUserProfileBackgroundUrl(userData);
 		const userBio = await getUserBiography(userData);
-		const posts = await getLatestPosts(userId);
 
-		await res.render('feed.ejs', {
+		const firstPageSize = 5;
+		const { items: firstItems, nextCursor } = await fetchLatestPostsPage(
+			userId,
+			firstPageSize,
+			Number.MAX_SAFE_INTEGER,
+		);
+
+		res.render('feed.ejs', {
 			username: req.session.username,
-			userId: userId,
-			userPictureUrl: userPictureUrl,
-			userBackgroundUrl: userBackgroundUrl,
-			userBio: userBio,
-			posts: posts,
+			userId,
+			userPictureUrl,
+			userBackgroundUrl,
+			userBio,
+			firstItems,
+			nextCursor,
+			activeTab: 'home',
+		});
+	} catch (error) {
+		console.error('Error fetching user data:', error);
+		res.status(500).render('error', { error: '500: Failed to load page' });
+	}
+}
+
+// @route   GET /feed/trending
+// @desc    Loads the main feed with trending posts
+export async function loadTrending(req, res) {
+	try {
+		const userId = req.session.userId;
+		const { userData } = await getUserData(userId);
+		const userPictureUrl = await getUserProfilePictureUrl(userData);
+		const userBackgroundUrl = await getUserProfileBackgroundUrl(userData);
+		const userBio = await getUserBiography(userData);
+
+		const firstPageSize = 5;
+		const { items: firstItems, nextCursor } = await fetchTrendingPostsPage(
+			userId,
+			firstPageSize,
+			Number.MAX_SAFE_INTEGER,
+		);
+
+		res.render('feed.ejs', {
+			username: req.session.username,
+			userId,
+			userPictureUrl,
+			userBackgroundUrl,
+			userBio,
+			firstItems,
+			nextCursor,
+			activeTab: 'trending',
 		});
 	} catch (error) {
 		console.error('Error fetching user data:', error);

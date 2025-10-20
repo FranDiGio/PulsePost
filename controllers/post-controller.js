@@ -12,7 +12,8 @@ import {
 	limitToLast,
 } from 'firebase/database';
 import { db } from '../config/firebase-config.js';
-import { fetchUserPostsPage, getPostLikes } from '../services/post-service.js';
+import { computeTrendScore, recalcAndUpdateTrend } from '../services/trending-service.js';
+import { fetchLatestPostsPage, fetchUserPostsPage, getPostLikes } from '../services/post-service.js';
 
 // @route   POST /posts
 // @desc    Handles post submission and writes to DB
@@ -42,6 +43,9 @@ export async function submitPost(req, res) {
 	const nowMs = Date.now();
 	const nowIso = new Date(nowMs).toISOString();
 
+	// Initial score so brand-new posts can appear in Trending immediately
+	const initialTrendScore = computeTrendScore({ likes: 0, comments: 0, createdAtMs: nowMs }, nowMs);
+
 	// Full post document
 	const postData = {
 		uid: userId,
@@ -52,6 +56,8 @@ export async function submitPost(req, res) {
 		likeCount: 0,
 		createdAtMs: nowMs,
 		createdAtIso: nowIso,
+		trendScore: initialTrendScore,
+		trendScoreUpdatedAt: nowMs,
 	};
 
 	// Lightweight user ref
@@ -117,6 +123,26 @@ export async function deletePost(req, res) {
 	} catch (error) {
 		console.error('Error deleting post:', error);
 		return res.status(500).json({ error: 'Internal Server Error' });
+	}
+}
+
+// @route   GET /posts/latest?limit=10[&beforeTs=...&beforeId=...]
+// @desc    Return a paginated list of the latest posts
+export async function getLatestPostsPage(req, res) {
+	try {
+		const userId = req.session.userId;
+		const limit = Math.min(Number(req.query.limit) || 10, 30);
+		const beforeTs = req.query.beforeTs ? Number(req.query.beforeTs) : Number.MAX_SAFE_INTEGER;
+
+		if (!Number.isFinite(beforeTs)) {
+			return res.status(400).json({ error: 'Invalid beforeTs' });
+		}
+
+		const { items, nextCursor } = await fetchLatestPostsPage(userId, limit, beforeTs);
+		res.json({ items, nextCursor });
+	} catch (e) {
+		console.error('GET /posts/latest error', e);
+		res.status(500).json({ error: 'Failed to load posts' });
 	}
 }
 
@@ -188,6 +214,8 @@ export async function submitComment(req, res) {
 
 	try {
 		await update(ref(db), updates);
+		await recalcAndUpdateTrend(postId);
+
 		return res.status(201).json({ ok: true, comment: commentData });
 	} catch (err) {
 		console.error('Error submitting comment:', err);
@@ -228,6 +256,8 @@ export async function deleteComment(req, res) {
 			const n = Number(curr) || 0;
 			return n > 0 ? n - 1 : 0;
 		});
+
+		await recalcAndUpdateTrend(postId);
 
 		return res.json({ message: 'Comment deleted' });
 	} catch (err) {
@@ -320,6 +350,9 @@ export async function addLike(req, res) {
 
 		const finalCountSnap = await get(likeCountRef);
 		const likeCount = Number(finalCountSnap.val()) || 0;
+
+		await recalcAndUpdateTrend(postId);
+
 		return res.json({ likeCount, isLiked: true });
 	} catch (err) {
 		console.error('Error adding like:', err);
@@ -355,6 +388,9 @@ export async function removeLike(req, res) {
 
 		const finalCountSnap = await get(likeCountRef);
 		const likeCount = Number(finalCountSnap.val()) || 0;
+
+		await recalcAndUpdateTrend(postId);
+
 		return res.json({ likeCount, isLiked: false });
 	} catch (err) {
 		console.error('Error removing like:', err);

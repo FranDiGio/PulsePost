@@ -1,32 +1,42 @@
-import { getUserProfilePictureUrl } from './user-service.js';
 import { ref, get, query, orderByChild, limitToLast, endAt } from 'firebase/database';
 import { db } from '../config/firebase-config.js';
 
-// @desc Retrieves latest posts and decorates with: profilePictureUrl, isLikedByCurrentUser, isFollowedByCurrentUser
-export async function getLatestPosts(userId) {
+// @desc Retrieves latest posts by page size
+export async function fetchLatestPostsPage(userId, pageSize = 5, beforeTs = Number.MAX_SAFE_INTEGER) {
 	const DEFAULT_PIC = '/images/default-profile.png';
 
 	try {
-		// Fetch all posts
-		const postsSnap = await get(ref(db, 'posts'));
-		const posts = postsSnap.val() || {};
-
-		// Liked posts of current user
-		const likedSnap = await get(ref(db, `users/${userId}/likes`));
-		const likedSet = new Set(Object.keys(likedSnap.val() || {}));
-
-		// Following list of current user
-		const followingSnap = await get(ref(db, `users/${userId}/following`));
-		const followingSet = new Set(Object.keys(followingSnap.val() || {}));
-
-		// Unique authorIds from posts
-		const authorIds = new Set(
-			Object.values(posts)
-				.map((p) => p.uid)
-				.filter(Boolean),
+		// Get page + 1 to detect "has more"
+		const snap = await get(
+			query(ref(db, 'posts'), orderByChild('createdAtMs'), endAt(beforeTs), limitToLast(pageSize + 1)),
 		);
 
-		// Fetch each author's profile picture once
+		if (!snap.exists()) return { items: [], nextCursor: null };
+
+		// Turn object into array and sort ascending
+		const rowsAsc = Object.entries(snap.val())
+			.map(([id, data]) => ({ id, ...data }))
+			.sort((a, b) => a.createdAtMs - b.createdAtMs);
+
+		// If pageSize+1 fetched, drop the oldest one
+		const hasMore = rowsAsc.length > pageSize;
+		const pageAsc = hasMore ? rowsAsc.slice(rowsAsc.length - pageSize) : rowsAsc;
+
+		// Convert to DESC
+		const items = pageAsc.slice().reverse();
+
+		// Preload current user's liked/following sets
+		const [likedSnap, followingSnap] = await Promise.all([
+			get(ref(db, `users/${userId}/likes`)),
+			get(ref(db, `users/${userId}/following`)),
+		]);
+		const likedSet = new Set(Object.keys(likedSnap.val() || {}));
+		const followingSet = new Set(Object.keys(followingSnap.val() || {}));
+
+		// Unique author ids
+		const authorIds = new Set(items.map((p) => p.uid).filter(Boolean));
+
+		// Fetch each author's profile picture
 		const profilePicByUid = new Map();
 		await Promise.all(
 			[...authorIds].map(async (aid) => {
@@ -36,31 +46,27 @@ export async function getLatestPosts(userId) {
 			}),
 		);
 
-		// Decorate posts with computed fields
-		for (const [postId, post] of Object.entries(posts)) {
+		// Decorate each item
+		for (const post of items) {
 			const authorUid = post.uid;
-
 			post.profilePictureUrl = authorUid ? profilePicByUid.get(authorUid) || DEFAULT_PIC : DEFAULT_PIC;
-
-			post.isLikedByCurrentUser = likedSet.has(postId);
-
-			if (authorUid === userId) {
-				post.isFollowedByCurrentUser = null;
-			} else if (authorUid) {
-				post.isFollowedByCurrentUser = followingSet.has(authorUid);
-			} else {
-				post.isFollowedByCurrentUser = false;
-			}
+			post.isLikedByCurrentUser = likedSet.has(post.id);
+			post.isFollowedByCurrentUser =
+				authorUid === userId ? null : authorUid ? followingSet.has(authorUid) : false;
 		}
 
-		return posts;
+		// Cursor for next page (oldest item)
+		const last = rowsAsc[0];
+		const nextCursor = hasMore && last ? last.createdAtMs : null;
+
+		return { items, nextCursor };
 	} catch (err) {
 		console.error('Error fetching posts:', err);
-		return {};
+		return { items: [], nextCursor: null };
 	}
 }
 
-// @desc  Fetch a page of posts for a user, newest -> older, using createdAtMs as cursor
+// @desc  	Fetch a page of posts for a user, newest -> older, using createdAtMs as cursor
 export async function fetchUserPostsPage(profileId, currentUserId, pageSize = 5, beforeTs = Number.MAX_SAFE_INTEGER) {
 	try {
 		// Read lightweight refs ordered by createdAtMs and ending at the cursor
